@@ -11,10 +11,8 @@
 
 # list of all chat formats
 chat:
-
   # the handle of the chat format (what it is called in the code & what it is referenced by)
   default:
-
     # if this is higher than other formats and the player has permission for multiple, this one will be shown
     priority: 999
     # The permission node for the player to use
@@ -22,45 +20,44 @@ chat:
 
     # the format itself; it contains parts that make up the chat format
     format:
-
       # these names are ambiguous. make them whatever you want and however many you want!
-      prefix
-      # the text shown
-      text: "<gray>Default | "
+      prefix:
+        # the text shown
+        text: "<gray>Default | "
 
-      # interaction events. right now you can do something on "click", or when someone "hovers"
-      extra:
-
-        # on click event
-        - click:
-            # <- open a url; the options are: "open_url", "run_command", "suggest_command" - self explanatory
-            action: "open_url"
-            # this is the value used. if open_url, this is the open url....etc
-            value: "https://tebex.io"
-
-        # when someone hovers
-        - hover:
-            # these are the lines shown when someone hovers over the message
-            - "<aqua>CLICK ME"
-            - "<gray>to purchase ranks!"
-
-      username:
-        text: "<gray>%player_name% "
+        # interaction events. right now you can do something on "click", or when someone "hovers"
         extra:
+
+          # on click event
           - click:
-              action: "suggest_command"
-              value: "/msg %player_name%"
+              # <- open a url; the options are: "open_url", "run_command", "suggest_command" - self explanatory
+              action: "open_url"
+              # this is the value used. if open_url, this is the open url....etc
+              value: "https://tebex.io"
+
+          # when someone hovers
           - hover:
+              # these are the lines shown when someone hovers over the message
               - "<aqua>CLICK ME"
-              - "<gray>to message %player_name%!"
+              - "<gray>to purchase ranks!"
 
-      # you don't have to include extra here at all....it can just be text :)
-      separator:
-        text: "<dark_gray>: "
+        username:
+          text: "<gray>%player_name% "
+          extra:
+            - click:
+                action: "suggest_command"
+                value: "/msg %player_name%"
+            - hover:
+                - "<aqua>CLICK ME"
+                - "<gray>to message %player_name%!"
 
-      chat-color:
-        text: "<white>"
+        # you don't have to include extra here at all....it can just be text :)
+        separator:
+          text: "<dark_gray>: "
 
-      chat-message:
-        text: "%chat_message%"
+        chat-color:
+          text: "<white>"
+
+        chat-message:
+          text: "%chat_message%"
 #=#=#=#=#=#=#=#=#=#=#=#=#
