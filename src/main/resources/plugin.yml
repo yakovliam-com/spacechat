@@ -1,0 +1,7 @@
+name: SpaceChat
+version: @version@
+main: com.yakovliam.spacechat.SpaceChat
+authors: [yakovliam]
+description: Simple and effective chat formatting
+website: https://www.yakovliam.com/
+api-version: 1.13

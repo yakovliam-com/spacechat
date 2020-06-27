@@ -1,0 +1,27 @@
+####################################
+# SpaceChat Configuration :)       #
+# v2                               #
+# Written by yakovliam             #
+# Visit https://www.yakovliam.com  #
+####################################
+
+#=#=#=#=#=#=#=#=#=#=#=#=#
+# Storage Configuration #
+#                       #
+# Storage types:        #
+# -> yaml               #
+# -> mysql              #
+#=#=#=#=#=#=#=#=#=#=#=#=#
+use: "yaml" # which storage type should we use?
+mysql: # mysql configuration settings
+  address: ""
+  port: 3306
+  username: ""
+  password: ""
+  database: ""
+  tables:
+    logs: "spacechat_logs"
+yaml:
+  tables:
+    logs: "logs"
+#=#=#=#=#=#=#=#=#=#=#=#=#
