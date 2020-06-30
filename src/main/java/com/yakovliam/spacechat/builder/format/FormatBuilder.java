@@ -2,6 +2,7 @@ package com.yakovliam.spacechat.builder.format;
 
 import com.yakovliam.spaceapi.config.impl.Configuration;
 import com.yakovliam.spacechat.builder.IBuilder;
+import com.yakovliam.spacechat.builder.part.FormatPartBuilder;
 import com.yakovliam.spacechat.model.Format;
 
 public class FormatBuilder implements IBuilder<Configuration, Format> {
@@ -23,8 +24,11 @@ public class FormatBuilder implements IBuilder<Configuration, Format> {
         // set priority
         format.setPriority(input.getInt("priority"));
 
-        // set permissoni
+        // set permission node
         format.setPermission(input.getString("permission"));
+
+        // set format parts
+        format.setFormatParts(new FormatPartBuilder().build(input.getSection("format")));
 
         return null;
     }

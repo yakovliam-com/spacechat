@@ -29,14 +29,15 @@ chat:
         extra:
 
           # on click event
-          - click:
-              # <- open a url; the options are: "open_url", "run_command", "suggest_command" - self explanatory
-              action: "open_url"
-              # this is the value used. if open_url, this is the open url....etc
-              value: "https://tebex.io"
+          click:
+            # <- open a url; the options are: "open_url", "run_command", "suggest_command" - self explanatory
+            action: "open_url"
+            # this is the value used. if open_url, this is the open url....etc
+            value: "https://tebex.io"
 
           # when someone hovers
-          - hover:
+          hover:
+            lines:
               # these are the lines shown when someone hovers over the message
               - "<aqua>CLICK ME"
               - "<gray>to purchase ranks!"
@@ -44,12 +45,12 @@ chat:
         username:
           text: "<gray>%player_name% "
           extra:
-            - click:
-                action: "suggest_command"
-                value: "/msg %player_name%"
-            - hover:
-                - "<aqua>CLICK ME"
-                - "<gray>to message %player_name%!"
+            click:
+              action: "suggest_command"
+              value: "/msg %player_name%"
+            hover:
+              - "<aqua>CLICK ME"
+              - "<gray>to message %player_name%!"
 
         # you don't have to include extra here at all....it can just be text :)
         separator:
