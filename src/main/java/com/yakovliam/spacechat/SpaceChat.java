@@ -3,8 +3,7 @@ package com.yakovliam.spacechat;
 import com.yakovliam.spaceapi.abstraction.plugin.BukkitPlugin;
 import com.yakovliam.spaceapi.abstraction.plugin.Plugin;
 import com.yakovliam.spacechat.configuration.FormatsConfig;
-import com.yakovliam.spacechat.loader.FormatLoader;
-import com.yakovliam.spacechat.manager.FormatManager;
+import com.yakovliam.spacechat.manager.ChatFormatManager;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -29,10 +28,10 @@ public final class SpaceChat extends JavaPlugin {
     private FormatsConfig formatsConfig;
 
     /**
-     * The chat manager
+     * The chat format manager
      */
     @Getter
-    private FormatManager chatFormatManager;
+    private ChatFormatManager chatFormatManager;
 
     @Override
     public void onLoad() {
@@ -47,11 +46,8 @@ public final class SpaceChat extends JavaPlugin {
         // initialize configs
         formatsConfig = new FormatsConfig();
 
-        // initialize chat format manager
-        chatFormatManager = new FormatManager();
-
-        // initialize format loader & load all
-        new FormatLoader().loadAllFormats();
+        // initialize chat format manager (also loads all formats)
+        chatFormatManager = new ChatFormatManager();
     }
 
     @Override

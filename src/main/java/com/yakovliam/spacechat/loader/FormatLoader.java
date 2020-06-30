@@ -1,40 +1,31 @@
 package com.yakovliam.spacechat.loader;
 
 import com.yakovliam.spaceapi.config.impl.Configuration;
-import com.yakovliam.spacechat.SpaceChat;
 import com.yakovliam.spacechat.builder.format.FormatBuilder;
 import com.yakovliam.spacechat.manager.FormatManager;
 
 public class FormatLoader {
 
     /**
-     * Initializes
+     * The format section
      */
-    public FormatLoader() {
-        // no-op
-    }
+    private final Configuration formatSection;
 
     /**
-     * Loads all formats
+     * Initializes
      */
-    public void loadAllFormats() {
-        loadChatFormats();
+    public FormatLoader(Configuration formatSection) {
+        this.formatSection = formatSection;
     }
 
     /**
      * Loads chat formats
      */
-    private void loadChatFormats() {
-        // get chat format manager
-        FormatManager chatFormatManager = SpaceChat.getInstance().getChatFormatManager();
-
-        // get configuration section for chat formats
-        Configuration configuration = SpaceChat.getInstance().getFormatsConfig().getConfig().getSection("chat");
-
-        // loop through keys
-        for (String handle : configuration.getKeys()) {
+    public void load(FormatManager formatManager) {
+        // loop through section keys
+        for (String handle : formatSection.getKeys()) {
             // add to manager
-            chatFormatManager.add(handle, new FormatBuilder().build(configuration.getSection(handle)));
+            formatManager.add(handle, new FormatBuilder().build(formatSection.getSection(handle)));
         }
     }
 }

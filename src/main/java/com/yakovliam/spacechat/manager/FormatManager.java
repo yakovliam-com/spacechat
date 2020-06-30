@@ -1,5 +1,8 @@
 package com.yakovliam.spacechat.manager;
 
+import com.yakovliam.spacechat.SpaceChat;
+import com.yakovliam.spacechat.loader.FormatLoader;
+import com.yakovliam.spacechat.loader.FormatType;
 import com.yakovliam.spacechat.model.Format;
 
 import java.util.HashMap;
@@ -13,10 +16,34 @@ public class FormatManager implements IManager<String, Format> {
     private final Map<String, Format> formatMap;
 
     /**
+     * The format loader
+     */
+    private final FormatLoader formatLoader;
+
+    /**
      * Initializes
      */
-    public FormatManager() {
-        formatMap = new HashMap<>();
+    public FormatManager(FormatType type) {
+        this.formatMap = new HashMap<>();
+
+        // create format manager
+        this.formatLoader = new FormatLoader(SpaceChat.getInstance()
+                .getFormatsConfig()
+                .getConfig()
+                .getSection(
+                        type.getSectionKey().toLowerCase()
+                )
+        );
+
+        // load
+        this.formatLoader.load(this);
+    }
+
+    /**
+     * Loads formats
+     */
+    public void loadFormats() {
+        formatLoader.load(this);
     }
 
     /**
@@ -42,7 +69,7 @@ public class FormatManager implements IManager<String, Format> {
      * Gets a format by handle
      *
      * @param handle The handle
-     * @param def The default value
+     * @param def    The default value
      * @return The format
      */
     @Override
