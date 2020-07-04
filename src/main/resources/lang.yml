@@ -1,0 +1,19 @@
+general:
+  help:
+    text:
+      - "&8&l[&d&lS&5&lS&8&l] &bChat &7&o(v2) &3help"
+      - "&8&l[&d&lS&5&lS&8&l] &f- &d/spacechat reload $&f&l(CLICK ME)$"
+      - "&8&l[&d&lS&5&lS&8&l] &f-   &3Reload chat formats"
+    extras:
+      1:
+        tooltip:
+          - "&bClick to reload chat formats"
+        action: "RUN_COMMAND"
+        content: "/spacechat reload"
+reload:
+  success:
+    text:
+      - "&8&l[&d&lS&5&lS&8&l] &aSuccessfully reloaded &bChat"
+  failure:
+    text:
+      - "&8&l[&d&lS&5&lS&8&l] &cFailed to reload &bChat"

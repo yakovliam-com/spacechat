@@ -1,9 +1,13 @@
-####################################
-# SpaceChat Formats Configuration  #
-# v2                               #
-# Written by yakovliam             #
-# Visit https://www.yakovliam.com  #
-####################################
+#############################################################################
+#                    SpaceChat Formats Configuration v2                     #
+#                                                                           #
+# Visit our website: https://www.spaceseries.dev                            #
+#                                                                           #
+# Written by yakovliam (https://yakovliam.com)                              #
+#                                                                           #
+# Refer to the MiniMessage documentation for help with formatting:          #
+# https://bit.ly/MiniMessageDocs                                            #
+#############################################################################
 
 #=#=#=#=#=#=#=#=#=#=#=#=#
 # Chat Formats          #
@@ -14,7 +18,7 @@ chat:
   # the handle of the chat format (what it is called in the code & what it is referenced by)
   default:
     # if this is higher than other formats and the player has permission for multiple, this one will be shown
-    priority: 999
+    priority: 1
     # The permission node for the player to use
     permission: "space.chat.cf.default"
 
@@ -23,14 +27,13 @@ chat:
       # these names are ambiguous. make them whatever you want and however many you want!
       prefix:
         # the text shown
-        text: "<gray>Default | "
+        text: "<gray>Default <dark_gray>| "
 
         # interaction events. right now you can do something on "click", or when someone "hovers"
         extra:
-
           # on click event
           click:
-            # <- open a url; the options are: "open_url", "run_command", "suggest_command" - self explanatory
+            # <- open a url; the options are: "open_url", "run_command", "suggest_command", "change_page", "open_file", etc - self explanatory
             action: "open_url"
             # this is the value used. if open_url, this is the open url....etc
             value: "https://tebex.io"
@@ -42,23 +45,33 @@ chat:
               - "<aqua>CLICK ME"
               - "<gray>to purchase ranks!"
 
-        username:
-          text: "<gray>%player_name% "
-          extra:
-            click:
-              action: "suggest_command"
-              value: "/msg %player_name%"
-            hover:
+      username:
+        text: "<gray>%player_displayname% "
+        extra:
+          click:
+            action: "suggest_command"
+            value: "/msg %player_name%"
+          hover:
+            lines:
               - "<aqua>CLICK ME"
               - "<gray>to message %player_name%!"
 
-        # you don't have to include extra here at all....it can just be text :)
-        separator:
-          text: "<dark_gray>: "
+      # you don't have to include extra here at all....it can just be text :)
+      separator:
+        text: "<dark_gray><bold>\u00BB "
 
-        chat-color:
-          text: "<white>"
+      chat-message:
+        text: "<white><chat_message>"
 
-        chat-message:
-          text: "%chat_message%"
+  # Staff format
+  staff:
+    priority: 999
+    permission: "space.chat.cf.staff"
+
+    format:
+      # Formats can also be one line only...format using MiniMessage (link for syntax above)
+      # Make sure to specify "line" instead of "text" when it is ONE line ONLY
+      the-entire-line:
+        line: "<click:open_url:https://www.enjin.com><hover:show_text:\"<yellow>Click to apply for staff!\"><red>Staff <dark_gray>|</hover></click> <gray>%player_displayname%</gray> <dark_gray>| <dark_gray><bold>\u00BB</bold></dark_gray> <white><chat_message>"
+
 #=#=#=#=#=#=#=#=#=#=#=#=#

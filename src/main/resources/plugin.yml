@@ -1,7 +1,9 @@
 name: SpaceChat
 version: @version@
-main: com.yakovliam.spacechat.SpaceChat
+main: dev.spaceseries.spacechat.SpaceChat
 authors: [yakovliam]
 description: Simple and effective chat formatting
-website: https://www.yakovliam.com/
+website: https://www.spaceseries.dev/
 api-version: 1.13
+depend:
+  - PlaceholderAPI
