@@ -55,8 +55,8 @@ public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, Stri
             // build text from legacy (and replace <chat_message> with the actual message)
             BaseComponent[] parsedText = TextComponent.fromLegacyText(
                     ChatColor.translateAlternateColorCodes('&',
-                    text
-                            .replace("<chat_message>", message)));
+                            text
+                                    .replace("<chat_message>", message)));
             /* Retaining events for MULTIPLE components */
 
             // loop through parsedText components, applying events to all
@@ -86,6 +86,9 @@ public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, Stri
             }
 
             // append build partComponentBuilder to main componentBuilder
+
+            //todo > Should be ComponentBuilder.FormatRetention.FORMATTING, but "reset" color codes are broken...
+            // this means that it has to be 'NONE' for now or it would break chat by adding styles (like bold) and not EVER being able to reset them
             componentBuilder.append(partComponentBuilder.create(), ComponentBuilder.FormatRetention.NONE);
         });
 
