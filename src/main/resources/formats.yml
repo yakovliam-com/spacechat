@@ -26,8 +26,8 @@ chat:
     format:
       # these names are ambiguous. make them whatever you want and however many you want!
       prefix:
-        # the text shown
-        text: "<gray>Default <dark_gray>| "
+        # the text shown (Can't use MiniMessage parsing for this!)
+        text: "&7Default &8| "
 
         # interaction events. right now you can do something on "click", or when someone "hovers"
         extra:
@@ -42,26 +42,26 @@ chat:
           hover:
             lines:
               # these are the lines shown when someone hovers over the message
-              - "<aqua>CLICK ME"
-              - "<gray>to purchase ranks!"
+              - "&bCLICK ME"
+              - "&7to purchase ranks!"
 
       username:
-        text: "<gray>%player_displayname% "
+        text: "&7%player_displayname% "
         extra:
           click:
             action: "suggest_command"
             value: "/msg %player_name%"
           hover:
             lines:
-              - "<aqua>CLICK ME"
-              - "<gray>to message %player_name%!"
+              - "&bCLICK ME"
+              - "&7to message %player_name%!"
 
       # you don't have to include extra here at all....it can just be text :)
       separator:
-        text: "<dark_gray><bold>\u00BB "
+        text: "&8&l\u00BB "
 
       chat-message:
-        text: "<white><chat_message>"
+        text: "<chat_message>"
 
   # Staff format
   staff:
@@ -72,6 +72,6 @@ chat:
       # Formats can also be one line only...format using MiniMessage (link for syntax above)
       # Make sure to specify "line" instead of "text" when it is ONE line ONLY
       the-entire-line:
-        line: "<click:open_url:https://www.enjin.com><hover:show_text:\"<yellow>Click to apply for staff!\"><red>Staff <dark_gray>|</hover></click> <gray>%player_displayname%</gray> <dark_gray>| <dark_gray><bold>\u00BB</bold></dark_gray> <white><chat_message>"
+        line: "<click:open_url:https://www.enjin.com><hover:show_text:\"<yellow>Click to apply for staff!\"><red>Staff <dark_gray>| <gray>%player_displayname%</gray> <dark_gray>| <dark_gray><bold>\u00BB</bold></dark_gray> <white><chat_message>"
 
 #=#=#=#=#=#=#=#=#=#=#=#=#

@@ -6,11 +6,11 @@ import dev.spaceseries.spacechat.builder.IBuilder;
 import dev.spaceseries.spacechat.model.Extra;
 import dev.spaceseries.spacechat.model.Format;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
-
-import java.util.Arrays;
 
 public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, String>, BaseComponent[]> {
 
@@ -34,7 +34,7 @@ public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, Stri
         format.getFormatParts().forEach(formatPart -> {
             // create component builder
             ComponentBuilder partComponentBuilder = new ComponentBuilder("");
-            // if the part has "line", it is a SINGLE minimessage...in that case, just parse & return (continues to next part if exists, which it shouldn't)
+            // if the part has "line", it is a SINGLE MiniMessage...in that case, just parse & return (continues to next part if exists, which it shouldn't)
             if (formatPart.getLine() != null) {
                 partComponentBuilder.append(
                         MiniMessageParser.parseFormat(
@@ -50,11 +50,13 @@ public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, Stri
             String text = formatPart.getText();
 
             // replace placeholders
-            text = PlaceholderAPI.setPlaceholders(player, text);
+            text = PlaceholderAPI.setPlaceholders(player, text, false);
 
-            // build text with MiniMessage (and replace <chat_message> with the actual message)
-            BaseComponent[] parsedText = MiniMessageParser.parseFormat(text, "chat_message", message);
-
+            // build text from legacy (and replace <chat_message> with the actual message)
+            BaseComponent[] parsedText = TextComponent.fromLegacyText(
+                    ChatColor.translateAlternateColorCodes('&',
+                    text
+                            .replace("<chat_message>", message)));
             /* Retaining events for MULTIPLE components */
 
             // loop through parsedText components, applying events to all

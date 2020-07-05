@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -43,7 +44,7 @@ public class HoverAction {
         for (String line : lines) {
             // append parsed & replace placeholders
             componentBuilder.append(
-                    MiniMessageParser.parseFormat(
+                    ChatColor.translateAlternateColorCodes('&',
                             PlaceholderAPI.setPlaceholders(player, line)
                     )
             );

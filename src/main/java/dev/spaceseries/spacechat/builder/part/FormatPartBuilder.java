@@ -4,6 +4,7 @@ import dev.spaceseries.api.config.impl.Configuration;
 import dev.spaceseries.spacechat.builder.IBuilder;
 import dev.spaceseries.spacechat.builder.extra.ExtraBuilder;
 import dev.spaceseries.spacechat.model.FormatPart;
+import net.md_5.bungee.api.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ public class FormatPartBuilder implements IBuilder<Configuration, List<FormatPar
 
             // get section from handle (key)
             Configuration section = input.getSection(handle);
+
 
             // get text
             String text = section.getString("text");
