@@ -7,6 +7,7 @@ import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.configuration.FormatsConfig;
 import dev.spaceseries.spacechat.configuration.LangConfig;
 import dev.spaceseries.spacechat.listener.ChatListener;
+import dev.spaceseries.spacechat.logging.LogManager;
 import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -50,6 +51,12 @@ public final class SpaceChat extends JavaPlugin {
     private ChatFormatManager chatFormatManager;
 
     /**
+     * The log manager
+     */
+    @Getter
+    private LogManager logManager;
+
+    /**
      * Runs on load
      */
     @Override
@@ -76,6 +83,9 @@ public final class SpaceChat extends JavaPlugin {
 
         // register chat listener
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
+
+        // initialize log manager
+        logManager = new LogManager();
 
         // initialize metrics
         new MetricsHandler();

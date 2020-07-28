@@ -8,17 +8,17 @@ public class Messages {
     /* General */
 
     // help
-    public static Message GENERAL_HELP = Message.fromConfigurationSection(getLangConfiguration().getSection("general.help"), "general.help")
+    public static final Message GENERAL_HELP = Message.fromConfigurationSection(getLangConfiguration().getSection("general.help"), "general.help")
             .build();
 
     /* Reload */
 
     // success
-    public static Message RELOAD_SUCCESS = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.success"), "reload.success")
+    public static final Message RELOAD_SUCCESS = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.success"), "reload.success")
             .build();
 
     // failure
-    public static Message RELOAD_FAILURE = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.failure"), "reload.failure")
+    public static final Message RELOAD_FAILURE = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.failure"), "reload.failure")
             .build();
 
     /**

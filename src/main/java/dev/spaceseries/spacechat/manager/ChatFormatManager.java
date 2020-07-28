@@ -2,14 +2,15 @@ package dev.spaceseries.spacechat.manager;
 
 import dev.spaceseries.api.util.ColorUtil;
 import dev.spaceseries.api.util.Trio;
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.builder.ReflectionHelper;
 import dev.spaceseries.spacechat.builder.live.LiveChatFormatBuilder;
 import dev.spaceseries.spacechat.loader.FormatType;
+import dev.spaceseries.spacechat.logging.LogType;
 import dev.spaceseries.spacechat.model.Format;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -55,6 +56,13 @@ public class ChatFormatManager extends FormatManager {
             // get baseComponents from live builder
             components = new LiveChatFormatBuilder().build(new Trio<>(player, message, applicableFormat));
         }
+
+        // log
+        SpaceChat.getInstance()
+                .getLogManager().log(Arrays.stream(components)
+                        .map(BaseComponent::toLegacyText)
+                        .collect(Collectors.joining()),
+                LogType.CHAT);
 
         // get all online players, loop through, send chat message
 //        Bukkit.getOnlinePlayers().forEach(onlinePlayer -> onlinePlayer.spigot().sendMessage(components));
