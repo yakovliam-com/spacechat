@@ -6,7 +6,7 @@ import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.builder.ReflectionHelper;
 import dev.spaceseries.spacechat.builder.live.LiveChatFormatBuilder;
 import dev.spaceseries.spacechat.loader.FormatType;
-import dev.spaceseries.spacechat.logging.LogType;
+import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.model.Format;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;

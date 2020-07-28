@@ -2,6 +2,7 @@ package dev.spaceseries.spacechat.logging;
 
 import dev.spaceseries.api.config.impl.Configuration;
 import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.logging.wrap.LogType;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
