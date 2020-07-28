@@ -1,16 +1,22 @@
 package dev.spaceseries.spacechat.manager;
 
+import dev.spaceseries.api.util.ColorUtil;
 import dev.spaceseries.api.util.Trio;
+import dev.spaceseries.spacechat.builder.ReflectionHelper;
 import dev.spaceseries.spacechat.builder.live.LiveChatFormatBuilder;
 import dev.spaceseries.spacechat.loader.FormatType;
 import dev.spaceseries.spacechat.model.Format;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 
 public class ChatFormatManager extends FormatManager {
 
@@ -42,7 +48,8 @@ public class ChatFormatManager extends FormatManager {
         if (applicableFormat == null) {
             // build components default message
             components = new ComponentBuilder("")
-                    .append(player.getDisplayName() + ChatColor.YELLOW + " > " + ChatColor.AQUA + message)
+                    .append(ChatColor.AQUA + player.getDisplayName() + ChatColor.GRAY + "> ")
+                    .append(ColorUtil.translateFromAmpersand(message))
                     .create();
         } else { // if not null
             // get baseComponents from live builder
@@ -50,8 +57,7 @@ public class ChatFormatManager extends FormatManager {
         }
 
         // get all online players, loop through, send chat message
-        Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
-            onlinePlayer.spigot().sendMessage(components);
-        });
+//        Bukkit.getOnlinePlayers().forEach(onlinePlayer -> onlinePlayer.spigot().sendMessage(components));
+        ReflectionHelper.sendPacket(ReflectionHelper.createTextPacket(ComponentSerializer.toString(components)), Bukkit.getOnlinePlayers().toArray(new Player[0]));
     }
 }

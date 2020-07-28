@@ -1,9 +1,9 @@
 general:
   help:
     text:
-      - "&8&l[&d&lS&5&lS&8&l] &bChat &7&o(v2) &3help"
-      - "&8&l[&d&lS&5&lS&8&l] &f- &d/spacechat reload $&f&l(CLICK ME)$"
-      - "&8&l[&d&lS&5&lS&8&l] &f-   &3Reload chat formats"
+      - "&8&l[&d&lS&5&lS&8&l]&r &bChat &7&o(v2)&r &3help"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/spacechat reload $&f&l(CLICK ME)$"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Reload chat formats"
     extras:
       1:
         tooltip:
@@ -13,7 +13,7 @@ general:
 reload:
   success:
     text:
-      - "&8&l[&d&lS&5&lS&8&l] &aSuccessfully reloaded &bChat"
+      - "&8&l[&d&lS&5&lS&8&l]&r &aSuccessfully reloaded &bChat"
   failure:
     text:
-      - "&8&l[&d&lS&5&lS&8&l] &cFailed to reload &bChat"
+      - "&8&l[&d&lS&5&lS&8&l]&r &cFailed to reload &bChat"

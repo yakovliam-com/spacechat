@@ -1,15 +1,14 @@
 package dev.spaceseries.spacechat.builder.live;
 
 import dev.spaceseries.api.text.mini.MiniMessageParser;
+import dev.spaceseries.api.util.ColorUtil;
 import dev.spaceseries.api.util.Trio;
 import dev.spaceseries.spacechat.builder.IBuilder;
 import dev.spaceseries.spacechat.model.Extra;
 import dev.spaceseries.spacechat.model.Format;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.entity.Player;
 
 public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, String>, BaseComponent[]> {
@@ -39,8 +38,9 @@ public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, Stri
                 partComponentBuilder.append(
                         MiniMessageParser.parseFormat(
                                 PlaceholderAPI.setPlaceholders(
-                                        player, formatPart.getLine())
-                                , "chat_message", message)
+                                        player, ColorUtil.translateFromAmpersand(formatPart.getLine()), false)
+                                , "chat_message",
+                                message)
                 );
                 // append partComponentBuilder to main builder
                 componentBuilder.append(partComponentBuilder.create());
@@ -53,10 +53,11 @@ public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, Stri
             text = PlaceholderAPI.setPlaceholders(player, text, false);
 
             // build text from legacy (and replace <chat_message> with the actual message)
-            BaseComponent[] parsedText = TextComponent.fromLegacyText(
-                    ChatColor.translateAlternateColorCodes('&',
-                            text
-                                    .replace("<chat_message>", message)));
+            BaseComponent[] parsedText = ColorUtil.fromLegacyText(
+                    ColorUtil.translateFromAmpersand(
+                            text.replace("<chat_message>", message)
+                    )
+            );
             /* Retaining events for MULTIPLE components */
 
             // loop through parsedText components, applying events to all
@@ -82,14 +83,12 @@ public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, Stri
                 }
 
                 // add SINGLE parsed text to part component builder
-                partComponentBuilder.append(subComponentBuilder.create());
+                partComponentBuilder.append(subComponentBuilder.create(), ComponentBuilder.FormatRetention.FORMATTING);
             }
 
             // append build partComponentBuilder to main componentBuilder
-
-            //todo > Should be ComponentBuilder.FormatRetention.FORMATTING, but "reset" color codes are broken...
-            // this means that it has to be 'NONE' for now or it would break chat by adding styles (like bold) and not EVER being able to reset them
-            componentBuilder.append(partComponentBuilder.create(), ComponentBuilder.FormatRetention.NONE);
+            // this was supposed to be FORMATTING retention, but the new ChatColor class is NOT stable enough to support it....it has to be NONE
+            componentBuilder.append(partComponentBuilder.create(), ComponentBuilder.FormatRetention.FORMATTING);
         });
 
         // return built component builder
