@@ -1,13 +1,11 @@
 package dev.spaceseries.spacechat.logging.wrap;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
 import java.util.UUID;
 
-@AllArgsConstructor
 public class LogChatWrap extends LogWrapper {
 
     /**
@@ -37,4 +35,22 @@ public class LogChatWrap extends LogWrapper {
     @Getter
     @Setter
     private Date at;
+
+    /**
+     * Creates a new log chat wrapper
+     *
+     * @param logType    The log type
+     * @param senderName The sender name
+     * @param senderUUID The sender uuid
+     * @param message    The message
+     * @param at         The time
+     */
+    public LogChatWrap(LogType logType, String senderName, UUID senderUUID, String message, Date at) {
+        super(logType);
+
+        this.senderName = senderName;
+        this.senderUUID = senderUUID;
+        this.message = message;
+        this.at = at;
+    }
 }
