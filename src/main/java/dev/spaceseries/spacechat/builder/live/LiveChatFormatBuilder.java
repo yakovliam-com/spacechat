@@ -1,12 +1,13 @@
 package dev.spaceseries.spacechat.builder.live;
 
-import dev.spaceseries.api.text.mini.MiniMessageParser;
+import dev.spaceseries.api.text.component.platform.BungeeCordComponentSerializer;
 import dev.spaceseries.api.util.ColorUtil;
 import dev.spaceseries.api.util.Trio;
 import dev.spaceseries.spacechat.builder.IBuilder;
 import dev.spaceseries.spacechat.model.Extra;
 import dev.spaceseries.spacechat.model.Format;
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.entity.Player;
@@ -36,11 +37,15 @@ public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, Stri
             // if the part has "line", it is a SINGLE MiniMessage...in that case, just parse & return (continues to next part if exists, which it shouldn't)
             if (formatPart.getLine() != null) {
                 partComponentBuilder.append(
-                        MiniMessageParser.parseFormat(
-                                PlaceholderAPI.setPlaceholders(
-                                        player, ColorUtil.translateFromAmpersand(formatPart.getLine()), false)
-                                , "chat_message",
-                                message)
+                        BungeeCordComponentSerializer.get()
+                                .serialize(
+                                        MiniMessage.get()
+                                                .parse(
+                                                        PlaceholderAPI.setPlaceholders(
+                                                                player, ColorUtil.translateFromAmpersand(formatPart.getLine()), false)
+                                                        , "chat_message",
+                                                        message)
+                                )
                 );
                 // append partComponentBuilder to main builder
                 componentBuilder.append(partComponentBuilder.create());
@@ -58,6 +63,7 @@ public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, Stri
                             text.replace("<chat_message>", message)
                     )
             );
+
             /* Retaining events for MULTIPLE components */
 
             // loop through parsedText components, applying events to all

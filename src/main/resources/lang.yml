@@ -16,4 +16,8 @@ reload:
       - "&8&l[&d&lS&5&lS&8&l]&r &aSuccessfully reloaded &bChat"
   failure:
     text:
-      - "&8&l[&d&lS&5&lS&8&l]&r &cFailed to reload &bChat"
+      - "&8&l[&d&lS&5&lS&8&l]&r $&cFailed to reload &bChat$"
+    extras:
+      1:
+        tooltip:
+          - "&cCheck console for details!"

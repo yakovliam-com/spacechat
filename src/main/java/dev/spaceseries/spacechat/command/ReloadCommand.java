@@ -29,8 +29,9 @@ public class ReloadCommand extends Command {
 
                 // reload formats
                 SpaceChat.getInstance().loadFormats();
-            } catch (Exception ignored) {
+            } catch (Exception e) {
                 RELOAD_FAILURE.msg(sender);
+                e.printStackTrace();
                 return;
             }
             RELOAD_SUCCESS.msg(sender);

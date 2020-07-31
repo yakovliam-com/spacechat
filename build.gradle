@@ -54,6 +54,9 @@ dependencies {
 
     // caffeine
     compile 'com.github.ben-manes.caffeine:caffeine:2.8.4'
+
+    // mini-message
+    compile 'net.kyori:adventure-text-minimessage:3.0.0-SNAPSHOT'
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
