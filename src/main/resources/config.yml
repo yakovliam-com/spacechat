@@ -20,10 +20,7 @@ mysql: # mysql configuration settings
   password: ""
   database: ""
   tables:
-    logs: "spacechat_logs"
-yaml:
-  tables:
-    logs: "logs"
+    chat-logs: "spacechat_chatlogs"
 #=#=#=#=#=#=#=#=#=#=#=#=#
 #      Misc Settings    #
 #=#=#=#=#=#=#=#=#=#=#=#=#

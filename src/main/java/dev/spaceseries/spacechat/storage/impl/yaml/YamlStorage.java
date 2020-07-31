@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.storage.impl;
+package dev.spaceseries.spacechat.storage.impl.yaml;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -57,6 +57,9 @@ dependencies {
 
     // mini-message
     compile 'net.kyori:adventure-text-minimessage:3.0.0-SNAPSHOT'
+
+    // hikariCP
+    compile "com.zaxxer:HikariCP:3.4.5"
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
