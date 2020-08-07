@@ -10,11 +10,11 @@ public class ChatListener implements Listener {
 
     /**
      * Listens for chat messages
-     * At the HIGHEST priority (runs LAST) to accommodate for plugins that block chat (mutes, anti-bots, etc)
+     * At the MONITOR priority (runs LAST) to accommodate for plugins that block chat (mutes, anti-bots, etc)
      *
      * @param event The event
      */
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onPlayerAsyncChat(AsyncPlayerChatEvent event) {
         // cancel chat event altogether
         event.setCancelled(true);
