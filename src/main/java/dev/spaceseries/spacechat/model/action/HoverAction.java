@@ -8,7 +8,6 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -58,6 +57,6 @@ public class HoverAction {
         }
 
         // build & return
-        return new HoverEvent(action, new Text(componentBuilder.create()));
+        return new HoverEvent(action, componentBuilder.create());
     }
 }

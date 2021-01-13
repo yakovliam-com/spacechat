@@ -16,21 +16,19 @@ public class LogManager implements ILogManager {
 
     @Override
     public <T> void log(T t, LogType logType, LogToType logToType) {
-        switch (logType) {
-            case CHAT:
-                switch (logToType) {
-                    case CONSOLE:
-                        if (LOGGING_CHAT_LOG_TO_CONSOLE.get(getConfig()) && t instanceof String) {
-                            global((String) t);
-                        }
-                        break;
-                    case STORAGE:
-                        if (LOGGING_CHAT_LOG_TO_STORAGE.get(getConfig()) && t instanceof LogChatWrap) {
-                            storage((LogChatWrap) t);
-                        }
-                        break;
-                }
-                break;
+        if (logType == LogType.CHAT) {
+            switch (logToType) {
+                case CONSOLE:
+                    if (LOGGING_CHAT_LOG_TO_CONSOLE.get(getConfig()) && t instanceof String) {
+                        global((String) t);
+                    }
+                    break;
+                case STORAGE:
+                    if (LOGGING_CHAT_LOG_TO_STORAGE.get(getConfig()) && t instanceof LogChatWrap) {
+                        storage((LogChatWrap) t);
+                    }
+                    break;
+            }
         }
 
     }

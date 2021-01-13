@@ -85,17 +85,17 @@ public final class SpaceChat extends JavaPlugin {
         // load formats
         loadFormats();
 
+        // load storage
+        loadStorage();
+
+        // initialize log manager
+        logManager = new LogManager();
+
         // initialize commands
         new SpaceChatCommand();
 
         // register chat listener
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
-
-        // initialize log manager
-        logManager = new LogManager();
-
-        // storage manager
-        storageManager = new StorageManager();
 
         // initialize metrics
         new MetricsHandler();
@@ -117,6 +117,14 @@ public final class SpaceChat extends JavaPlugin {
     public void loadFormats() {
         // initialize chat format manager (also loads all formats!)
         chatFormatManager = new ChatFormatManager();
+    }
+
+    /**
+     * Loads storage manager
+     */
+    public void loadStorage() {
+        // initialize storage
+        storageManager = new StorageManager();
     }
 
 }

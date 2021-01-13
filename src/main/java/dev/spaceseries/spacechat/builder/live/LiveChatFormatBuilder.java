@@ -1,6 +1,5 @@
 package dev.spaceseries.spacechat.builder.live;
 
-import dev.spaceseries.api.text.component.platform.BungeeCordComponentSerializer;
 import dev.spaceseries.api.util.ColorUtil;
 import dev.spaceseries.api.util.Trio;
 import dev.spaceseries.spacechat.builder.IBuilder;
@@ -8,6 +7,7 @@ import dev.spaceseries.spacechat.model.Extra;
 import dev.spaceseries.spacechat.model.Format;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.entity.Player;
@@ -37,7 +37,7 @@ public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, Stri
             // if the part has "line", it is a SINGLE MiniMessage...in that case, just parse & return (continues to next part if exists, which it shouldn't)
             if (formatPart.getLine() != null) {
                 partComponentBuilder.append(
-                        BungeeCordComponentSerializer.get()
+                        BungeeComponentSerializer.get()
                                 .serialize(
                                         MiniMessage.get()
                                                 .parse(
@@ -58,8 +58,8 @@ public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, Stri
             text = PlaceholderAPI.setPlaceholders(player, text, false);
 
             // build text from legacy (and replace <chat_message> with the actual message)
-            BaseComponent[] parsedText = ColorUtil.fromLegacyText(
-                    ColorUtil.translateFromAmpersand(
+            BaseComponent[] parsedText = dev.spaceseries.spacechat.util.color.ColorUtil.fromLegacyText(
+                    dev.spaceseries.spacechat.util.color.ColorUtil.translateFromAmpersand(
                             text.replace("<chat_message>", message)
                     )
             );
@@ -89,12 +89,12 @@ public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, Stri
                 }
 
                 // add SINGLE parsed text to part component builder
-                partComponentBuilder.append(subComponentBuilder.create(), ComponentBuilder.FormatRetention.FORMATTING);
+                partComponentBuilder.append(subComponentBuilder.create(), ComponentBuilder.FormatRetention.NONE);
             }
 
             // append build partComponentBuilder to main componentBuilder
             // this was supposed to be FORMATTING retention, but the new ChatColor class is NOT stable enough to support it....it has to be NONE
-            componentBuilder.append(partComponentBuilder.create(), ComponentBuilder.FormatRetention.FORMATTING);
+            componentBuilder.append(partComponentBuilder.create(), ComponentBuilder.FormatRetention.NONE);
         });
 
         // return built component builder

@@ -39,7 +39,6 @@ public class ChatFormatManager extends FormatManager {
      * @param message The message
      */
     public void send(Player player, String message) {
-
         // get applicable format
         Format applicableFormat = getAll().values().stream()
                 .filter(format -> player.hasPermission(format.getPermission()) || format.getHandle().equals("default")) // player has permission OR the format is default
@@ -52,6 +51,7 @@ public class ChatFormatManager extends FormatManager {
         // if null, return
         if (applicableFormat == null) {
             // build components default message
+            // this only happens if it's not possible to find a chat format
             components = new ComponentBuilder("")
                     .append(ChatColor.AQUA + player.getDisplayName() + ChatColor.GRAY + "> ")
                     .append(ColorUtil.translateFromAmpersand(message))
@@ -64,9 +64,9 @@ public class ChatFormatManager extends FormatManager {
         // log to console
         SpaceChat.getInstance()
                 .getLogManager()
-                .log(Arrays.stream(components)
+                .log(ChatColor.stripColor(Arrays.stream(components)
                                 .map(TextComponent::toLegacyText)
-                                .collect(Collectors.joining()),
+                                .collect(Collectors.joining())),
                         LogType.CHAT,
                         LogToType.CONSOLE
                 );
@@ -79,8 +79,10 @@ public class ChatFormatManager extends FormatManager {
                         LogToType.STORAGE
                 );
 
+        String componentsString = ComponentSerializer.toString(components);
+
         // get all online players, loop through, send chat message
         // Bukkit.getOnlinePlayers().forEach(onlinePlayer -> onlinePlayer.spigot().sendMessage(components));
-        ReflectionHelper.sendPacket(ReflectionHelper.createTextPacket(ComponentSerializer.toString(components)), Bukkit.getOnlinePlayers().toArray(new Player[0]));
+        ReflectionHelper.sendPacket(ReflectionHelper.createTextPacket(componentsString), Bukkit.getOnlinePlayers().toArray(new Player[0]));
     }
 }
