@@ -11,6 +11,8 @@ import dev.spaceseries.spacechat.util.date.DateUtil;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static dev.spaceseries.spacechat.configuration.Config.MYSQL_TABLES_CHAT_LOGS;
+
 public class MysqlStorage implements IStorage {
 
     // Creates chat logging table (automatically)
@@ -24,7 +26,7 @@ public class MysqlStorage implements IStorage {
             ");";
 
     // Logs chat into the 'chat logging' database table
-    private static final String LOG_CHAT = "INSERT INTO " + Config.MYSQL_TABLES_CHAT_LOGS + " (uuid, name, message, date) VALUES(?, ?, ?, ?)";
+    private static final String LOG_CHAT = "INSERT INTO " + MYSQL_TABLES_CHAT_LOGS.get(Config.get()) + " (uuid, name, message, date) VALUES(?, ?, ?, ?)";
 
     /**
      * The connection manager
