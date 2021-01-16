@@ -37,7 +37,9 @@ public final class MysqlConnectionManager extends SqlAble {
                 new Credentials(
                         MYSQL_USERNAME.get(Config.get()),
                         MYSQL_PASSWORD.get(Config.get())
-                )
+                ),
+                MYSQL_USE_SSL.get(Config.get()),
+                MYSQL_VERIFY_SERVER_CERTIFICATE.get(Config.get())
         );
 
         // If not exists, create chat logging table

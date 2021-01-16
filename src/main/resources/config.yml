@@ -19,6 +19,8 @@ mysql: # mysql configuration settings
   username: ""
   password: ""
   database: ""
+  use-ssl: false
+  verify-server-certificate: false
   tables:
     chat-logs: "spacechat_chatlogs"
 #=#=#=#=#=#=#=#=#=#=#=#=#

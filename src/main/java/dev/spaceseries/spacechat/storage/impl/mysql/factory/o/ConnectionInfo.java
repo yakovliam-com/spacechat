@@ -31,6 +31,18 @@ public final class ConnectionInfo {
     private final Credentials credentials;
 
     /**
+     * Use ssl?
+     */
+    @Getter
+    private final boolean useSSL;
+
+    /**
+     * Verify server certificate?
+     */
+    @Getter
+    private final boolean verifyServerCertificate;
+
+    /**
      * The hikari config
      */
     @Getter
@@ -45,11 +57,13 @@ public final class ConnectionInfo {
     /**
      * Initializes new connection info
      */
-    public ConnectionInfo(String address, int port, String database, Credentials credentials) {
+    public ConnectionInfo(String address, int port, String database, Credentials credentials, boolean useSSL, boolean verifyServerCertificate) {
         this.address = address;
         this.port = port;
         this.database = database;
         this.credentials = credentials;
+        this.useSSL = useSSL;
+        this.verifyServerCertificate = verifyServerCertificate;
         // build config
         config = new HikariConfig();
 
@@ -59,6 +73,9 @@ public final class ConnectionInfo {
         config.setJdbcUrl(jdbc);
         config.setUsername(this.credentials.getUsername());
         config.setPassword(this.credentials.getPassword());
+
+        config.addDataSourceProperty("useSSL", this.useSSL);
+        config.addDataSourceProperty("verifyServerCertificate", this.verifyServerCertificate);
 
         // create data source
         dataSource = new HikariDataSource(config);

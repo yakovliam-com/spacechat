@@ -18,6 +18,9 @@ public final class Config extends dev.spaceseries.api.config.obj.Config {
     public static ConfigKey<String> MYSQL_USERNAME = ConfigKeyTypes.stringKey("mysql.username", null);
     public static ConfigKey<String> MYSQL_PASSWORD = ConfigKeyTypes.stringKey("mysql.password", null);
     public static ConfigKey<String> MYSQL_DATABASE = ConfigKeyTypes.stringKey("mysql.database", null);
+    public static ConfigKey<Boolean> MYSQL_USE_SSL = ConfigKeyTypes.booleanKey("mysql.use-ssl", false);
+    public static ConfigKey<Boolean> MYSQL_VERIFY_SERVER_CERTIFICATE = ConfigKeyTypes.booleanKey("mysql.verify-server-certificate", false);
+
     public static ConfigKey<String> MYSQL_TABLES_CHAT_LOGS = ConfigKeyTypes.stringKey("mysql.tables.chat-logs", null);
 
     public static ConfigKey<Boolean> LOGGING_CHAT_LOG_TO_CONSOLE = ConfigKeyTypes.booleanKey("logging.chat.log-to-console", true);
