@@ -39,10 +39,10 @@ dependencies {
     // spigot
     compileOnly "org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT"
     // bungee
-    compile "net.md-5:bungeecord-chat:1.16-R0.4-SNAPSHOT"
+    implementation "net.md-5:bungeecord-chat:1.16-R0.4-SNAPSHOT"
 
     // space api
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     // lombok
     compileOnly 'org.projectlombok:lombok:1.18.12'
@@ -50,11 +50,11 @@ dependencies {
 
     // bStats
     // https://repo.codemc.org/repository/maven-public
-    compile "org.bstats:bstats-bukkit:1.7"
+    implementation "org.bstats:bstats-bukkit:1.7"
 
     // json
     // https://mvnrepository.com/artifact/org.json/json
-    compile group: 'org.json', name: 'json', version: '20200518'
+    implementation group: 'org.json', name: 'json', version: '20200518'
 
     // placeholderAPI
     compileOnly "me.clip:placeholderapi:2.10.6"
@@ -66,7 +66,7 @@ dependencies {
     implementation 'net.kyori:adventure-platform-bungeecord:4.0.0-SNAPSHOT'
 
     // hikariCP
-    compile "com.zaxxer:HikariCP:3.4.5"
+    implementation "com.zaxxer:HikariCP:3.4.5"
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens

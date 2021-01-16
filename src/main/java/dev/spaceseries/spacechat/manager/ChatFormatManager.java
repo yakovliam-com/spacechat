@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class ChatFormatManager extends FormatManager {
@@ -40,7 +41,9 @@ public class ChatFormatManager extends FormatManager {
      */
     public void send(Player player, String message) {
         // get applicable format
-        Format applicableFormat = getAll().values().stream()
+        Format applicableFormat = getAll()
+                .values()
+                .stream()
                 .filter(format -> player.hasPermission(format.getPermission()) || format.getHandle().equals("default")) // player has permission OR the format is default
                 .max(Comparator.comparing(Format::getPriority))
                 .orElse(null);
@@ -61,23 +64,27 @@ public class ChatFormatManager extends FormatManager {
             components = new LiveChatFormatBuilder().build(new Trio<>(player, message, applicableFormat));
         }
 
-        // log to console
-        SpaceChat.getInstance()
-                .getLogManager()
-                .log(ChatColor.stripColor(Arrays.stream(components)
-                                .map(TextComponent::toLegacyText)
-                                .collect(Collectors.joining())),
-                        LogType.CHAT,
-                        LogToType.CONSOLE
-                );
+        // async logging
+        CompletableFuture.runAsync(() -> {
+            // log to console
+            SpaceChat.getInstance()
+                    .getLogManager()
+                    .log(ChatColor.stripColor(Arrays.stream(components)
+                                    .map(TextComponent::toLegacyText)
+                                    .collect(Collectors.joining())),
+                            LogType.CHAT,
+                            LogToType.CONSOLE
+                    );
 
-        // log to storage
-        SpaceChat.getInstance()
-                .getLogManager()
-                .log(new LogChatWrap(LogType.CHAT, player.getName(), player.getUniqueId(), message, new Date()),
-                        LogType.CHAT,
-                        LogToType.STORAGE
-                );
+            // log to storage
+            SpaceChat.getInstance()
+                    .getLogManager()
+                    .log(new LogChatWrap(LogType.CHAT, player.getName(), player.getUniqueId(), message, new Date()),
+                            LogType.CHAT,
+                            LogToType.STORAGE
+                    );
+        });
+
 
         String componentsString = ComponentSerializer.toString(components);
 
