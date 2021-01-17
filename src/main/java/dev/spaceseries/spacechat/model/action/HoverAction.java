@@ -1,13 +1,16 @@
 package dev.spaceseries.spacechat.model.action;
 
+import com.google.common.base.Joiner;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentBuilder;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -30,33 +33,13 @@ public class HoverAction {
      * @param player The player
      * @return The hover event
      */
-    public HoverEvent toHoverEvent(Player player) {
+    public HoverEvent<Component> toHoverEvent(Player player) {
         // parse action
-        HoverEvent.Action action = HoverEvent.Action.SHOW_TEXT;
+        HoverEvent.Action<Component> action = HoverEvent.Action.SHOW_TEXT;
 
-        // parse text to value using MiniMessage lib
-        ComponentBuilder componentBuilder = new ComponentBuilder("");
-
-        // parse line and append
-        int i = 0;
-        for (String line : lines) {
-            // append parsed & replace placeholders
-            componentBuilder.append(
-                    ChatColor.translateAlternateColorCodes('&',
-                            PlaceholderAPI.setPlaceholders(player, line)
-                    )
-            );
-
-            // if NOT last iteration
-            if (i < lines.size() - 1) {
-                componentBuilder.append("\n");
-            }
-
-            // incr
-            i++;
-        }
+        String line = PlaceholderAPI.setPlaceholders(player, Joiner.on("\n").join(lines));
 
         // build & return
-        return new HoverEvent(action, componentBuilder.create());
+        return HoverEvent.hoverEvent(action, LegacyComponentSerializer.legacyAmpersand().deserialize(line));
     }
 }

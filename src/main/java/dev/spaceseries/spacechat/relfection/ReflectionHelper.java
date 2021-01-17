@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.builder;
+package dev.spaceseries.spacechat.relfection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
