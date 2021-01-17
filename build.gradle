@@ -37,9 +37,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     // spigot
-    compileOnly "org.spigotmc:spigot-api:1.16.4-R0.1-SNAPSHOT"
-    // bungee
-    implementation "net.md-5:bungeecord-chat:1.16-R0.4-SNAPSHOT"
+    compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
 
     // space api
     implementation fileTree(dir: 'libs', include: ['*.jar'])
