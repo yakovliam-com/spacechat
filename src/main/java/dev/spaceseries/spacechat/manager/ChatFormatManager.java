@@ -13,6 +13,7 @@ import dev.spaceseries.spacechat.model.Format;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.Comparator;
@@ -62,7 +63,7 @@ public class ChatFormatManager extends FormatManager {
         }
 
         // async logging
-        CompletableFuture.runAsync(() -> {
+        Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> {
             // log to console
             SpaceChat.getInstance()
                     .getLogManager()
