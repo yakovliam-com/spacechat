@@ -9,28 +9,13 @@ targetCompatibility = '1.8'
 
 repositories {
     mavenCentral()
-    maven {
-        name = 'sonatype'
-        url = 'https://oss.sonatype.org/content/groups/public/'
-    }
-    maven {
-        name = 'codemc'
-        url "https://repo.codemc.org/repository/maven-public/"
-    }
-    maven {
-        name = 'spigotmc-repo'
-        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-    }
-    maven {
-        name = 'sonatype2'
-        url = 'https://oss.sonatype.org/content/repositories/releases/'
-    }
-    maven {
-        url 'https://jitpack.io'
-    }
-    maven {
-        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
-    }
+    maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+    maven { url "https://repo.codemc.org/repository/maven-public/" }
+    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/releases/' }
+    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url = "https://repo.piggypiglet.me/repository/maven-releases" }
 }
 
 dependencies {
@@ -52,6 +37,9 @@ dependencies {
 
     // placeholderAPI
     compileOnly "me.clip:placeholderapi:2.10.9"
+
+    // timeAPI
+    compile "me.piggypiglet:TimeAPI:+"
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -67,7 +55,7 @@ shadowJar {
 
     relocate 'org.bstats.bukkit', 'dev.spaceseries.spacechat'
     relocate 'dev.spaceseries.api', 'dev.spaceseries.spacechat.api'
-    
+
     from(sourceSets.main.resources.srcDirs) {
         filter ReplaceTokens, tokens: [version: project.ext.pluginVersion]
     }
