@@ -127,4 +127,11 @@ public final class SpaceChat extends JavaPlugin {
         storageManager = new StorageManager();
     }
 
+    /**
+     * Loads messages
+     */
+    public void loadMessages() {
+        Messages.renew();
+    }
+
 }

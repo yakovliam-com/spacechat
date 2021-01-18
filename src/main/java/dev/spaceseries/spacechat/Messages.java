@@ -5,20 +5,45 @@ import dev.spaceseries.api.text.Message;
 
 public class Messages {
 
+    /**
+     * Instance of this class
+     */
+    private static Messages instance;
+
+    /**
+     * Gets instance of messages class
+     * <p>(Singleton)</p>
+     *
+     * @return messages
+     */
+    public static Messages getInstance() {
+        if (instance == null)
+            instance = new Messages();
+        return instance;
+    }
+
+
+    /**
+     * Renews the messages
+     */
+    public static void renew() {
+        instance = null;
+    }
+
     /* General */
 
     // help
-    public static final Message GENERAL_HELP = Message.fromConfigurationSection(getLangConfiguration().getSection("general.help"), "general.help")
+    public Message GENERAL_HELP = Message.fromConfigurationSection(getLangConfiguration().getSection("l.help"), "general.help")
             .build();
 
     /* Reload */
 
     // success
-    public static final Message RELOAD_SUCCESS = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.success"), "reload.success")
+    public Message RELOAD_SUCCESS = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.success"), "reload.success")
             .build();
 
     // failure
-    public static final Message RELOAD_FAILURE = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.failure"), "reload.failure")
+    public Message RELOAD_FAILURE = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.failure"), "reload.failure")
             .build();
 
     /**
@@ -26,7 +51,7 @@ public class Messages {
      *
      * @return The lang configuration
      */
-    private static Configuration getLangConfiguration() {
+    private Configuration getLangConfiguration() {
         return SpaceChat.getInstance().getLangConfig().getConfig();
     }
 }

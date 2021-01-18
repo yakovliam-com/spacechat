@@ -4,12 +4,10 @@ import dev.spaceseries.api.command.Command;
 import dev.spaceseries.api.command.Permissible;
 import dev.spaceseries.api.command.SpaceCommandSender;
 import dev.spaceseries.api.command.SubCommand;
+import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
 
 import java.util.concurrent.CompletableFuture;
-
-import static dev.spaceseries.spacechat.Messages.RELOAD_FAILURE;
-import static dev.spaceseries.spacechat.Messages.RELOAD_SUCCESS;
 
 @SubCommand
 @Permissible("space.chat.reload")
@@ -32,12 +30,16 @@ public class ReloadCommand extends Command {
 
                 // reload storage
                 SpaceChat.getInstance().loadStorage();
+
+                // load messages
+                SpaceChat.getInstance().loadMessages();
+
             } catch (Exception e) {
-                RELOAD_FAILURE.msg(sender);
+                Messages.getInstance().RELOAD_FAILURE.msg(sender);
                 e.printStackTrace();
                 return;
             }
-            RELOAD_SUCCESS.msg(sender);
+            Messages.getInstance().RELOAD_SUCCESS.msg(sender);
         });
     }
 }

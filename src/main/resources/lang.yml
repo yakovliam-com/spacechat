@@ -3,7 +3,7 @@ general:
     text:
       - "&8&l[&d&lS&5&lS&8&l]&r &bChat &7&o(v2)&r &3help"
       - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/spacechat reload $&f&l(CLICK ME)$"
-      - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Reload chat formats"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Reload plugin &7(chat formats, messages)"
     extras:
       1:
         tooltip:
