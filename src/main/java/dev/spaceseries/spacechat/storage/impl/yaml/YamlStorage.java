@@ -7,12 +7,12 @@ import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
-import dev.spaceseries.spacechat.storage.IStorage;
+import dev.spaceseries.spacechat.storage.Storage;
 
 import java.io.File;
 import java.util.Date;
 
-public class YamlStorage implements IStorage {
+public class YamlStorage implements Storage {
 
     /**
      * The Yaml configuration for logging

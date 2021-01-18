@@ -4,7 +4,7 @@ import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
-import dev.spaceseries.spacechat.storage.IStorage;
+import dev.spaceseries.spacechat.storage.Storage;
 import dev.spaceseries.spacechat.storage.impl.mysql.factory.MysqlConnectionManager;
 import dev.spaceseries.spacechat.util.date.DateUtil;
 
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 
 import static dev.spaceseries.spacechat.configuration.Config.MYSQL_TABLES_CHAT_LOGS;
 
-public class MysqlStorage implements IStorage {
+public class MysqlStorage implements Storage {
 
     // Creates chat logging table (automatically)
     public static final String LOG_CHAT_CREATION_STATEMENT = "CREATE TABLE IF NOT EXISTS `%s` (\n" +

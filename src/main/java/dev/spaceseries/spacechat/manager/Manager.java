@@ -2,7 +2,7 @@ package dev.spaceseries.spacechat.manager;
 
 import java.util.*;
 
-public interface IManager<K, V> {
+public interface Manager<K, V> {
 
     Map<K, V> getAll();
 

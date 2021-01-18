@@ -1,14 +1,14 @@
 package dev.spaceseries.spacechat.builder.part;
 
 import dev.spaceseries.api.config.impl.Configuration;
-import dev.spaceseries.spacechat.builder.IBuilder;
+import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.builder.extra.ExtraBuilder;
 import dev.spaceseries.spacechat.model.FormatPart;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FormatPartBuilder implements IBuilder<Configuration, List<FormatPart>> {
+public class FormatPartBuilder implements Builder<Configuration, List<FormatPart>> {
 
     /**
      * Builds an V (output) from a K (input)

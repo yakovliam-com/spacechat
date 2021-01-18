@@ -1,11 +1,11 @@
 package dev.spaceseries.spacechat.builder.format;
 
 import dev.spaceseries.api.config.impl.Configuration;
-import dev.spaceseries.spacechat.builder.IBuilder;
+import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.builder.part.FormatPartBuilder;
 import dev.spaceseries.spacechat.model.Format;
 
-public class FormatBuilder implements IBuilder<Configuration, Format> {
+public class FormatBuilder implements Builder<Configuration, Format> {
 
     /**
      * Builds a format from a Configuration

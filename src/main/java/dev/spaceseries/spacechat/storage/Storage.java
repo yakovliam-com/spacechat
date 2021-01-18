@@ -2,7 +2,7 @@ package dev.spaceseries.spacechat.storage;
 
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 
-public interface IStorage {
+public interface Storage {
 
     /**
      * Logs to the storage medium

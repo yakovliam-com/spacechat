@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.builder.live;
 
 import dev.spaceseries.api.util.Trio;
-import dev.spaceseries.spacechat.builder.IBuilder;
+import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.model.Extra;
 import dev.spaceseries.spacechat.model.Format;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -12,7 +12,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
-public class LiveChatFormatBuilder implements IBuilder<Trio<Player, Format, String>, TextComponent> {
+public class LiveChatFormatBuilder implements Builder<Trio<Player, Format, String>, TextComponent> {
 
     /**
      * Builds an array of baseComponents from a message, player, and format

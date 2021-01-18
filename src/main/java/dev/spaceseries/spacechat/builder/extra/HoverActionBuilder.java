@@ -1,13 +1,13 @@
 package dev.spaceseries.spacechat.builder.extra;
 
 import dev.spaceseries.api.config.impl.Configuration;
-import dev.spaceseries.spacechat.builder.IBuilder;
+import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.model.action.HoverAction;
 
 import java.util.Collections;
 import java.util.List;
 
-public class HoverActionBuilder implements IBuilder<Configuration, HoverAction> {
+public class HoverActionBuilder implements Builder<Configuration, HoverAction> {
 
     /**
      * Builds an V (output) from a K (input)

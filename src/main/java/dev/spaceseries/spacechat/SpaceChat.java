@@ -7,7 +7,7 @@ import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.configuration.FormatsConfig;
 import dev.spaceseries.spacechat.configuration.LangConfig;
 import dev.spaceseries.spacechat.listener.ChatListener;
-import dev.spaceseries.spacechat.logging.LogManager;
+import dev.spaceseries.spacechat.logging.LogManagerImpl;
 import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import dev.spaceseries.spacechat.storage.StorageManager;
 import lombok.Getter;
@@ -55,7 +55,7 @@ public final class SpaceChat extends JavaPlugin {
      * The log manager
      */
     @Getter
-    private LogManager logManager;
+    private LogManagerImpl logManagerImpl;
 
     /**
      * The storage manager
@@ -89,7 +89,7 @@ public final class SpaceChat extends JavaPlugin {
         loadStorage();
 
         // initialize log manager
-        logManager = new LogManager();
+        logManagerImpl = new LogManagerImpl();
 
         // initialize commands
         new SpaceChatCommand();

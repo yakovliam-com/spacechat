@@ -18,7 +18,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Comparator;
 import java.util.Date;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class ChatFormatManager extends FormatManager {
@@ -66,7 +65,7 @@ public class ChatFormatManager extends FormatManager {
         Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> {
             // log to console
             SpaceChat.getInstance()
-                    .getLogManager()
+                    .getLogManagerImpl()
                     .log(components.children()
                             .stream()
                             .map(c -> LegacyComponentSerializer.legacySection().serialize(c))
@@ -76,7 +75,7 @@ public class ChatFormatManager extends FormatManager {
 
             // log to storage
             SpaceChat.getInstance()
-                    .getLogManager()
+                    .getLogManagerImpl()
                     .log(new LogChatWrap(LogType.CHAT, player.getName(), player.getUniqueId(), message, new Date()),
                             LogType.CHAT,
                             LogToType.STORAGE

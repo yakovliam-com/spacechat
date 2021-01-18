@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.builder;
 
-public interface IBuilder<K, V> {
+public interface Builder<K, V> {
 
     /**
      * Builds an V (output) from a K (input)

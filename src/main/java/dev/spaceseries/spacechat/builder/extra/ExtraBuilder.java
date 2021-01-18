@@ -1,10 +1,10 @@
 package dev.spaceseries.spacechat.builder.extra;
 
 import dev.spaceseries.api.config.impl.Configuration;
-import dev.spaceseries.spacechat.builder.IBuilder;
+import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.model.Extra;
 
-public class ExtraBuilder implements IBuilder<Configuration, Extra> {
+public class ExtraBuilder implements Builder<Configuration, Extra> {
 
     /**
      * Builds an V (output) from a K (input)

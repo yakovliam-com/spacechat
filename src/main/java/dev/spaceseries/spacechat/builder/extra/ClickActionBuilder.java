@@ -1,14 +1,14 @@
 package dev.spaceseries.spacechat.builder.extra;
 
 import dev.spaceseries.api.config.impl.Configuration;
-import dev.spaceseries.spacechat.builder.IBuilder;
+import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.model.action.ClickAction;
 import dev.spaceseries.spacechat.model.action.ClickActionType;
 import org.bukkit.Bukkit;
 
 import java.util.logging.Level;
 
-public class ClickActionBuilder implements IBuilder<Configuration, ClickAction> {
+public class ClickActionBuilder implements Builder<Configuration, ClickAction> {
 
     /**
      * Builds an V (output) from a K (input)

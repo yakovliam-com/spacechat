@@ -11,7 +11,7 @@ public class StorageManager {
      * The current storage medium
      */
     @Getter
-    private IStorage current;
+    private Storage current;
 
     /**
      * Initializes storage

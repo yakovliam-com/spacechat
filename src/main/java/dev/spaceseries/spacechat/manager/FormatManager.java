@@ -8,7 +8,7 @@ import dev.spaceseries.spacechat.model.Format;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FormatManager implements IManager<String, Format> {
+public class FormatManager implements Manager<String, Format> {
 
     /**
      * The format map
