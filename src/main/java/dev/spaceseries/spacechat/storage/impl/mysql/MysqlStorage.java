@@ -19,7 +19,7 @@ public class MysqlStorage implements IStorage {
     public static final String LOG_CHAT_CREATION_STATEMENT = "CREATE TABLE IF NOT EXISTS `%s` (\n" +
             "`uuid` TEXT NOT NULL,\n" +
             "`name` TEXT,\n" +
-            "`message` INT,\n" +
+            "`message` TEXT,\n" +
             "`date` TEXT NOT NULL,\n" +
             "`id` INT NOT NULL AUTO_INCREMENT,\n" +
             "PRIMARY KEY (`id`)\n" +
