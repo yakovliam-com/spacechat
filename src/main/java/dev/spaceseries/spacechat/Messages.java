@@ -33,7 +33,7 @@ public class Messages {
     /* General */
 
     // help
-    public Message GENERAL_HELP = Message.fromConfigurationSection(getLangConfiguration().getSection("l.help"), "general.help")
+    public Message GENERAL_HELP = Message.fromConfigurationSection(getLangConfiguration().getSection("general.help"), "general.help")
             .build();
 
     /* Reload */
