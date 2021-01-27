@@ -8,7 +8,7 @@ import java.sql.SQLException;
 /**
  * If extended, the child class can call an execution method
  */
-public class SqlAble {
+public abstract class SqlAble {
 
     protected void execute(Connection connection, String sql, Object... replacements) {
 
