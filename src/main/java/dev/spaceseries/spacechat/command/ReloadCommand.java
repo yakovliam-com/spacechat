@@ -35,11 +35,11 @@ public class ReloadCommand extends Command {
                 SpaceChat.getInstance().loadMessages();
 
             } catch (Exception e) {
-                Messages.getInstance().RELOAD_FAILURE.msg(sender);
+                Messages.getInstance().reloadFailure.msg(sender);
                 e.printStackTrace();
                 return;
             }
-            Messages.getInstance().RELOAD_SUCCESS.msg(sender);
+            Messages.getInstance().reloadSuccess.msg(sender);
         });
     }
 }

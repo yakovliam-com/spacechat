@@ -33,17 +33,17 @@ public class Messages {
     /* General */
 
     // help
-    public Message GENERAL_HELP = Message.fromConfigurationSection(getLangConfiguration().getSection("general.help"), "general.help")
+    public Message generalHelp = Message.fromConfigurationSection(getLangConfiguration().getSection("general.help"), "general.help")
             .build();
 
     /* Reload */
 
     // success
-    public Message RELOAD_SUCCESS = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.success"), "reload.success")
+    public Message reloadSuccess = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.success"), "reload.success")
             .build();
 
     // failure
-    public Message RELOAD_FAILURE = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.failure"), "reload.failure")
+    public Message reloadFailure = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.failure"), "reload.failure")
             .build();
 
     /**

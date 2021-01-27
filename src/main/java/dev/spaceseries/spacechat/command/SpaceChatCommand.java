@@ -21,6 +21,6 @@ public class SpaceChatCommand extends Command {
     @Override
     public void onCommand(SpaceCommandSender sender, String s, String... args) {
         // send help message
-        Messages.getInstance().GENERAL_HELP.msg(sender);
+        Messages.getInstance().generalHelp.msg(sender);
     }
 }
