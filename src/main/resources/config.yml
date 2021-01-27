@@ -1,5 +1,5 @@
 ####################################
-# SpaceChat Configuration :)       #
+# SpaceChat Configuration          #
 # v2                               #
 # Written by yakovliam             #
 # Visit https://www.yakovliam.com  #
@@ -30,3 +30,12 @@ logging:
   chat:
     log-to-console: true
     log-to-storage: true
+
+#=#=#=#=#=#=#=#=#=#=#=#=#
+# Permissions           #
+#                       #
+# Use chat colors (&)   #
+# space.chat.chatcolor  #
+#=#=#=#=#=#=#=#=#=#=#=#=#
+permissions:
+  use-chat-colors: "space.chat.chatcolor"

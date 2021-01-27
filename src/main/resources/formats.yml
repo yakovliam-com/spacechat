@@ -7,6 +7,7 @@
 # https://docs.yakovliam.com/                                               #
 # Refer to the MiniMessage documentation for help with formatting:          #
 # https://bit.ly/MiniMessageDocs                                            #
+# https://docs.adventure.kyori.net/minimessage.html#format                  #
 #############################################################################
 
 #=#=#=#=#=#=#=#=#=#=#=#=#
@@ -27,7 +28,7 @@ chat:
       # these names are ambiguous. make them whatever you want and however many you want!
       prefix:
         # the text shown (Can't use MiniMessage parsing for this!)
-        text: "&(#34eb96)Default &8| "
+        text: "&#34eb96Default &8| "
 
         # interaction events. right now you can do something on "click", or when someone "hovers"
         extra:
@@ -42,8 +43,8 @@ chat:
           hover:
             lines:
               # these are the lines shown when someone hovers over the message
-              - "&bCLICK ME"
-              - "&7to purchase ranks!"
+              - "&b&lClick to"
+              - "&7purchase &oranks"
 
       username:
         text: "&7%player_displayname% "
@@ -53,10 +54,10 @@ chat:
             value: "/msg %player_name%"
           hover:
             lines:
-              - "&bCLICK ME"
-              - "&7to message %player_name%!"
+              - "&b&lClick to"
+              - "&7message &o%player_name%"
 
-      # you don't have to include extra here at all....it can just be text :)
+      # you don't have to include extra here at all; it can just be text
       separator:
         text: "&8&l\u00BB&r "
 

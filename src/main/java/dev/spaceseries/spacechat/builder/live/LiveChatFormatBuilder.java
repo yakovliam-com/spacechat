@@ -2,6 +2,7 @@ package dev.spaceseries.spacechat.builder.live;
 
 import dev.spaceseries.api.util.Trio;
 import dev.spaceseries.spacechat.builder.Builder;
+import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.model.Extra;
 import dev.spaceseries.spacechat.model.Format;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -11,6 +12,8 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
+
+import static dev.spaceseries.spacechat.configuration.Config.PERMISSIONS_USE_CHAT_COLORS;
 
 public class LiveChatFormatBuilder implements Builder<Trio<Player, Format, String>, TextComponent> {
 
@@ -38,7 +41,15 @@ public class LiveChatFormatBuilder implements Builder<Trio<Player, Format, Strin
             if (formatPart.getLine() != null) {
                 partComponentBuilder.append(
                         MiniMessage.get()
-                                .parse(PlaceholderAPI.setPlaceholders(player, formatPart.getLine()), "chat_message", message)
+                                .parse(PlaceholderAPI.setPlaceholders(player, formatPart.getLine())
+                                        .replace("<chat_message>",
+                                                LegacyComponentSerializer
+                                                        .legacySection()
+                                                        .serialize(player.hasPermission(PERMISSIONS_USE_CHAT_COLORS.get(Config.get())) ?
+                                                                LegacyComponentSerializer
+                                                                        .legacyAmpersand()
+                                                                        .deserialize(message) :
+                                                                Component.text(message))))
 
                 );
                 // append partComponentBuilder to main builder
@@ -52,9 +63,11 @@ public class LiveChatFormatBuilder implements Builder<Trio<Player, Format, Strin
             text = PlaceholderAPI.setPlaceholders(player, text);
 
             // build text from legacy (and replace <chat_message> with the actual message)
-            TextComponent parsedText = LegacyComponentSerializer.legacyAmpersand().deserialize(
-                    text.replace("<chat_message>", message)
-            );
+            // and check permissions for chat colors
+            Component parsedText = player.hasPermission(PERMISSIONS_USE_CHAT_COLORS.get(Config.get())) ? LegacyComponentSerializer.legacyAmpersand().deserialize(
+                    text.replace("<chat_message>", message)) :
+                    LegacyComponentSerializer.legacyAmpersand().deserialize(text).replaceText((b) -> b.match("<chat_message>")
+                            .replacement(message));
 
             /* Retaining events for MULTIPLE components */
             // parse extra (if applicable)
