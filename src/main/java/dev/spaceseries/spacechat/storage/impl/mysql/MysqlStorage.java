@@ -8,6 +8,7 @@ import dev.spaceseries.spacechat.storage.Storage;
 import dev.spaceseries.spacechat.storage.impl.mysql.factory.MysqlConnectionManager;
 import dev.spaceseries.spacechat.util.date.DateUtil;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -56,8 +57,11 @@ public class MysqlStorage implements Storage {
      */
     private void logChat(LogChatWrap data) {
         // create prepared statement
+        PreparedStatement preparedStatement = null;
+        Connection connection = mysqlConnectionManager.getConnection();
+
         try {
-            PreparedStatement preparedStatement = mysqlConnectionManager.getConnection().prepareStatement(LOG_CHAT);
+            preparedStatement = mysqlConnectionManager.getConnection().prepareStatement(LOG_CHAT);
             // replace
             preparedStatement.setString(1, data.getSenderUUID().toString());
             preparedStatement.setString(2, data.getSenderName());
@@ -69,6 +73,15 @@ public class MysqlStorage implements Storage {
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }finally {
+            try {
+                preparedStatement.close();
+            } catch (SQLException ignored) {
+            }
+            try {
+                connection.close();
+            } catch (SQLException ignored) {
+            }
         }
     }
 }
