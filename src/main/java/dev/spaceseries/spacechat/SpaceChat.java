@@ -6,10 +6,12 @@ import dev.spaceseries.spacechat.command.SpaceChatCommand;
 import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.configuration.FormatsConfig;
 import dev.spaceseries.spacechat.configuration.LangConfig;
+import dev.spaceseries.spacechat.dependency.DependencyLoader;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
 import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import dev.spaceseries.spacechat.storage.StorageManager;
+import me.bristermitten.pdm.PluginDependencyManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SpaceChat extends JavaPlugin {
@@ -67,6 +69,9 @@ public final class SpaceChat extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        // load dependencies
+        new DependencyLoader().load(this);
+
         // initialize space api
         plugin = new BukkitPlugin(this);
 

@@ -1,0 +1,15 @@
+{
+  "repositories": {
+    "maven3": "https://oss.sonatype.org/content/groups/public/",
+    "maven9": "https://repo.piggypiglet.me/repository/maven-releases/"
+  },
+  "dependencies": [
+    {
+      "groupId": "me.piggypiglet",
+      "artifactId": "TimeAPI",
+      "version": "1.9",
+      "repository": "maven9",
+      "transitive": []
+    }
+  ]
+}
