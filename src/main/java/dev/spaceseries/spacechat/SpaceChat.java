@@ -1,6 +1,5 @@
 package dev.spaceseries.spacechat;
 
-import dev.spaceseries.api.abstraction.plugin.BukkitPlugin;
 import dev.spaceseries.api.abstraction.plugin.Plugin;
 import dev.spaceseries.spacechat.command.SpaceChatCommand;
 import dev.spaceseries.spacechat.configuration.Config;
@@ -10,8 +9,8 @@ import dev.spaceseries.spacechat.dependency.DependencyLoader;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
 import dev.spaceseries.spacechat.manager.ChatFormatManager;
+import dev.spaceseries.spacechat.space.SpacePlugin;
 import dev.spaceseries.spacechat.storage.StorageManager;
-import me.bristermitten.pdm.PluginDependencyManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SpaceChat extends JavaPlugin {
@@ -24,7 +23,7 @@ public final class SpaceChat extends JavaPlugin {
     /**
      * The instance of the space api
      */
-    private Plugin plugin;
+    private SpacePlugin plugin;
 
     /**
      * The formats config
@@ -62,6 +61,8 @@ public final class SpaceChat extends JavaPlugin {
     @Override
     public void onLoad() {
         instance = this;
+        // load dependencies
+        new DependencyLoader().load(this);
     }
 
     /**
@@ -69,11 +70,8 @@ public final class SpaceChat extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        // load dependencies
-        new DependencyLoader().load(this);
-
         // initialize space api
-        plugin = new BukkitPlugin(this);
+        plugin = new SpacePlugin(this);
 
         // load configs
         loadConfigs();
@@ -140,7 +138,7 @@ public final class SpaceChat extends JavaPlugin {
      * @return plugin
      */
     public Plugin getPlugin() {
-        return plugin;
+        return plugin.getPlugin();
     }
 
     /**

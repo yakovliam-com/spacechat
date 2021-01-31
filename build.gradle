@@ -32,7 +32,7 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
 
     // space api
-    implementation 'dev.spaceseries:spaceapi:1.0.0-SNAPSHOT'
+    compileOnly 'dev.spaceseries:spaceapi:1.0.0-SNAPSHOT'
 
     // bStats
     // https://repo.codemc.org/repository/maven-public
@@ -51,7 +51,6 @@ shadowJar {
     archiveName("SpaceChat-${version}.jar")
 
     relocate 'org.bstats.bukkit', "${group}.spacechat"
-    relocate 'dev.spaceseries.api', "${group}.spacechat.api"
 
     from(sourceSets.main.resources.srcDirs) {
         filter ReplaceTokens, tokens: [version: version]

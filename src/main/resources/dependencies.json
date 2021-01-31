@@ -1,14 +1,21 @@
 {
   "repositories": {
-    "maven3": "https://oss.sonatype.org/content/groups/public/",
-    "maven9": "https://repo.piggypiglet.me/repository/maven-releases/"
+    "maven1": "https://repo.piggypiglet.me/repository/maven-releases/",
+    "maven2": "https://repo.yakovliam.com/snapshots/"
   },
   "dependencies": [
     {
       "groupId": "me.piggypiglet",
       "artifactId": "TimeAPI",
       "version": "1.9",
-      "repository": "maven9",
+      "repository": "maven1",
+      "transitive": []
+    },
+    {
+      "groupId": "dev.spaceseries",
+      "artifactId": "spaceapi",
+      "version": "1.0.0-SNAPSHOT",
+      "repository": "maven2",
       "transitive": []
     }
   ]

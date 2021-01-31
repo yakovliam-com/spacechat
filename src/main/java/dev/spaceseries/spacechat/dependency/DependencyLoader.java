@@ -1,7 +1,6 @@
 package dev.spaceseries.spacechat.dependency;
 
 import me.bristermitten.pdm.PluginDependencyManager;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 public class DependencyLoader {
