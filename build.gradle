@@ -1,21 +1,27 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id "com.github.johnrengelman.shadow" version "5.2.0"
 }
 
 apply plugin: 'java'
 
-sourceCompatibility = '1.8'
-targetCompatibility = '1.8'
+// naming
+project.ext.majorVersion = '2'
+project.ext.midVersion = '0'
+project.ext.minorVersion = '0'
+project.ext.versionType = 'SNAPSHOT'
+version = project.ext.majorVersion + '.' + project.ext.midVersion + '.' + project.ext.minorVersion + "-" + project.ext.versionType
+group = 'dev.spaceseries'
 
 repositories {
     mavenCentral()
-    maven { url = 'https://oss.sonatype.org/content/groups/public/' }
-    maven { url "https://repo.codemc.org/repository/maven-public/" }
-    maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    maven { url = 'https://oss.sonatype.org/content/repositories/releases/' }
-    maven { url = 'https://jitpack.io' }
-    maven { url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-    maven { url = "https://repo.piggypiglet.me/repository/maven-releases" }
+    maven { url 'https://oss.sonatype.org/content/groups/public/' }
+    maven { url 'https://repo.codemc.org/repository/maven-public/' }
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/central/' }
+    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url 'https://repo.piggypiglet.me/repository/maven-releases/' }
+    maven { url 'https://repo.yakovliam.com/snapshots/' }
 }
 
 dependencies {
@@ -25,11 +31,7 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
 
     // space api
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    // lombok
-    compileOnly 'org.projectlombok:lombok:1.18.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+    implementation 'dev.spaceseries:spaceapi:1.0.0-SNAPSHOT'
 
     // bStats
     // https://repo.codemc.org/repository/maven-public
@@ -39,25 +41,19 @@ dependencies {
     compileOnly "me.clip:placeholderapi:2.10.9"
 
     // timeAPI
-    compile "me.piggypiglet:TimeAPI:+"
+    implementation "me.piggypiglet:TimeAPI:1.9"
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
 
 shadowJar {
-    project.ext.majorVersion = '2'
-    project.ext.midVersion = '0'
-    project.ext.minorVersion = '0'
-    project.ext.versionType = 'SNAPSHOT'
-    project.ext.pluginVersion = project.ext.majorVersion + '.' + project.ext.midVersion + '.' + project.ext.minorVersion + "-" + project.ext.versionType
+    archiveName("SpaceChat-${version}.jar")
 
-    archiveName = "SpaceChat-${project.ext.pluginVersion}.jar"
-
-    relocate 'org.bstats.bukkit', 'dev.spaceseries.spacechat'
-    relocate 'dev.spaceseries.api', 'dev.spaceseries.spacechat.api'
+    relocate 'org.bstats.bukkit', "${group}.spacechat"
+    relocate 'dev.spaceseries.api', "${group}.spacechat.api"
 
     from(sourceSets.main.resources.srcDirs) {
-        filter ReplaceTokens, tokens: [version: project.ext.pluginVersion]
+        filter ReplaceTokens, tokens: [version: version]
     }
 }
 
@@ -65,7 +61,7 @@ shadowJar {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'dev.spaceseries.spacechat.SpaceChat'
+                'Main-Class': "${group}.spacechat.SpaceChat"
         )
     }
     from {

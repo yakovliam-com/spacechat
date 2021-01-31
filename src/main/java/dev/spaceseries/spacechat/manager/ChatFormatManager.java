@@ -64,6 +64,7 @@ public class ChatFormatManager extends FormatManager {
         // async logging
         Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> {
             // log to console
+            //noinspection deprecation
             SpaceChat.getInstance()
                     .getLogManagerImpl()
                     .log(components.children()
@@ -86,7 +87,5 @@ public class ChatFormatManager extends FormatManager {
 
         Message.getAudienceProvider().players().sendMessage(components);
 
-        // String json = GsonComponentSerializer.gson().serialize(components);
-        //  ReflectionHelper.sendPacket(ReflectionHelper.createTextPacket(json), Bukkit.getOnlinePlayers().toArray(new Player[0]));
     }
 }

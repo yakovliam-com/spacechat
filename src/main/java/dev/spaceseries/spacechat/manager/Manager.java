@@ -11,5 +11,4 @@ public interface Manager<K, V> {
     V get(K k, V def);
 
     void add(K k, V v);
-
 }

@@ -32,7 +32,7 @@ public class MysqlStorage implements Storage {
     /**
      * The connection manager
      */
-    private MysqlConnectionManager mysqlConnectionManager;
+    private final MysqlConnectionManager mysqlConnectionManager;
 
     /**
      * Initializes new mysql storage
@@ -57,11 +57,8 @@ public class MysqlStorage implements Storage {
      */
     private void logChat(LogChatWrap data) {
         // create prepared statement
-        PreparedStatement preparedStatement = null;
-        Connection connection = mysqlConnectionManager.getConnection();
 
-        try {
-            preparedStatement = mysqlConnectionManager.getConnection().prepareStatement(LOG_CHAT);
+        try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(LOG_CHAT)) {
             // replace
             preparedStatement.setString(1, data.getSenderUUID().toString());
             preparedStatement.setString(2, data.getSenderName());
@@ -73,15 +70,6 @@ public class MysqlStorage implements Storage {
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
-        }finally {
-            try {
-                preparedStatement.close();
-            } catch (SQLException ignored) {
-            }
-            try {
-                connection.close();
-            } catch (SQLException ignored) {
-            }
         }
     }
 }

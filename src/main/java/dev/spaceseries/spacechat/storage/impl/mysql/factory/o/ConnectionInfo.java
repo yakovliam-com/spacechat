@@ -2,56 +2,47 @@ package dev.spaceseries.spacechat.storage.impl.mysql.factory.o;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.Getter;
 
 public final class ConnectionInfo {
 
     /**
      * The url to connect to
      */
-    @Getter
     private final String address;
 
     /**
      * The port
      */
-    @Getter
     private final int port;
 
     /**
      * The database name
      */
-    @Getter
     private final String database;
 
     /**
      * The connection credentials
      */
-    @Getter
     private final Credentials credentials;
 
     /**
      * Use ssl?
      */
-    @Getter
     private final boolean useSSL;
 
     /**
      * Verify server certificate?
      */
-    @Getter
     private final boolean verifyServerCertificate;
 
     /**
      * The hikari config
      */
-    @Getter
     private HikariConfig config;
 
     /**
      * The hikari data source
      */
-    @Getter
     private HikariDataSource dataSource;
 
     /**
@@ -79,5 +70,77 @@ public final class ConnectionInfo {
 
         // create data source
         dataSource = new HikariDataSource(config);
+    }
+
+    /**
+     * Returns address
+     *
+     * @return address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * Returns port
+     *
+     * @return port
+     */
+    public int getPort() {
+        return port;
+    }
+
+    /**
+     * Returns database
+     *
+     * @return database
+     */
+    public String getDatabase() {
+        return database;
+    }
+
+    /**
+     * Returns credentials
+     *
+     * @return credentials
+     */
+    public Credentials getCredentials() {
+        return credentials;
+    }
+
+    /**
+     * Returns is using ssl
+     *
+     * @return is using ssl
+     */
+    public boolean isUseSSL() {
+        return useSSL;
+    }
+
+    /**
+     * Returns is verify server certificate
+     *
+     * @return is verify server certificate
+     */
+    public boolean isVerifyServerCertificate() {
+        return verifyServerCertificate;
+    }
+
+    /**
+     * Returns config
+     *
+     * @return config
+     */
+    public HikariConfig getConfig() {
+        return config;
+    }
+
+    /**
+     * Returns datasource
+     *
+     * @return datasource
+     */
+    public HikariDataSource getDataSource() {
+        return dataSource;
     }
 }

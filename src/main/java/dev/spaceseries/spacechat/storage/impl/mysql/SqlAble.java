@@ -5,18 +5,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-/**
- * If extended, the child class can call an execution method
- */
 public abstract class SqlAble {
 
     protected void execute(Connection connection, String sql, Object... replacements) {
 
-        // try catch
-        try {
-            // prepare
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
+        // try catch prepare
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             int i = 1;
             // replace
             for (Object replacement : replacements) {
@@ -49,15 +43,18 @@ public abstract class SqlAble {
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+            } catch (SQLException ignored) {
+            }
         }
     }
 
     protected ResultSet executeQuery(Connection connection, String sql, Object... replacements) {
 
-        // try catch
-        try {
-            // prepare
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        // try catch prepare
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
 
             int i = 1;
             // replace

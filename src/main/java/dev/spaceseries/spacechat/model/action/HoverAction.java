@@ -1,31 +1,36 @@
 package dev.spaceseries.spacechat.model.action;
 
 import com.google.common.base.Joiner;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentBuilder;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
 public class HoverAction {
 
     /**
      * The list of lines in the
      * hover action
      */
-    @Getter
-    @Setter
     private List<String> lines;
+
+    /**
+     * Construct hover action
+     *
+     * @param lines lines
+     */
+    public HoverAction(List<String> lines) {
+        this.lines = lines;
+    }
+
+    /**
+     * Construct hover action
+     */
+    public HoverAction() {
+    }
 
     /**
      * Converts the hover action to a BungeeCord / Spigot hover event
@@ -41,5 +46,23 @@ public class HoverAction {
 
         // build & return
         return HoverEvent.hoverEvent(action, LegacyComponentSerializer.legacyAmpersand().deserialize(line));
+    }
+
+    /**
+     * Returns lines
+     *
+     * @return lines
+     */
+    public List<String> getLines() {
+        return lines;
+    }
+
+    /**
+     * Sets lines
+     *
+     * @param lines lines
+     */
+    public void setLines(List<String> lines) {
+        this.lines = lines;
     }
 }

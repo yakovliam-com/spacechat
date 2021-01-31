@@ -1,16 +1,36 @@
 package dev.spaceseries.spacechat.logging.wrap;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-
-@AllArgsConstructor
 public class LogWrapper {
 
     /**
      * The type of log
      */
-    @Getter
-    @Setter
     private LogType logType;
+
+    /**
+     * Construct log wrapper
+     *
+     * @param logType log type
+     */
+    public LogWrapper(LogType logType) {
+        this.logType = logType;
+    }
+
+    /**
+     * Returns log type
+     *
+     * @return log type
+     */
+    public LogType getLogType() {
+        return logType;
+    }
+
+    /**
+     * Sets log type
+     *
+     * @param logType log type
+     */
+    public void setLogType(LogType logType) {
+        this.logType = logType;
+    }
 }

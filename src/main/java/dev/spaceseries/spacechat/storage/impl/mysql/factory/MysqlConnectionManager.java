@@ -5,7 +5,6 @@ import dev.spaceseries.spacechat.storage.impl.mysql.MysqlStorage;
 import dev.spaceseries.spacechat.storage.impl.mysql.SqlAble;
 import dev.spaceseries.spacechat.storage.impl.mysql.factory.o.ConnectionInfo;
 import dev.spaceseries.spacechat.storage.impl.mysql.factory.o.Credentials;
-import lombok.Getter;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,13 +16,7 @@ public final class MysqlConnectionManager extends SqlAble {
     /**
      * The connection info
      */
-    @Getter
     private final ConnectionInfo connectionInfo;
-
-    /**
-     * The connection
-     */
-    private Connection connection;
 
     /**
      * Initializes Mysql Connection Manager
@@ -63,5 +56,13 @@ public final class MysqlConnectionManager extends SqlAble {
         }
 
         return null;
+    }
+
+    /**
+     * Returns connection info
+     * @return connection info
+     */
+    public ConnectionInfo getConnectionInfo() {
+        return connectionInfo;
     }
 }

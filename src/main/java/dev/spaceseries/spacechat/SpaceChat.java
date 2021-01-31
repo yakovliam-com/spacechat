@@ -10,7 +10,6 @@ import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
 import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import dev.spaceseries.spacechat.storage.StorageManager;
-import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SpaceChat extends JavaPlugin {
@@ -18,49 +17,41 @@ public final class SpaceChat extends JavaPlugin {
     /**
      * The instance of the main class (this class)
      */
-    @Getter
     private static SpaceChat instance;
 
     /**
      * The instance of the space api
      */
-    @Getter
     private Plugin plugin;
 
     /**
      * The formats config
      */
-    @Getter
     private FormatsConfig formatsConfig;
 
     /**
      * The main plugin config
      */
-    @Getter
     private Config spaceChatConfig;
 
     /**
      * The plugin's language configuration
      */
-    @Getter
     private LangConfig langConfig;
 
     /**
      * The chat format manager
      */
-    @Getter
     private ChatFormatManager chatFormatManager;
 
     /**
      * The log manager
      */
-    @Getter
     private LogManagerImpl logManagerImpl;
 
     /**
      * The storage manager
      */
-    @Getter
     private StorageManager storageManager;
 
     /**
@@ -134,4 +125,70 @@ public final class SpaceChat extends JavaPlugin {
         Messages.renew();
     }
 
+    public static SpaceChat getInstance() {
+        return instance;
+    }
+
+    /**
+     * Returns space plugin
+     *
+     * @return plugin
+     */
+    public Plugin getPlugin() {
+        return plugin;
+    }
+
+    /**
+     * Returns formats config
+     *
+     * @return formats config
+     */
+    public FormatsConfig getFormatsConfig() {
+        return formatsConfig;
+    }
+
+    /**
+     * Returns main configuration
+     *
+     * @return config
+     */
+    public Config getSpaceChatConfig() {
+        return spaceChatConfig;
+    }
+
+    /**
+     * Get lang configuration
+     *
+     * @return lang config
+     */
+    public LangConfig getLangConfig() {
+        return langConfig;
+    }
+
+    /**
+     * Returns chat format manager
+     *
+     * @return chat format manager
+     */
+    public ChatFormatManager getChatFormatManager() {
+        return chatFormatManager;
+    }
+
+    /**
+     * Returns log manager implementation
+     *
+     * @return log manager
+     */
+    public LogManagerImpl getLogManagerImpl() {
+        return logManagerImpl;
+    }
+
+    /**
+     * Returns storage manager
+     *
+     * @return storage manager
+     */
+    public StorageManager getStorageManager() {
+        return storageManager;
+    }
 }

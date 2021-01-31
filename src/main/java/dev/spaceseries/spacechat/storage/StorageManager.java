@@ -3,14 +3,12 @@ package dev.spaceseries.spacechat.storage;
 import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.storage.impl.mysql.MysqlStorage;
 import dev.spaceseries.spacechat.storage.impl.yaml.YamlStorage;
-import lombok.Getter;
 
 public class StorageManager {
 
     /**
      * The current storage medium
      */
-    @Getter
     private Storage current;
 
     /**
@@ -26,5 +24,14 @@ public class StorageManager {
         } else if (using.equalsIgnoreCase("mysql")) {
             current = new MysqlStorage();
         }
+    }
+
+    /**
+     * Returns storage
+     *
+     * @return storage
+     */
+    public Storage getCurrent() {
+        return current;
     }
 }

@@ -22,7 +22,7 @@ public class YamlStorage implements Storage {
     /**
      * The gson instance
      */
-    private Gson gson;
+    private final Gson gson;
 
     public YamlStorage() {
         config = new YamlStorageConfig();

@@ -1,31 +1,38 @@
 package dev.spaceseries.spacechat.model.action;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.entity.Player;
 
-@AllArgsConstructor
-@NoArgsConstructor
 public class ClickAction {
 
     /**
      * The type of action for the click action
      */
-    @Getter
-    @Setter
     private ClickActionType clickActionType;
 
     /**
      * The value applied to the click action type when the
      * event is fired
      */
-    @Getter
-    @Setter
     private String value;
+
+    /**
+     * Construct click action
+     *
+     * @param clickActionType click action type
+     * @param value           value
+     */
+    public ClickAction(ClickActionType clickActionType, String value) {
+        this.clickActionType = clickActionType;
+        this.value = value;
+    }
+
+    /**
+     * Construct click action
+     */
+    public ClickAction() {
+    }
 
     /**
      * Converts the click action to a BungeeCord / Spigot click event
@@ -39,5 +46,41 @@ public class ClickAction {
 
         // build & return
         return ClickEvent.clickEvent(action, PlaceholderAPI.setPlaceholders(player, value));
+    }
+
+    /**
+     * Returns click action type
+     *
+     * @return click action type
+     */
+    public ClickActionType getClickActionType() {
+        return clickActionType;
+    }
+
+    /**
+     * Sets click action type
+     *
+     * @param clickActionType click action type
+     */
+    public void setClickActionType(ClickActionType clickActionType) {
+        this.clickActionType = clickActionType;
+    }
+
+    /**
+     * Returns value
+     *
+     * @return value
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Sets value
+     *
+     * @param value value
+     */
+    public void setValue(String value) {
+        this.value = value;
     }
 }

@@ -1,42 +1,120 @@
 package dev.spaceseries.spacechat.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
 public class Format {
 
     /**
      * The handle of the format
      * Same as "identifier" meaning
      */
-    @Getter
-    @Setter
     private String handle;
 
     /**
      * The priority of the format
      */
-    @Getter
-    @Setter
     private Integer priority;
 
     /**
      * The applicable permission node for the format
      */
-    @Getter
-    @Setter
     private String permission;
 
     /**
      * The list of format parts
      */
-    @Getter
-    @Setter
     private List<FormatPart> formatParts;
+
+    /**
+     * Construct format
+     *
+     * @param handle      handle
+     * @param priority    priority
+     * @param permission  permission
+     * @param formatParts format parts
+     */
+    public Format(String handle, Integer priority, String permission, List<FormatPart> formatParts) {
+        this.handle = handle;
+        this.priority = priority;
+        this.permission = permission;
+        this.formatParts = formatParts;
+    }
+
+    /**
+     * Construct format
+     */
+    public Format() {
+    }
+
+    /**
+     * Returns handle
+     *
+     * @return handle
+     */
+    public String getHandle() {
+        return handle;
+    }
+
+    /**
+     * Sets handle
+     *
+     * @param handle handle
+     */
+    public void setHandle(String handle) {
+        this.handle = handle;
+    }
+
+    /**
+     * Returns priority
+     *
+     * @return priority
+     */
+    public Integer getPriority() {
+        return priority;
+    }
+
+    /**
+     * Sets priority
+     *
+     * @param priority priority
+     */
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
+    /**
+     * Returns permission
+     *
+     * @return permission
+     */
+    public String getPermission() {
+        return permission;
+    }
+
+    /**
+     * Sets permission
+     *
+     * @param permission permission
+     */
+    public void setPermission(String permission) {
+        this.permission = permission;
+    }
+
+    /**
+     * Gets format parts
+     *
+     * @return format parts
+     */
+    public List<FormatPart> getFormatParts() {
+        return formatParts;
+    }
+
+    /**
+     * Sets format parts
+     *
+     * @param formatParts format parts
+     */
+    public void setFormatParts(List<FormatPart> formatParts) {
+        this.formatParts = formatParts;
+    }
 }

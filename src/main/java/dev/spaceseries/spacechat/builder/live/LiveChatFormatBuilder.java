@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 
 import static dev.spaceseries.spacechat.configuration.Config.PERMISSIONS_USE_CHAT_COLORS;
 
-public class LiveChatFormatBuilder implements Builder<Trio<Player, Format, String>, TextComponent> {
+public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Format>, TextComponent> {
 
     /**
      * Builds an array of baseComponents from a message, player, and format
@@ -24,11 +24,11 @@ public class LiveChatFormatBuilder implements Builder<Trio<Player, Format, Strin
      * @return The array of baseComponents
      */
     @Override
-    public TextComponent build(Trio<Player, Format, String> input) {
+    public TextComponent build(Trio<Player, String, Format> input) {
         // get input parameters
         Player player = input.getLeft();
-        Format format = input.getMid();
-        String message = input.getRight();
+        String message = input.getMid();
+        Format format = input.getRight();
 
         // create component builder for message
         ComponentBuilder<TextComponent, TextComponent.Builder> componentBuilder = Component.text();
