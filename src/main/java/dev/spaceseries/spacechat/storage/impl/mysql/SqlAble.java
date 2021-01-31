@@ -54,7 +54,7 @@ public abstract class SqlAble {
     protected ResultSet executeQuery(Connection connection, String sql, Object... replacements) {
 
         // try catch prepare
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             int i = 1;
             // replace
