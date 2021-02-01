@@ -73,6 +73,6 @@ chat:
       # Formats can also be one line only...format using MiniMessage (link for syntax above)
       # Make sure to specify "line" instead of "text" when it is ONE line ONLY
       the-entire-line:
-        line: "<click:open_url:https://www.enjin.com><hover:show_text:\"<yellow>Click to apply for staff!\"><red>STAFF</red> <dark_gray>|</hover></click> <click:suggest_command:/msg %player_name%><hover:show_text:\"&bCLICK ME\n&7to message %player_name%!\"><gray>%player_displayname%</hover></click> <dark_gray><bold>\u00BB</dark_gray> <reset><chat_message>"
+        line: "<click:open_url:https://www.spigotmc.org/><hover:show_text:\"<yellow>Click to apply for staff!\"><red>STAFF</red> <dark_gray>|</hover></click> <click:suggest_command:/msg %player_name%><hover:show_text:\"<aqua><bold>Click to\n</bold><gray>message <italic>%player_name%\"><gray>%player_displayname%</hover></click> <dark_gray><bold>\u00BB <reset><chat_message>"
 
 #=#=#=#=#=#=#=#=#=#=#=#=#

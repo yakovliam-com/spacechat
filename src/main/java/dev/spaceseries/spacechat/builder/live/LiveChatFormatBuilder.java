@@ -5,6 +5,8 @@ import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.model.Extra;
 import dev.spaceseries.spacechat.model.Format;
+import dev.spaceseries.spacechat.replacer.AmpersandReplacer;
+import dev.spaceseries.spacechat.replacer.SectionReplacer;
 import me.clip.placeholderapi.PlaceholderAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
@@ -16,6 +18,16 @@ import org.bukkit.entity.Player;
 import static dev.spaceseries.spacechat.configuration.Config.PERMISSIONS_USE_CHAT_COLORS;
 
 public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Format>, TextComponent> {
+
+    /**
+     * Ampersand replacer
+     */
+    private static final AmpersandReplacer ampersandReplacer = new AmpersandReplacer();
+
+    /**
+     * Section replacer
+     */
+    private static final SectionReplacer sectionReplacer = new SectionReplacer();
 
     /**
      * Builds an array of baseComponents from a message, player, and format
@@ -41,15 +53,15 @@ public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Forma
             if (formatPart.getLine() != null) {
                 partComponentBuilder.append(
                         MiniMessage.get()
-                                .parse(PlaceholderAPI.setPlaceholders(player, formatPart.getLine())
-                                        .replace("<chat_message>",
+                                .parse(sectionReplacer.apply(PlaceholderAPI.setPlaceholders(player, ampersandReplacer.apply(formatPart.getLine(), player)), player) // replace placeholders
+                                        .replace("<chat_message>", // replace <chat_message>
                                                 LegacyComponentSerializer
                                                         .legacySection()
-                                                        .serialize(player.hasPermission(PERMISSIONS_USE_CHAT_COLORS.get(Config.get())) ?
-                                                                LegacyComponentSerializer
+                                                        .serialize(player.hasPermission(PERMISSIONS_USE_CHAT_COLORS.get(Config.get())) ? // if player has permission to use chat colors
+                                                                LegacyComponentSerializer // color message
                                                                         .legacyAmpersand()
                                                                         .deserialize(message) :
-                                                                Component.text(message))))
+                                                                Component.text(message)))) // else, just return the message (not colored)
 
                 );
                 // append partComponentBuilder to main builder
@@ -59,8 +71,9 @@ public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Forma
 
             String text = formatPart.getText();
 
-            // replace placeholders
-            text = PlaceholderAPI.setPlaceholders(player, text);
+            // basically what I am doing here is converting & -> section, then replacing placeholders, then section -> &
+            // this just bypasses PAPI's hacky way of coloring text which shouldn't even be implemented...
+            text = sectionReplacer.apply(PlaceholderAPI.setPlaceholders(player, ampersandReplacer.apply(text, player)), player);
 
             // build text from legacy (and replace <chat_message> with the actual message)
             // and check permissions for chat colors
@@ -70,6 +83,7 @@ public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Forma
                             .replacement(message));
 
             /* Retaining events for MULTIPLE components */
+
             // parse extra (if applicable)
             if (formatPart.getExtra() != null) {
                 Extra extra = formatPart.getExtra();
