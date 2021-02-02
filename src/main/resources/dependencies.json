@@ -1,0 +1,22 @@
+{
+  "repositories": {
+    "maven2": "https://repo.piggypiglet.me/repository/maven-releases/",
+    "maven": "https://repo.yakovliam.com/snapshots/"
+  },
+  "dependencies": [
+    {
+      "groupId": "dev.spaceseries",
+      "artifactId": "spaceapi",
+      "version": "1.0.1-SNAPSHOT",
+      "repository": "maven",
+      "transitive": []
+    },
+    {
+      "groupId": "me.piggypiglet",
+      "artifactId": "TimeAPI",
+      "version": "1.9",
+      "repository": "maven2",
+      "transitive": []
+    }
+  ]
+}

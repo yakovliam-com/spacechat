@@ -84,8 +84,6 @@ public class ChatFormatManager extends FormatManager {
         });
 
         // get all online players, loop through, send chat message
-
         Message.getAudienceProvider().players().sendMessage(components);
-
     }
 }
