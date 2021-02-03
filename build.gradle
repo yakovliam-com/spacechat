@@ -8,7 +8,7 @@ apply plugin: 'java'
 // naming
 project.ext.majorVersion = '2'
 project.ext.midVersion = '0'
-project.ext.minorVersion = '3'
+project.ext.minorVersion = '4'
 project.ext.versionType = 'SNAPSHOT'
 version = project.ext.majorVersion + '.' + project.ext.midVersion + '.' + project.ext.minorVersion + "-" + project.ext.versionType
 group = 'dev.spaceseries'
@@ -32,7 +32,7 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT"
 
     // space api
-    compileOnly 'dev.spaceseries:spaceapi:1.0.1-SNAPSHOT'
+    pdm 'dev.spaceseries:spaceapi:1.0.2-SNAPSHOT'
 
     // bStats
     // https://repo.codemc.org/repository/maven-public
