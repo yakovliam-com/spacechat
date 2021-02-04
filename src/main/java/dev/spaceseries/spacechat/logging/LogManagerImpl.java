@@ -6,6 +6,7 @@ import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,11 +17,15 @@ public class LogManagerImpl implements LogManager {
 
     @Override
     public <T> void log(T t, LogType logType, LogToType logToType) {
+        log(t, logType, logToType, null);
+    }
+
+    public <T, K> void log(T t, LogType logType, LogToType logToType, K optional) {
         if (logType == LogType.CHAT) {
             switch (logToType) {
                 case CONSOLE:
-                    if (LOGGING_CHAT_LOG_TO_CONSOLE.get(getConfig()) && t instanceof String) {
-                        global((String) t);
+                    if (t instanceof String && optional instanceof AsyncPlayerChatEvent) {
+                        global((String) t, (AsyncPlayerChatEvent) optional);
                     }
                     break;
                 case STORAGE:
@@ -30,16 +35,16 @@ public class LogManagerImpl implements LogManager {
                     break;
             }
         }
-
     }
 
     /**
      * Logs chat
      *
      * @param s The chat message
+     * @param e The chat event
      */
-    private void global(String s) {
-        Logger.getGlobal().log(Level.INFO, s);
+    private void global(String s, AsyncPlayerChatEvent e) {
+        e.setFormat(s);
     }
 
     /**

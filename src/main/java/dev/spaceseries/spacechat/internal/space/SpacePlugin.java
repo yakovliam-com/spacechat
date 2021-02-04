@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.space;
+package dev.spaceseries.spacechat.internal.space;
 
 import dev.spaceseries.api.abstraction.plugin.BukkitPlugin;
 import dev.spaceseries.api.abstraction.plugin.Plugin;

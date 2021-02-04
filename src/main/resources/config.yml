@@ -28,7 +28,6 @@ mysql: # mysql configuration settings
 #=#=#=#=#=#=#=#=#=#=#=#=#
 logging:
   chat:
-    log-to-console: true
     log-to-storage: true
 
 #=#=#=#=#=#=#=#=#=#=#=#=#

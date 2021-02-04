@@ -14,12 +14,12 @@ public class ChatListener implements Listener {
      *
      * @param event The event
      */
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerAsyncChat(AsyncPlayerChatEvent event) {
-        // cancel chat event altogether
-        event.setCancelled(true);
+        // clear recipients to "cancel"
+        event.getRecipients().clear();
 
-        // get chat format manager, send chat packet
-        SpaceChat.getInstance().getChatFormatManager().send(event.getPlayer(), event.getMessage());
+        // get chat format manager, send chat packet (this method also sets the format in console)
+        SpaceChat.getInstance().getChatFormatManager().send(event, event.getMessage());
     }
 }
