@@ -1,7 +1,6 @@
 package dev.spaceseries.spacechat.internal.space;
 
 import dev.spaceseries.api.abstraction.plugin.BukkitPlugin;
-import dev.spaceseries.api.abstraction.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SpacePlugin {
@@ -9,7 +8,7 @@ public class SpacePlugin {
     /**
      * SpaceAPI plugin
      */
-    private Plugin plugin;
+    private final BukkitPlugin plugin;
 
     /**
      * Construct space plugin
@@ -25,7 +24,7 @@ public class SpacePlugin {
      *
      * @return plugin
      */
-    public Plugin getPlugin() {
+    public BukkitPlugin getPlugin() {
         return plugin;
     }
 }
