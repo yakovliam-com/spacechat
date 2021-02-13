@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat;
 
+import dev.spaceseries.api.abstraction.plugin.BukkitPlugin;
 import dev.spaceseries.api.abstraction.plugin.Plugin;
 import dev.spaceseries.spacechat.command.SpaceChatCommand;
 import dev.spaceseries.spacechat.configuration.Config;
@@ -137,7 +138,7 @@ public final class SpaceChat extends JavaPlugin {
      *
      * @return plugin
      */
-    public Plugin getPlugin() {
+    public BukkitPlugin getPlugin() {
         return plugin.getPlugin();
     }
 
