@@ -22,12 +22,12 @@ public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Forma
     /**
      * Ampersand replacer
      */
-    private static final AmpersandReplacer ampersandReplacer = new AmpersandReplacer();
+    private static final AmpersandReplacer AMPERSAND_REPLACER = new AmpersandReplacer();
 
     /**
      * Section replacer
      */
-    private static final SectionReplacer sectionReplacer = new SectionReplacer();
+    private static final SectionReplacer SECTION_REPLACER = new SectionReplacer();
 
     /**
      * Builds an array of baseComponents from a message, player, and format
@@ -51,19 +51,26 @@ public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Forma
             ComponentBuilder<TextComponent, TextComponent.Builder> partComponentBuilder = Component.text();
             // if the part has "line", it is a SINGLE MiniMessage...in that case, just parse & return (continues to next part if exists, which it shouldn't)
             if (formatPart.getLine() != null) {
-                partComponentBuilder.append(
-                        MiniMessage.get()
-                                .parse(sectionReplacer.apply(PlaceholderAPI.setPlaceholders(player, ampersandReplacer.apply(formatPart.getLine(), player)), player) // replace placeholders
-                                        .replace("<chat_message>", // replace <chat_message>
-                                                LegacyComponentSerializer
-                                                        .legacySection()
-                                                        .serialize(player.hasPermission(PERMISSIONS_USE_CHAT_COLORS.get(Config.get())) ? // if player has permission to use chat colors
-                                                                LegacyComponentSerializer // color message
-                                                                        .legacyAmpersand()
-                                                                        .deserialize(message) :
-                                                                Component.text(message)))) // else, just return the message (not colored)
+                // replace placeholders
+                String mmWithPlaceholdersReplaced = SECTION_REPLACER.apply(PlaceholderAPI.setPlaceholders(player, AMPERSAND_REPLACER.apply(formatPart.getLine(), player)), player);
 
-                );
+                // get chat message (formatted)
+                String chatMessage = LegacyComponentSerializer
+                        .legacySection()
+                        .serialize(player.hasPermission(PERMISSIONS_USE_CHAT_COLORS.get(Config.get())) ? // if player has permission to use chat colors
+                                LegacyComponentSerializer // yes, the player has permission to use chat colors, so color message
+                                        .legacyAmpersand()
+                                        .deserialize(message) :
+                                Component.text(message)); // no, the player doesn't have permission to use chat colors, so just return the message (not colored)
+
+                // parse miniMessage
+                Component parsedMiniMessage = MiniMessage.get().parse(mmWithPlaceholdersReplaced);
+
+                // replace chat message
+                parsedMiniMessage = parsedMiniMessage.replaceText((text) -> text.match("<chat_message>").replacement(chatMessage));
+
+                // parse MiniMessage into builder
+                partComponentBuilder.append(parsedMiniMessage);
                 // append partComponentBuilder to main builder
                 componentBuilder.append(partComponentBuilder.build());
                 return;
@@ -73,7 +80,7 @@ public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Forma
 
             // basically what I am doing here is converting & -> section, then replacing placeholders, then section -> &
             // this just bypasses PAPI's hacky way of coloring text which shouldn't even be implemented...
-            text = sectionReplacer.apply(PlaceholderAPI.setPlaceholders(player, ampersandReplacer.apply(text, player)), player);
+            text = SECTION_REPLACER.apply(PlaceholderAPI.setPlaceholders(player, AMPERSAND_REPLACER.apply(text, player)), player);
 
             // build text from legacy (and replace <chat_message> with the actual message)
             // and check permissions for chat colors

@@ -10,16 +10,18 @@ public class ChatListener implements Listener {
 
     /**
      * Listens for chat messages
-     * At the MONITOR priority (runs LAST) to accommodate for plugins that block chat (mutes, anti-bots, etc)
+     * At the MONITOR priority (runs near LAST) to accommodate for plugins that block chat (mutes, anti-bots, etc)
      *
      * @param event The event
      */
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerAsyncChat(AsyncPlayerChatEvent event) {
-        // cancel chat event altogether
-        event.setCancelled(true);
+        if(event.isCancelled()) return;
 
-        // get chat format manager, send chat packet
-        SpaceChat.getInstance().getChatFormatManager().send(event.getPlayer(), event.getMessage());
+        // clear recipients to "cancel"
+        event.getRecipients().clear();
+
+        // get chat format manager, send chat packet (this method also sets the format in console)
+        SpaceChat.getInstance().getChatFormatManager().send(event, event.getMessage());
     }
 }

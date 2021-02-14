@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.dependency;
+package dev.spaceseries.spacechat.internal.dependency;
 
 import me.bristermitten.pdm.PluginDependencyManager;
 import org.bukkit.plugin.Plugin;

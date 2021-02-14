@@ -7,3 +7,5 @@ website: https://www.spaceseries.dev/
 api-version: 1.13
 depend:
   - PlaceholderAPI
+softdepend:
+  - DiscordSRV

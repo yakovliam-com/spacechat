@@ -15,6 +15,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -32,10 +33,13 @@ public class ChatFormatManager extends FormatManager {
     /**
      * Sends a chat message using the applicable format
      *
-     * @param player  The player
+     * @param event  The event
      * @param message The message
      */
-    public void send(Player player, String message) {
+    public void send(AsyncPlayerChatEvent event, String message) {
+        // get player
+        Player player = event.getPlayer();
+
         // get applicable format
         Format applicableFormat = getAll()
                 .values()
@@ -61,19 +65,21 @@ public class ChatFormatManager extends FormatManager {
             components = new LiveChatFormatBuilder().build(new Trio<>(player, message, applicableFormat));
         }
 
+        // get all online players, loop through, send chat message
+        Message.getAudienceProvider().players().sendMessage(components);
+
+        // log to console
+        SpaceChat.getInstance()
+                .getLogManagerImpl()
+                .log(components.children()
+                        .stream()
+                        .map(c -> LegacyComponentSerializer.legacySection().serialize(c))
+                        .map(ColorUtil::translateFromAmpersand)
+                        .map(ColorUtil::stripColor)
+                        .collect(Collectors.joining()), LogType.CHAT, LogToType.CONSOLE, event);
+
         // async logging
         Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> {
-            // log to console
-            //noinspection deprecation
-            SpaceChat.getInstance()
-                    .getLogManagerImpl()
-                    .log(components.children()
-                            .stream()
-                            .map(c -> LegacyComponentSerializer.legacySection().serialize(c))
-                            .map(ColorUtil::translateFromAmpersand)
-                            .map(ColorUtil::stripColor)
-                            .collect(Collectors.joining()), LogType.CHAT, LogToType.CONSOLE);
-
             // log to storage
             SpaceChat.getInstance()
                     .getLogManagerImpl()
@@ -82,8 +88,5 @@ public class ChatFormatManager extends FormatManager {
                             LogToType.STORAGE
                     );
         });
-
-        // get all online players, loop through, send chat message
-        Message.getAudienceProvider().players().sendMessage(components);
     }
 }

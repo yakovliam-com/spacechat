@@ -23,7 +23,6 @@ public final class Config extends dev.spaceseries.api.config.obj.Config {
 
     public static ConfigKey<String> MYSQL_TABLES_CHAT_LOGS = ConfigKeyTypes.stringKey("mysql.tables.chat-logs", null);
 
-    public static ConfigKey<Boolean> LOGGING_CHAT_LOG_TO_CONSOLE = ConfigKeyTypes.booleanKey("logging.chat.log-to-console", true);
     public static ConfigKey<Boolean> LOGGING_CHAT_LOG_TO_STORAGE = ConfigKeyTypes.booleanKey("logging.chat.log-to-storage", true);
 
     public static ConfigKey<String> PERMISSIONS_USE_CHAT_COLORS = ConfigKeyTypes.stringKey("permissions.use-chat-colors", null);
