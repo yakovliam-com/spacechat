@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.logging;
 
+import com.google.common.net.PercentEscaper;
 import dev.spaceseries.api.config.impl.Configuration;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
@@ -10,6 +11,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
 
 import static dev.spaceseries.spacechat.configuration.Config.*;
 
@@ -44,7 +46,8 @@ public class LogManagerImpl implements LogManager {
      * @param e The chat event
      */
     private void global(String s, AsyncPlayerChatEvent e) {
-        e.setFormat(s);
+        // set & escape
+        e.setFormat(s.replace("%", "%%"));
     }
 
     /**
