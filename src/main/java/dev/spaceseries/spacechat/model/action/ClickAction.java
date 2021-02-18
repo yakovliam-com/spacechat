@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.model.action;
 
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.event.ClickEvent;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.event.ClickEvent;
 import org.bukkit.entity.Player;
 
 public class ClickAction {

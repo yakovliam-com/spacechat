@@ -11,6 +11,7 @@ import dev.spaceseries.spacechat.util.date.DateUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import static dev.spaceseries.spacechat.configuration.Config.MYSQL_TABLES_CHAT_LOGS;
 
@@ -58,7 +59,7 @@ public class MysqlStorage implements Storage {
     private void logChat(LogChatWrap data) {
         // create prepared statement
 
-        try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(LOG_CHAT)) {
+        try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = Objects.requireNonNull(connection).prepareStatement(LOG_CHAT)) {
             // replace
             preparedStatement.setString(1, data.getSenderUUID().toString());
             preparedStatement.setString(2, data.getSenderName());

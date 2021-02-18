@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat;
 
-import dev.spaceseries.api.config.impl.Configuration;
-import dev.spaceseries.api.text.Message;
+import dev.spaceseries.spaceapi.config.impl.Configuration;
+import dev.spaceseries.spaceapi.text.Message;
 
 public class Messages {
 

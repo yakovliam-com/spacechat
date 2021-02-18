@@ -1,17 +1,12 @@
 package dev.spaceseries.spacechat.logging;
 
-import com.google.common.net.PercentEscaper;
-import dev.spaceseries.api.config.impl.Configuration;
+import dev.spaceseries.spaceapi.config.impl.Configuration;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.regex.Matcher;
 
 import static dev.spaceseries.spacechat.configuration.Config.*;
 

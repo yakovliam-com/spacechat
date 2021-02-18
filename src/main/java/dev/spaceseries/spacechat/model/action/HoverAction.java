@@ -2,9 +2,9 @@ package dev.spaceseries.spacechat.model.action;
 
 import com.google.common.base.Joiner;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.event.HoverEvent;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
 import java.util.List;

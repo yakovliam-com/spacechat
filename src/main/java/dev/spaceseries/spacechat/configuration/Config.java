@@ -1,11 +1,11 @@
 package dev.spaceseries.spacechat.configuration;
 
-import dev.spaceseries.api.config.impl.Configuration;
-import dev.spaceseries.api.config.keys.ConfigKey;
-import dev.spaceseries.api.config.keys.ConfigKeyTypes;
+import dev.spaceseries.spaceapi.config.impl.Configuration;
+import dev.spaceseries.spaceapi.config.keys.ConfigKey;
+import dev.spaceseries.spaceapi.config.keys.ConfigKeyTypes;
 import dev.spaceseries.spacechat.SpaceChat;
 
-public final class Config extends dev.spaceseries.api.config.obj.Config {
+public final class Config extends dev.spaceseries.spaceapi.config.obj.Config {
 
     public Config() {
         super(SpaceChat.getInstance().getPlugin(), "config.yml");

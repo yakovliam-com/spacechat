@@ -38,12 +38,12 @@ public final class ConnectionInfo {
     /**
      * The hikari config
      */
-    private HikariConfig config;
+    private final HikariConfig config;
 
     /**
      * The hikari data source
      */
-    private HikariDataSource dataSource;
+    private final HikariDataSource dataSource;
 
     /**
      * Initializes new connection info
