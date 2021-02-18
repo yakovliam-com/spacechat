@@ -1,7 +1,6 @@
 package dev.spaceseries.spacechat;
 
-import dev.spaceseries.api.abstraction.plugin.BukkitPlugin;
-import dev.spaceseries.api.abstraction.plugin.Plugin;
+import dev.spaceseries.spaceapi.abstraction.plugin.BukkitPlugin;
 import dev.spaceseries.spacechat.command.SpaceChatCommand;
 import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.configuration.FormatsConfig;

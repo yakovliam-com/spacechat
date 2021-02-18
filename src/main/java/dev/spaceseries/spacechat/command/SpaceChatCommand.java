@@ -1,8 +1,8 @@
 package dev.spaceseries.spacechat.command;
 
-import dev.spaceseries.api.command.Command;
-import dev.spaceseries.api.command.Permissible;
-import dev.spaceseries.api.command.SpaceCommandSender;
+import dev.spaceseries.spaceapi.command.Command;
+import dev.spaceseries.spaceapi.command.Permissible;
+import dev.spaceseries.spaceapi.command.SpaceCommandSender;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
 

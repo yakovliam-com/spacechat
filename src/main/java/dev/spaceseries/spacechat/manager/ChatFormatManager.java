@@ -1,8 +1,8 @@
 package dev.spaceseries.spacechat.manager;
 
-import dev.spaceseries.api.text.Message;
-import dev.spaceseries.api.util.ColorUtil;
-import dev.spaceseries.api.util.Trio;
+import dev.spaceseries.spaceapi.text.Message;
+import dev.spaceseries.spaceapi.util.ColorUtil;
+import dev.spaceseries.spaceapi.util.Trio;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.builder.live.LiveChatFormatBuilder;
 import dev.spaceseries.spacechat.loader.FormatType;
@@ -10,9 +10,9 @@ import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.model.Format;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.NamedTextColor;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -49,7 +49,7 @@ public class ChatFormatManager extends FormatManager {
                 .orElse(null);
 
         // create components
-        net.kyori.adventure.text.Component components;
+        dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component components;
 
         // if null, return
         if (applicableFormat == null) {
@@ -69,6 +69,7 @@ public class ChatFormatManager extends FormatManager {
         Message.getAudienceProvider().players().sendMessage(components);
 
         // log to console
+        //noinspection deprecation
         SpaceChat.getInstance()
                 .getLogManagerImpl()
                 .log(components.children()

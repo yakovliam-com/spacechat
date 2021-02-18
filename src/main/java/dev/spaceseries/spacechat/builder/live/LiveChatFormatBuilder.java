@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.builder.live;
 
-import dev.spaceseries.api.util.Trio;
+import dev.spaceseries.spaceapi.util.Trio;
 import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.model.Extra;
@@ -8,11 +8,11 @@ import dev.spaceseries.spacechat.model.Format;
 import dev.spaceseries.spacechat.replacer.AmpersandReplacer;
 import dev.spaceseries.spacechat.replacer.SectionReplacer;
 import me.clip.placeholderapi.PlaceholderAPI;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.ComponentBuilder;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.ComponentBuilder;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.TextComponent;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.minimessage.MiniMessage;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
 import static dev.spaceseries.spacechat.configuration.Config.PERMISSIONS_USE_CHAT_COLORS;

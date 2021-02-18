@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.internal.space;
 
-import dev.spaceseries.api.abstraction.plugin.BukkitPlugin;
+import dev.spaceseries.spaceapi.abstraction.plugin.BukkitPlugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SpacePlugin {
