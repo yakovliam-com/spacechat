@@ -10,6 +10,7 @@ import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.storage.Storage;
 
 import java.io.File;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 
 public class YamlStorage implements Storage {
@@ -52,7 +53,10 @@ public class YamlStorage implements Storage {
         // object (json) for data
         String json = gson.toJson(data);
         // set new key (date as milliseconds is the key)
-        config.set("chat." + data.getAt().getTime(), json);
+        try {
+            config.set("chat." + data.getAt().getTime(), json);
+        } catch (ConcurrentModificationException | NullPointerException ignored) {
+        }
     }
 
     private static final class YamlStorageConfig extends Config {
@@ -60,6 +64,5 @@ public class YamlStorage implements Storage {
         public YamlStorageConfig() {
             super(SpaceChat.getInstance().getPlugin(), new File(SpaceChat.getInstance().getDataFolder() + File.separator + "storage"), "logs.yml");
         }
-
     }
 }

@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.mysql;
 
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
@@ -7,6 +8,7 @@ import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.storage.Storage;
 import dev.spaceseries.spacechat.storage.impl.mysql.factory.MysqlConnectionManager;
 import dev.spaceseries.spacechat.util.date.DateUtil;
+import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -57,20 +59,22 @@ public class MysqlStorage implements Storage {
      * @param data The data
      */
     private void logChat(LogChatWrap data) {
-        // create prepared statement
+        // async logging with MySQL
+        Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> {
+            // create prepared statement
+            try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = Objects.requireNonNull(connection).prepareStatement(LOG_CHAT)) {
+                // replace
+                preparedStatement.setString(1, data.getSenderUUID().toString());
+                preparedStatement.setString(2, data.getSenderName());
+                preparedStatement.setString(3, data.getMessage());
+                preparedStatement.setString(4, DateUtil.toString(data.getAt()));
 
-        try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = Objects.requireNonNull(connection).prepareStatement(LOG_CHAT)) {
-            // replace
-            preparedStatement.setString(1, data.getSenderUUID().toString());
-            preparedStatement.setString(2, data.getSenderName());
-            preparedStatement.setString(3, data.getMessage());
-            preparedStatement.setString(4, DateUtil.toString(data.getAt()));
+                // execute
+                preparedStatement.execute();
 
-            // execute
-            preparedStatement.execute();
-
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        });
     }
 }

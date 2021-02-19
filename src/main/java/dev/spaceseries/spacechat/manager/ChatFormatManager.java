@@ -33,7 +33,7 @@ public class ChatFormatManager extends FormatManager {
     /**
      * Sends a chat message using the applicable format
      *
-     * @param event  The event
+     * @param event   The event
      * @param message The message
      */
     public void send(AsyncPlayerChatEvent event, String message) {
@@ -79,15 +79,13 @@ public class ChatFormatManager extends FormatManager {
                         .map(ColorUtil::stripColor)
                         .collect(Collectors.joining()), LogType.CHAT, LogToType.CONSOLE, event);
 
-        // async logging
-        Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> {
-            // log to storage
-            SpaceChat.getInstance()
-                    .getLogManagerImpl()
-                    .log(new LogChatWrap(LogType.CHAT, player.getName(), player.getUniqueId(), message, new Date()),
-                            LogType.CHAT,
-                            LogToType.STORAGE
-                    );
-        });
+
+        // log to storage
+        SpaceChat.getInstance()
+                .getLogManagerImpl()
+                .log(new LogChatWrap(LogType.CHAT, player.getName(), player.getUniqueId(), message, new Date()),
+                        LogType.CHAT,
+                        LogToType.STORAGE
+                );
     }
 }
