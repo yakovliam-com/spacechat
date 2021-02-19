@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.storage.impl.mysql.factory.o;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import dev.spaceseries.spaceapi.lib.hikari.HikariConfig;
+import dev.spaceseries.spaceapi.lib.hikari.HikariDataSource;
 
 public final class ConnectionInfo {
 
