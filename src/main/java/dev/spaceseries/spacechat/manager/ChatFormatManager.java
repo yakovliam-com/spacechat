@@ -1,10 +1,9 @@
 package dev.spaceseries.spacechat.manager;
 
-import dev.spaceseries.spaceapi.text.Message;
-import dev.spaceseries.spaceapi.util.ColorUtil;
 import dev.spaceseries.spaceapi.util.Trio;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.builder.live.LiveChatFormatBuilder;
+import dev.spaceseries.spacechat.dynamicconnection.redis.RedisChatMessage;
 import dev.spaceseries.spacechat.loader.FormatType;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
@@ -12,14 +11,12 @@ import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.model.Format;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.NamedTextColor;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
+import dev.spaceseries.spacechat.util.chat.ChatUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Comparator;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 public class ChatFormatManager extends FormatManager {
 
@@ -65,19 +62,12 @@ public class ChatFormatManager extends FormatManager {
             components = new LiveChatFormatBuilder().build(new Trio<>(player, message, applicableFormat));
         }
 
-        // get all online players, loop through, send chat message
-        Message.getAudienceProvider().players().sendMessage(components);
+        // send chat message!
+        ChatUtil.sendComponentChatMessage(components);
 
-        // log to console
-        //noinspection deprecation
-        SpaceChat.getInstance()
-                .getLogManagerImpl()
-                .log(components.children()
-                        .stream()
-                        .map(c -> LegacyComponentSerializer.legacySection().serialize(c))
-                        .map(ColorUtil::translateFromAmpersand)
-                        .map(ColorUtil::stripColor)
-                        .collect(Collectors.joining()), LogType.CHAT, LogToType.CONSOLE, event);
+
+        // send via redis (it won't do anything if redis isn't enabled, so we can be sure that we aren't using dead methods that will throw an exception)
+        SpaceChat.getInstance().getDynamicConnectionManager().getRedisSupervisor().publishChatMessage(new RedisChatMessage(player.getUniqueId(), player.getName(), components));
 
 
         // log to storage

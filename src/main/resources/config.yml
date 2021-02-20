@@ -12,17 +12,31 @@
 # -> yaml               #
 # -> mysql              #
 #=#=#=#=#=#=#=#=#=#=#=#=#
-use: "yaml" # which storage type should we use?
-mysql: # mysql configuration settings
-  address: ""
-  port: 3306
-  username: ""
-  password: ""
-  database: ""
-  use-ssl: false
-  verify-server-certificate: false
-  tables:
-    chat-logs: "spacechat_chatlogs"
+storage:
+  use: "yaml" # which storage type should we use?
+  mysql: # mysql configuration settings
+    address: ""
+    port: 3306
+    username: ""
+    password: ""
+    database: ""
+    use-ssl: false
+    verify-server-certificate: false
+    tables:
+      chat-logs: "spacechat_chatlogs"
+
+#=#=#=#=#=#=#=#=#=#=#=#=#
+# Redis Configuration   #
+#=#=#=#=#=#=#=#=#=#=#=#=#
+redis:
+  enabled: false
+  # redis://[password@]host[:port][/databaseNumber]
+  # redis-sentinel://[password@]host[:port][,host2[:port2]][/databaseNumber]#sentinelMasterId
+  # redis-socket:///path/to/socket
+  # And yes, that extra s below (redis[s]) IS correct- that means 'SSL'
+  url: "rediss://[password@]host[:port][/databaseNumber]"
+  chat-channel: "spacechat-message"
+
 #=#=#=#=#=#=#=#=#=#=#=#=#
 #      Misc Settings    #
 #=#=#=#=#=#=#=#=#=#=#=#=#

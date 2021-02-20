@@ -10,6 +10,7 @@ import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
 import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import dev.spaceseries.spacechat.internal.space.SpacePlugin;
+import dev.spaceseries.spacechat.dynamicconnection.DynamicConnectionManager;
 import dev.spaceseries.spacechat.storage.StorageManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -56,6 +57,11 @@ public final class SpaceChat extends JavaPlugin {
     private StorageManager storageManager;
 
     /**
+     * Dynamic connection manager for redis
+     */
+    private DynamicConnectionManager dynamicConnectionManager;
+
+    /**
      * Runs on load
      */
     @Override
@@ -82,6 +88,9 @@ public final class SpaceChat extends JavaPlugin {
         // load storage
         loadStorage();
 
+        // load connection managers
+        loadConnectionManagers();
+
         // initialize log manager
         logManagerImpl = new LogManagerImpl();
 
@@ -93,6 +102,12 @@ public final class SpaceChat extends JavaPlugin {
 
         // initialize metrics
         new MetricsHandler();
+    }
+
+    @Override
+    public void onDisable() {
+        // stop redis supervisor
+        this.getDynamicConnectionManager().getRedisSupervisor().stop();
     }
 
     /**
@@ -119,6 +134,13 @@ public final class SpaceChat extends JavaPlugin {
     public void loadStorage() {
         // initialize storage
         storageManager = new StorageManager();
+    }
+
+    /**
+     * Load connection managers
+     */
+    public void loadConnectionManagers() {
+        dynamicConnectionManager = new DynamicConnectionManager();
     }
 
     /**
@@ -193,5 +215,14 @@ public final class SpaceChat extends JavaPlugin {
      */
     public StorageManager getStorageManager() {
         return storageManager;
+    }
+
+    /**
+     * Returns dynamic connection managers
+     *
+     * @return dynamic connection manager
+     */
+    public DynamicConnectionManager getDynamicConnectionManager() {
+        return dynamicConnectionManager;
     }
 }

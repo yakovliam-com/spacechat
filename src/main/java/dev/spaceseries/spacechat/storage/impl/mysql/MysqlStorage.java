@@ -15,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import static dev.spaceseries.spacechat.configuration.Config.MYSQL_TABLES_CHAT_LOGS;
+import static dev.spaceseries.spacechat.configuration.Config.STORAGE_MYSQL_TABLES_CHAT_LOGS;
 
 public class MysqlStorage implements Storage {
 
@@ -30,7 +30,7 @@ public class MysqlStorage implements Storage {
             ");";
 
     // Logs chat into the 'chat logging' database table
-    private static final String LOG_CHAT = "INSERT INTO " + MYSQL_TABLES_CHAT_LOGS.get(Config.get()) + " (uuid, name, message, date) VALUES(?, ?, ?, ?)";
+    private static final String LOG_CHAT = "INSERT INTO " + STORAGE_MYSQL_TABLES_CHAT_LOGS.get(Config.get()) + " (uuid, name, message, date) VALUES(?, ?, ?, ?)";
 
     /**
      * The connection manager
