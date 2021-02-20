@@ -3,7 +3,8 @@ package dev.spaceseries.spacechat.manager;
 import dev.spaceseries.spaceapi.util.Trio;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.builder.live.LiveChatFormatBuilder;
-import dev.spaceseries.spacechat.dynamicconnection.redis.RedisChatMessage;
+import dev.spaceseries.spacechat.configuration.Config;
+import dev.spaceseries.spacechat.dc.redis.RedisChatMessage;
 import dev.spaceseries.spacechat.loader.FormatType;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
@@ -17,6 +18,8 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Comparator;
 import java.util.Date;
+
+import static dev.spaceseries.spacechat.configuration.Config.*;
 
 public class ChatFormatManager extends FormatManager {
 
@@ -63,12 +66,10 @@ public class ChatFormatManager extends FormatManager {
         }
 
         // send chat message!
-        ChatUtil.sendComponentChatMessage(components);
-
+        ChatUtil.sendComponentChatMessage(components, event);
 
         // send via redis (it won't do anything if redis isn't enabled, so we can be sure that we aren't using dead methods that will throw an exception)
-        SpaceChat.getInstance().getDynamicConnectionManager().getRedisSupervisor().publishChatMessage(new RedisChatMessage(player.getUniqueId(), player.getName(), components));
-
+        SpaceChat.getInstance().getDynamicConnectionManager().getRedisSupervisor().publishChatMessage(new RedisChatMessage(player.getUniqueId(), player.getName(), REDIS_SERVER_IDENTIFIER.get(Config.get()), REDIS_SERVER_DISPLAYNAME.get(Config.get()), components));
 
         // log to storage
         SpaceChat.getInstance()

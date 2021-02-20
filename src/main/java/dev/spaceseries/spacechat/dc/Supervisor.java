@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.dynamicconnection;
+package dev.spaceseries.spacechat.dc;
 
 public abstract class Supervisor<T> {
 

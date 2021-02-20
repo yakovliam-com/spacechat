@@ -1,8 +1,8 @@
-package dev.spaceseries.spacechat.dynamicconnection;
+package dev.spaceseries.spacechat.dc;
 
 import dev.spaceseries.spacechat.configuration.Config;
-import dev.spaceseries.spacechat.dynamicconnection.redis.supervisor.EmptyRedisSupervisor;
-import dev.spaceseries.spacechat.dynamicconnection.redis.supervisor.RedisSupervisor;
+import dev.spaceseries.spacechat.dc.redis.supervisor.EmptyRedisSupervisor;
+import dev.spaceseries.spacechat.dc.redis.supervisor.RedisSupervisor;
 
 import static dev.spaceseries.spacechat.configuration.Config.REDIS_ENABLED;
 
@@ -20,12 +20,15 @@ public class DynamicConnectionManager {
         // redis
         // is redis enabled?
         if (REDIS_ENABLED.get(Config.get())) {
-            // initialize supervisor
+            // instantiate and initialize supervisor
             redisSupervisor = new RedisSupervisor();
         } else {
             // else nothing...no need for a supervisor or any kind of dynamic connection
             redisSupervisor = new EmptyRedisSupervisor();
         }
+
+        // initialize supervisor
+        redisSupervisor.initialize();
     }
 
     /**

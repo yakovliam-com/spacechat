@@ -30,8 +30,15 @@ storage:
 #=#=#=#=#=#=#=#=#=#=#=#=#
 redis:
   enabled: false
+  # Set these server name values to the name of the current server the plugin is present on.
+  # For example, if we're running on 'skyblock-1', change the identifier to 'skyblock-1'. This can be accessed
+  # through placeholders using %spacechat_server-identifier%
+  # The displayName is a display version of the server that can be accessed through placeholders as well by using
+  # %spacechat_server-displayname%
+  server:
+    identifier: "server1"
+    displayName: "&a&lServer #1"
   # redis://[password@]host[:port][/databaseNumber]
-  # redis-sentinel://[password@]host[:port][,host2[:port2]][/databaseNumber]#sentinelMasterId
   # redis-socket:///path/to/socket
   # And yes, that extra s below (redis[s]) IS correct- that means 'SSL'
   url: "rediss://[password@]host[:port][/databaseNumber]"

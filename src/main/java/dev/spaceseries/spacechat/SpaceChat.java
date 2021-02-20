@@ -5,12 +5,13 @@ import dev.spaceseries.spacechat.command.SpaceChatCommand;
 import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.configuration.FormatsConfig;
 import dev.spaceseries.spacechat.configuration.LangConfig;
+import dev.spaceseries.spacechat.external.papi.SpaceChatExpansion;
 import dev.spaceseries.spacechat.internal.dependency.DependencyLoader;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
 import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import dev.spaceseries.spacechat.internal.space.SpacePlugin;
-import dev.spaceseries.spacechat.dynamicconnection.DynamicConnectionManager;
+import dev.spaceseries.spacechat.dc.DynamicConnectionManager;
 import dev.spaceseries.spacechat.storage.StorageManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -100,6 +101,9 @@ public final class SpaceChat extends JavaPlugin {
         // register chat listener
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
 
+        // register placeholder expansion
+        new SpaceChatExpansion().register();
+
         // initialize metrics
         new MetricsHandler();
     }
@@ -140,6 +144,10 @@ public final class SpaceChat extends JavaPlugin {
      * Load connection managers
      */
     public void loadConnectionManagers() {
+        // if currently exists, stop first
+        if(dynamicConnectionManager != null)
+            dynamicConnectionManager.getRedisSupervisor().stop();
+
         dynamicConnectionManager = new DynamicConnectionManager();
     }
 

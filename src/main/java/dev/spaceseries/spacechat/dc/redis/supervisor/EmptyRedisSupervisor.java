@@ -1,6 +1,6 @@
-package dev.spaceseries.spacechat.dynamicconnection.redis.supervisor;
+package dev.spaceseries.spacechat.dc.redis.supervisor;
 
-import dev.spaceseries.spacechat.dynamicconnection.redis.RedisChatMessage;
+import dev.spaceseries.spacechat.dc.redis.RedisChatMessage;
 
 public class EmptyRedisSupervisor extends RedisSupervisor {
 
@@ -14,6 +14,9 @@ public class EmptyRedisSupervisor extends RedisSupervisor {
     public void stop() {
     }
 
+    @Override
+    public void initialize() {
+    }
 
     @Override
     public void publishChatMessage(RedisChatMessage redisChatMessage) {

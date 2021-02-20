@@ -1,28 +1,34 @@
-package dev.spaceseries.spacechat.dynamicconnection.redis.supervisor;
+package dev.spaceseries.spacechat.dc.redis.supervisor;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.spaceseries.spacechat.configuration.Config;
-import dev.spaceseries.spacechat.dynamicconnection.Supervisor;
-import dev.spaceseries.spacechat.dynamicconnection.redis.RedisChatMessage;
-import dev.spaceseries.spacechat.dynamicconnection.redis.RedisChatMessageDeserializer;
-import dev.spaceseries.spacechat.dynamicconnection.redis.RedisChatMessageSerializer;
-import dev.spaceseries.spacechat.dynamicconnection.redis.connector.RedisConnector;
+import dev.spaceseries.spacechat.dc.Supervisor;
+import dev.spaceseries.spacechat.dc.redis.RedisChatMessage;
+import dev.spaceseries.spacechat.dc.redis.RedisChatMessageDeserializer;
+import dev.spaceseries.spacechat.dc.redis.RedisChatMessageSerializer;
+import dev.spaceseries.spacechat.dc.redis.connector.RedisConnector;
 import dev.spaceseries.spacechat.util.chat.ChatUtil;
 
-import static dev.spaceseries.spacechat.configuration.Config.REDIS_CHAT_CHANNEL;
+import static dev.spaceseries.spacechat.configuration.Config.*;
 
 public class RedisSupervisor extends Supervisor<RedisConnector> {
 
     /**
      * Gson
      */
-    private final Gson gson;
+    private Gson gson;
 
     /**
      * Construct supervisor
      */
     public RedisSupervisor() {
+    }
+
+    /**
+     * Initialize
+     */
+    public void initialize() {
         // set supervised
         this.supervised = new RedisConnector(this);
 
@@ -38,8 +44,10 @@ public class RedisSupervisor extends Supervisor<RedisConnector> {
      */
     @Override
     public void stop() {
-        if (this.getSupervised() != null)
+        if (this.getSupervised() != null) {
+            // shutdown
             this.getSupervised().shutdown();
+        }
     }
 
     /**
@@ -63,6 +71,11 @@ public class RedisSupervisor extends Supervisor<RedisConnector> {
     public void receiveChatMessage(String raw) {
         // deserialize
         RedisChatMessage chatMessage = gson.fromJson(raw, RedisChatMessage.class);
+
+        // if the message is from ourselves, then return
+        if (chatMessage.getServerIdentifier().equalsIgnoreCase(REDIS_SERVER_IDENTIFIER.get(Config.get()))) {
+            return;
+        }
 
         // send to all players
         ChatUtil.sendComponentChatMessage(chatMessage.getComponent());

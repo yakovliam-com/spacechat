@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.dynamicconnection.redis;
+package dev.spaceseries.spacechat.dc.redis;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -24,12 +24,17 @@ public class RedisChatMessageDeserializer implements JsonDeserializer<RedisChatM
         // get sender name
         String senderName = object.get("senderName").getAsString();
 
+        // get server identifier
+        String serverIdentifier = object.get("serverIdentifier").getAsString();
+        // get server display name
+        String serverDisplayName = object.get("serverDisplayName").getAsString();
+
         // get component string
         String componentString = object.get("component").getAsString();
         // deserialize
         Component component = GsonComponentSerializer.gson().deserialize(componentString);
 
         // return a new message
-        return new RedisChatMessage(sender, senderName, component);
+        return new RedisChatMessage(sender, senderName, serverIdentifier, serverDisplayName, component);
     }
 }

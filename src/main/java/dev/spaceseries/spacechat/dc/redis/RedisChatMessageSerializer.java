@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.dynamicconnection.redis;
+package dev.spaceseries.spacechat.dc.redis;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -18,6 +18,8 @@ public class RedisChatMessageSerializer implements JsonSerializer<RedisChatMessa
         // add properties
         element.addProperty("senderUUID", src.getSender().toString());
         element.addProperty("senderName", src.getSenderName());
+        element.addProperty("serverIdentifier", src.getServerIdentifier());
+        element.addProperty("serverDisplayName", src.getServerDisplayName());
         element.addProperty("component", GsonComponentSerializer.gson().serialize(src.getComponent()));
 
         return element;
