@@ -54,7 +54,7 @@ shadowJar {
     relocate 'dev.spaceseries.spaceapi', "${project.group}.spacechat.lib.spaceapi"
 
     from(sourceSets.main.resources.srcDirs) {
-        filter ReplaceTokens, tokens: [version: version]
+        filter ReplaceTokens, tokens: [version: project.version]
     }
 }
 
@@ -62,7 +62,7 @@ shadowJar {
 jar {
     manifest {
         attributes(
-                'Main-Class': "${group}.spacechat.SpaceChat"
+                'Main-Class': "${project.group}.spacechat.SpaceChat"
         )
     }
     from {
