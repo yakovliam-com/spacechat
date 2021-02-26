@@ -25,9 +25,14 @@ storage:
     tables:
       chat-logs: "spacechat_chatlogs"
 
-#=#=#=#=#=#=#=#=#=#=#=#=#
-# Redis Configuration   #
-#=#=#=#=#=#=#=#=#=#=#=#=#
+#=#=#=#=#=#=#=#=#=#=#=#=#=#
+# Redis Configuration     #
+#                         #
+# This allows multiple    #
+# server to have the same #
+# chat happening in       #
+# realtime!               #
+#=#=#=#=#=#=#=#=#=#=#=#=#=#
 redis:
   enabled: false
   # Set these server name values to the name of the current server the plugin is present on.
