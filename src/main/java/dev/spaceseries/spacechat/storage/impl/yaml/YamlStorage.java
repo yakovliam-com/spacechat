@@ -8,9 +8,9 @@ import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.storage.Storage;
+import org.bukkit.Bukkit;
 
 import java.io.File;
-import java.util.ConcurrentModificationException;
 import java.util.Date;
 
 public class YamlStorage implements Storage {
@@ -52,11 +52,8 @@ public class YamlStorage implements Storage {
     private void logChat(LogChatWrap data) {
         // object (json) for data
         String json = gson.toJson(data);
-        // set new key (date as milliseconds is the key)
-        try {
-            config.set("chat." + data.getAt().getTime(), json);
-        } catch (ConcurrentModificationException | NullPointerException ignored) {
-        }
+        // set new key (date as milliseconds is the key) (SYNC)
+        Bukkit.getScheduler().runTask(SpaceChat.getInstance(), () -> config.set("chat." + data.getAt().getTime(), json));
     }
 
     private static final class YamlStorageConfig extends Config {

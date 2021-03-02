@@ -32,6 +32,10 @@ storage:
 # server to have the same #
 # chat happening in       #
 # realtime!               #
+# ----------------------- #
+# NOTE: THESE ARE NOT     #
+# CHANNELS! THIS IS FOR   #
+# MULTI-SERVER SYNC       #
 #=#=#=#=#=#=#=#=#=#=#=#=#=#
 redis:
   enabled: false
@@ -45,8 +49,7 @@ redis:
     displayName: "&a&lServer #1"
   # redis://[password@]host[:port][/databaseNumber]
   # redis-socket:///path/to/socket
-  # And yes, that extra s below (redis[s]) IS correct- that means 'SSL'
-  url: "rediss://[password@]host[:port][/databaseNumber]"
+  url: "redis://[password@]host[:port][/databaseNumber]"
   chat-channel: "spacechat-message"
 
 #=#=#=#=#=#=#=#=#=#=#=#=#
