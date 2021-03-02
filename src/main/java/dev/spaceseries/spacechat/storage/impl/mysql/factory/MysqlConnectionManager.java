@@ -24,20 +24,20 @@ public final class MysqlConnectionManager extends SqlAble {
     public MysqlConnectionManager() {
         // create connection info
         connectionInfo = new ConnectionInfo(
-                MYSQL_ADDRESS.get(Config.get()),
-                MYSQL_PORT.get(Config.get()),
-                MYSQL_DATABASE.get(Config.get()),
+                STORAGE_MYSQL_ADDRESS.get(Config.get()),
+                STORAGE_MYSQL_PORT.get(Config.get()),
+                STORAGE_MYSQL_DATABASE.get(Config.get()),
                 new Credentials(
-                        MYSQL_USERNAME.get(Config.get()),
-                        MYSQL_PASSWORD.get(Config.get())
+                        STORAGE_MYSQL_USERNAME.get(Config.get()),
+                        STORAGE_MYSQL_PASSWORD.get(Config.get())
                 ),
-                MYSQL_USE_SSL.get(Config.get()),
-                MYSQL_VERIFY_SERVER_CERTIFICATE.get(Config.get())
+                STORAGE_MYSQL_USE_SSL.get(Config.get()),
+                STORAGE_MYSQL_VERIFY_SERVER_CERTIFICATE.get(Config.get())
         );
 
         // If not exists, create chat logging table
         try {
-            execute(connectionInfo.getDataSource().getConnection(), String.format(MysqlStorage.LOG_CHAT_CREATION_STATEMENT, MYSQL_TABLES_CHAT_LOGS.get(Config.get())));
+            execute(connectionInfo.getDataSource().getConnection(), String.format(MysqlStorage.LOG_CHAT_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_CHAT_LOGS.get(Config.get())));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

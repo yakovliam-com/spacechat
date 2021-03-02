@@ -8,6 +8,8 @@ import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.logging.Level;
+
 import static dev.spaceseries.spacechat.configuration.Config.*;
 
 public class LogManagerImpl implements LogManager {
@@ -23,6 +25,8 @@ public class LogManagerImpl implements LogManager {
                 case CONSOLE:
                     if (t instanceof String && optional instanceof AsyncPlayerChatEvent) {
                         global((String) t, (AsyncPlayerChatEvent) optional);
+                    } else if (t instanceof String && optional == null) {
+                        global((String) t);
                     }
                     break;
                 case STORAGE:
@@ -43,6 +47,15 @@ public class LogManagerImpl implements LogManager {
     private void global(String s, AsyncPlayerChatEvent e) {
         // set & escape
         e.setFormat(s.replace("%", "%%"));
+    }
+
+    /**
+     * Logs chat
+     *
+     * @param s The chat message
+     */
+    private void global(String s) {
+        SpaceChat.getInstance().getLogger().log(Level.INFO, s);
     }
 
     /**
