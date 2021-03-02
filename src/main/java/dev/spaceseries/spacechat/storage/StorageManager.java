@@ -16,7 +16,7 @@ public class StorageManager {
      */
     public StorageManager() {
         // get active storage type
-        String using = Config.USE.get(Config.get());
+        String using = Config.STORAGE_USE.get(Config.get());
 
         // if type, etc....
         if (using.equalsIgnoreCase("yaml")) {

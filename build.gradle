@@ -8,7 +8,7 @@ apply plugin: 'java'
 // naming
 project.ext.majorVersion = '2'
 project.ext.midVersion = '0'
-project.ext.minorVersion = '10'
+project.ext.minorVersion = '11'
 project.ext.versionType = 'SNAPSHOT'
 version = project.ext.majorVersion + '.' + project.ext.midVersion + '.' + project.ext.minorVersion + "-" + project.ext.versionType
 group = 'dev.spaceseries'
@@ -54,7 +54,7 @@ shadowJar {
     relocate 'dev.spaceseries.spaceapi', "${project.group}.spacechat.lib.spaceapi"
 
     from(sourceSets.main.resources.srcDirs) {
-        filter ReplaceTokens, tokens: [version: version]
+        filter ReplaceTokens, tokens: [version: project.version]
     }
 }
 
@@ -62,7 +62,7 @@ shadowJar {
 jar {
     manifest {
         attributes(
-                'Main-Class': "${group}.spacechat.SpaceChat"
+                'Main-Class': "${project.group}.spacechat.SpaceChat"
         )
     }
     from {
