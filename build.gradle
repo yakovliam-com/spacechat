@@ -8,7 +8,7 @@ apply plugin: 'java'
 // naming
 project.ext.majorVersion = '2'
 project.ext.midVersion = '0'
-project.ext.minorVersion = '10'
+project.ext.minorVersion = '11'
 project.ext.versionType = 'SNAPSHOT'
 version = project.ext.majorVersion + '.' + project.ext.midVersion + '.' + project.ext.minorVersion + "-" + project.ext.versionType
 group = 'dev.spaceseries'
