@@ -56,13 +56,14 @@ redis:
   chat-channel: "spacechat-message"
   broadcast-channel: "spacechat-broadcast"
 
-
 #=#=#=#=#=#=#=#=#=#=#=#=#
 #      Misc Settings    #
 #=#=#=#=#=#=#=#=#=#=#=#=#
 logging:
   chat:
     log-to-storage: true
+broadcast:
+  use-lang-wrapper: false
 
 #=#=#=#=#=#=#=#=#=#=#=#=#
 # Permissions           #

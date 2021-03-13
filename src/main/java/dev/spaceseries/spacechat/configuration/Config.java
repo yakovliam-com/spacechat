@@ -33,6 +33,8 @@ public final class Config extends dev.spaceseries.spaceapi.config.obj.Config {
 
     public static ConfigKey<String> PERMISSIONS_USE_CHAT_COLORS = ConfigKeyTypes.stringKey("permissions.use-chat-colors", null);
 
+    public static  ConfigKey<Boolean> BROADCAST_USE_LANG_WRAPPER = ConfigKeyTypes.booleanKey("broadcast.use-lang-wrapper", false);
+
     public static Configuration get() {
         return SpaceChat.getInstance().getSpaceChatConfig().getConfig();
     }

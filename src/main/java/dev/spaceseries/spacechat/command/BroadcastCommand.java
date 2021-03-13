@@ -14,6 +14,7 @@ import dev.spaceseries.spacechat.util.chat.ChatUtil;
 
 import java.util.Collections;
 
+import static dev.spaceseries.spacechat.configuration.Config.BROADCAST_USE_LANG_WRAPPER;
 import static dev.spaceseries.spacechat.configuration.Config.REDIS_SERVER_IDENTIFIER;
 
 @SubCommand
@@ -37,6 +38,14 @@ public class BroadcastCommand extends Command {
 
         // convert to component
         Component component = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
+
+        // use lang wrapper?
+        if (BROADCAST_USE_LANG_WRAPPER.get(Config.get())) {
+            Component previousComponent = component;
+            component = Messages.getInstance().broadcastWrapper.toComponent()
+                    .replaceText((b) -> b.match("%message%")
+                            .replacement(previousComponent));
+        }
 
         // send broadcast packet (redis)
         SpaceChat.getInstance().getDynamicConnectionManager().getRedisSupervisor().publishBroadcast(new RedisBroadcastPacket(REDIS_SERVER_IDENTIFIER.get(Config.get()), component));

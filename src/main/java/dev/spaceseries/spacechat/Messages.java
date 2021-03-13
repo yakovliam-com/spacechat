@@ -54,6 +54,10 @@ public class Messages {
     public Message broadcastArgs = Message.fromConfigurationSection(getLangConfiguration().getSection("broadcast.args"), "broadcast.args")
             .build();
 
+    // wrapper
+    public Message broadcastWrapper = Message.fromConfigurationSection(getLangConfiguration().getSection("broadcast.wrapper"), "broadcast.wrapper")
+            .build();
+
     /**
      * Gets the lang configuration from the main class
      *
