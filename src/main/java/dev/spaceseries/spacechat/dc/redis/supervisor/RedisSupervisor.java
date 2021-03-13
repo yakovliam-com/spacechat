@@ -114,6 +114,6 @@ public class RedisSupervisor extends Supervisor<RedisConnector> {
         }
 
         // send to all players
-        ChatUtil.sendComponentChatMessage(broadcastPacket.getComponent());
+        ChatUtil.sendComponentMessage(broadcastPacket.getComponent());
     }
 }

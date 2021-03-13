@@ -24,7 +24,7 @@ reload:
 broadcast:
   args:
     text:
-      - "&8&l[&d&lS&5&lS&8&l]&r $&cOops! &7You need to specify a message."
+      - "&8&l[&d&lS&5&lS&8&l]&r &cOops! &7You need to specify a message."
   wrapper:
     text:
       - "&8&l[&d&lS&5&lS&8&l]&r $&f&oBroadcast$ \u00BB &7%message%"
