@@ -50,7 +50,12 @@ redis:
   # redis://[password@]host[:port][/databaseNumber]
   # redis-socket:///path/to/socket
   url: "redis://[password@]host[:port][/databaseNumber]"
+
+  # <!> 'chat-channel' and 'broadcast-channel' can ***NOT*** be the same <!>
+  # Please choose two different channels
   chat-channel: "spacechat-message"
+  broadcast-channel: "spacechat-broadcast"
+
 
 #=#=#=#=#=#=#=#=#=#=#=#=#
 #      Misc Settings    #

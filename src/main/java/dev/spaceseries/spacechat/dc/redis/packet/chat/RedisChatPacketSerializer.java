@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.dc.redis;
+package dev.spaceseries.spacechat.dc.redis.packet.chat;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -8,10 +8,10 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.gson.Gso
 
 import java.lang.reflect.Type;
 
-public class RedisChatMessageSerializer implements JsonSerializer<RedisChatMessage> {
+public class RedisChatPacketSerializer implements JsonSerializer<RedisChatPacket> {
 
     @Override
-    public JsonElement serialize(RedisChatMessage src, Type typeOfSrc, JsonSerializationContext context) {
+    public JsonElement serialize(RedisChatPacket src, Type typeOfSrc, JsonSerializationContext context) {
         // create json element
         JsonObject element = new JsonObject();
 

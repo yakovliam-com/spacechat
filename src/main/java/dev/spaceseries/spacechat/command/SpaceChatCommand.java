@@ -14,7 +14,9 @@ public class SpaceChatCommand extends Command {
 
         // add sub commands
         addSubCommands(
-                new ReloadCommand()
+                new ReloadCommand(),
+                new BroadcastCommand(),
+                new BroadcastMinimessageCommand()
         );
     }
 

@@ -48,6 +48,14 @@ public class RedisConnector extends JedisPubSub {
                 jedis.subscribe(this, REDIS_CHAT_CHANNEL.get(Config.get()));
             }
         }).start();
+
+        // create a separate thread for broadcast packets
+        new Thread(() -> {
+            try (Jedis jedis = pool.getResource()) {
+                // subscribe this class to chat channel
+                jedis.subscribe(this, REDIS_BROADCAST_CHANNEL.get(Config.get()));
+            }
+        }).start();
     }
 
     /**
@@ -56,6 +64,7 @@ public class RedisConnector extends JedisPubSub {
     public void shutdown() {
         // unsubscribe from chat channel
         unsubscribe(REDIS_CHAT_CHANNEL.get(Config.get()));
+        unsubscribe(REDIS_BROADCAST_CHANNEL.get(Config.get()));
         pool.close();
     }
 
@@ -67,6 +76,8 @@ public class RedisConnector extends JedisPubSub {
         // if it's the correct channel
         if (channel.equalsIgnoreCase(REDIS_CHAT_CHANNEL.get(Config.get())))
             this.supervisor.receiveChatMessage(message);
+        else if (channel.equalsIgnoreCase(REDIS_BROADCAST_CHANNEL.get(Config.get())))
+            this.supervisor.receiveBroadcast(message);
     }
 
     @Override

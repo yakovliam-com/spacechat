@@ -25,6 +25,7 @@ public final class Config extends dev.spaceseries.spaceapi.config.obj.Config {
     public static ConfigKey<Boolean> REDIS_ENABLED = ConfigKeyTypes.booleanKey("redis.enabled", false);
     public static ConfigKey<String> REDIS_URL = ConfigKeyTypes.stringKey("redis.url", null);
     public static ConfigKey<String> REDIS_CHAT_CHANNEL = ConfigKeyTypes.stringKey("redis.chat-channel", null);
+    public static ConfigKey<String> REDIS_BROADCAST_CHANNEL = ConfigKeyTypes.stringKey("redis.broadcast-channel", null);
     public static ConfigKey<String> REDIS_SERVER_IDENTIFIER = ConfigKeyTypes.stringKey("redis.server.identifier", null);
     public static ConfigKey<String> REDIS_SERVER_DISPLAYNAME = ConfigKeyTypes.stringKey("redis.server.displayName", null);
 

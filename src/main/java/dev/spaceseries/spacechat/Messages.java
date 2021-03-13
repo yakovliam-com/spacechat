@@ -47,6 +47,14 @@ public class Messages {
             .build();
 
     /**
+     * Broadcast
+     */
+
+    // args
+    public Message broadcastArgs = Message.fromConfigurationSection(getLangConfiguration().getSection("broadcast.args"), "broadcast.args")
+            .build();
+
+    /**
      * Gets the lang configuration from the main class
      *
      * @return The lang configuration

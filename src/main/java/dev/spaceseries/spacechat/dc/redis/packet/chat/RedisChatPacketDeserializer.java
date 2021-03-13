@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.dc.redis;
+package dev.spaceseries.spacechat.dc.redis.packet.chat;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -10,10 +10,10 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.gson.Gso
 import java.lang.reflect.Type;
 import java.util.UUID;
 
-public class RedisChatMessageDeserializer implements JsonDeserializer<RedisChatMessage> {
+public class RedisChatPacketDeserializer implements JsonDeserializer<RedisChatPacket> {
 
     @Override
-    public RedisChatMessage deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
+    public RedisChatPacket deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
         JsonObject object = json.getAsJsonObject();
 
         // get sender uuid
@@ -35,6 +35,6 @@ public class RedisChatMessageDeserializer implements JsonDeserializer<RedisChatM
         Component component = GsonComponentSerializer.gson().deserialize(componentString);
 
         // return a new message
-        return new RedisChatMessage(sender, senderName, serverIdentifier, serverDisplayName, component);
+        return new RedisChatPacket(sender, senderName, serverIdentifier, serverDisplayName, component);
     }
 }
