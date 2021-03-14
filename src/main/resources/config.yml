@@ -64,6 +64,17 @@ logging:
     log-to-storage: true
 broadcast:
   use-lang-wrapper: false
+item-chat:
+  enabled: false
+  replace: "[item]"
+  with:
+    chat: "&7[&f%name% &ox%amount%&7]"
+    lore:
+      use-custom: false
+      custom:
+        - "&7This is"
+        - "&6Custom"
+        - "&c&bLore!"
 
 #=#=#=#=#=#=#=#=#=#=#=#=#
 # Permissions           #
@@ -73,3 +84,4 @@ broadcast:
 #=#=#=#=#=#=#=#=#=#=#=#=#
 permissions:
   use-chat-colors: "space.chat.chatcolor"
+  use-item-chat: "space.chat.item-chat"

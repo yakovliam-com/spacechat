@@ -5,6 +5,9 @@ import dev.spaceseries.spaceapi.config.keys.ConfigKey;
 import dev.spaceseries.spaceapi.config.keys.ConfigKeyTypes;
 import dev.spaceseries.spacechat.SpaceChat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public final class Config extends dev.spaceseries.spaceapi.config.obj.Config {
 
     public Config() {
@@ -32,8 +35,15 @@ public final class Config extends dev.spaceseries.spaceapi.config.obj.Config {
     public static ConfigKey<Boolean> LOGGING_CHAT_LOG_TO_STORAGE = ConfigKeyTypes.booleanKey("logging.chat.log-to-storage", true);
 
     public static ConfigKey<String> PERMISSIONS_USE_CHAT_COLORS = ConfigKeyTypes.stringKey("permissions.use-chat-colors", null);
+    public static ConfigKey<String> PERMISSIONS_USE_ITEM_CHAT = ConfigKeyTypes.stringKey("permissions.use-item-chat", null);
 
-    public static  ConfigKey<Boolean> BROADCAST_USE_LANG_WRAPPER = ConfigKeyTypes.booleanKey("broadcast.use-lang-wrapper", false);
+    public static ConfigKey<Boolean> BROADCAST_USE_LANG_WRAPPER = ConfigKeyTypes.booleanKey("broadcast.use-lang-wrapper", false);
+
+    public static ConfigKey<Boolean> ITEM_CHAT_ENABLED = ConfigKeyTypes.booleanKey("item-chat.enabled", false);
+    public static ConfigKey<String> ITEM_CHAT_REPLACE = ConfigKeyTypes.stringKey("item-chat.replace", null);
+    public static ConfigKey<String> ITEM_CHAT_WITH_CHAT = ConfigKeyTypes.stringKey("item-chat.with.chat", null);
+    public static ConfigKey<Boolean> ITEM_CHAT_WITH_LORE_USE_CUSTOM = ConfigKeyTypes.booleanKey("item-chat.with.lore.use-custom", false);
+    public static ConfigKey<List<String>> ITEM_CHAT_WITH_LORE_CUSTOM = ConfigKeyTypes.stringListKey("item-chat.with.lore.custom", new ArrayList<>());
 
     public static Configuration get() {
         return SpaceChat.getInstance().getSpaceChatConfig().getConfig();

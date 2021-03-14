@@ -5,6 +5,7 @@ import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.model.Extra;
 import dev.spaceseries.spacechat.model.Format;
+import dev.spaceseries.spacechat.parser.MessageParser;
 import dev.spaceseries.spacechat.replacer.AmpersandReplacer;
 import dev.spaceseries.spacechat.replacer.SectionReplacer;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -15,7 +16,7 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.minimessage.MiniMes
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
-import static dev.spaceseries.spacechat.configuration.Config.PERMISSIONS_USE_CHAT_COLORS;
+import static dev.spaceseries.spacechat.configuration.Config.*;
 
 public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Format>, TextComponent> {
 
@@ -39,7 +40,7 @@ public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Forma
     public TextComponent build(Trio<Player, String, Format> input) {
         // get input parameters
         Player player = input.getLeft();
-        String message = input.getMid();
+        String messageString = input.getMid();
         Format format = input.getRight();
 
         // create component builder for message
@@ -60,14 +61,17 @@ public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Forma
                         .serialize(player.hasPermission(PERMISSIONS_USE_CHAT_COLORS.get(Config.get())) ? // if player has permission to use chat colors
                                 LegacyComponentSerializer // yes, the player has permission to use chat colors, so color message
                                         .legacyAmpersand()
-                                        .deserialize(message) :
-                                Component.text(message)); // no, the player doesn't have permission to use chat colors, so just return the message (not colored)
+                                        .deserialize(messageString) :
+                                Component.text(messageString)); // no, the player doesn't have permission to use chat colors, so just return the message (not colored)
+
+                // parse message
+                Component message = new MessageParser().parse(player, Component.text(chatMessage));
 
                 // parse miniMessage
                 Component parsedMiniMessage = MiniMessage.get().parse(mmWithPlaceholdersReplaced);
 
                 // replace chat message
-                parsedMiniMessage = parsedMiniMessage.replaceText((text) -> text.match("<chat_message>").replacement(chatMessage));
+                parsedMiniMessage = parsedMiniMessage.replaceText((text) -> text.match("<chat_message>").replacement(message));
 
                 // parse MiniMessage into builder
                 partComponentBuilder.append(parsedMiniMessage);
@@ -85,9 +89,12 @@ public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Forma
             // build text from legacy (and replace <chat_message> with the actual message)
             // and check permissions for chat colors
             Component parsedText = player.hasPermission(PERMISSIONS_USE_CHAT_COLORS.get(Config.get())) ? LegacyComponentSerializer.legacyAmpersand().deserialize(
-                    text.replace("<chat_message>", message)) :
+                    text.replace("<chat_message>", messageString)) :
                     LegacyComponentSerializer.legacyAmpersand().deserialize(text).replaceText((b) -> b.match("<chat_message>")
-                            .replacement(message));
+                            .replacement(messageString));
+
+            // parse message
+            parsedText = new MessageParser().parse(player, parsedText);
 
             /* Retaining events for MULTIPLE components */
 
