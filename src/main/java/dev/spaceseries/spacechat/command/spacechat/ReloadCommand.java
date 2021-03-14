@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.command;
+package dev.spaceseries.spacechat.command.spacechat;
 
 import dev.spaceseries.spaceapi.command.Command;
 import dev.spaceseries.spaceapi.command.Permissible;

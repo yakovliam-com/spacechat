@@ -1,11 +1,11 @@
-package dev.spaceseries.spacechat.command;
+package dev.spaceseries.spacechat.command.spacechat;
 
 import dev.spaceseries.spaceapi.command.Command;
 import dev.spaceseries.spaceapi.command.Permissible;
 import dev.spaceseries.spaceapi.command.SpaceCommandSender;
 import dev.spaceseries.spaceapi.command.SubCommand;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.minimessage.MiniMessage;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.configuration.Config;
@@ -17,11 +17,12 @@ import java.util.Collections;
 import static dev.spaceseries.spacechat.configuration.Config.BROADCAST_USE_LANG_WRAPPER;
 import static dev.spaceseries.spacechat.configuration.Config.REDIS_SERVER_IDENTIFIER;
 
-@Permissible("space.chat.broadcastminimessage")
-public class BroadcastMinimessageCommand extends Command {
+@SubCommand
+@Permissible("space.chat.broadcast")
+public class BroadcastCommand extends Command {
 
-    public BroadcastMinimessageCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "spacechatbroadcastminimessage", "Broadcast (minimessage) command", Collections.singletonList("scbcastm"));
+    public BroadcastCommand() {
+        super(SpaceChat.getInstance().getPlugin(), "broadcast", "Broadcast command", Collections.singletonList("bcast"));
     }
 
     @Override
@@ -35,8 +36,8 @@ public class BroadcastMinimessageCommand extends Command {
         // compile args into single message
         String message = String.join(" ", args);
 
-        // parse through minimessage
-        Component component = MiniMessage.get().deserialize(message);
+        // convert to component
+        Component component = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
 
         // use lang wrapper?
         if (BROADCAST_USE_LANG_WRAPPER.get(Config.get())) {

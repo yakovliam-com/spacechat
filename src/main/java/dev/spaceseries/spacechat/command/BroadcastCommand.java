@@ -17,12 +17,11 @@ import java.util.Collections;
 import static dev.spaceseries.spacechat.configuration.Config.BROADCAST_USE_LANG_WRAPPER;
 import static dev.spaceseries.spacechat.configuration.Config.REDIS_SERVER_IDENTIFIER;
 
-@SubCommand
 @Permissible("space.chat.broadcast")
 public class BroadcastCommand extends Command {
 
     public BroadcastCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "broadcast", "Broadcast command", Collections.singletonList("bcast"));
+        super(SpaceChat.getInstance().getPlugin(), "spacechatbroadcast", "Broadcast command", Collections.singletonList("scbcast"));
     }
 
     @Override

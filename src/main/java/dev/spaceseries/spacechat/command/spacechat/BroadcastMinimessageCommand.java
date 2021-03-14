@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.command;
+package dev.spaceseries.spacechat.command.spacechat;
 
 import dev.spaceseries.spaceapi.command.Command;
 import dev.spaceseries.spaceapi.command.Permissible;
@@ -17,11 +17,12 @@ import java.util.Collections;
 import static dev.spaceseries.spacechat.configuration.Config.BROADCAST_USE_LANG_WRAPPER;
 import static dev.spaceseries.spacechat.configuration.Config.REDIS_SERVER_IDENTIFIER;
 
+@SubCommand
 @Permissible("space.chat.broadcastminimessage")
 public class BroadcastMinimessageCommand extends Command {
 
     public BroadcastMinimessageCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "spacechatbroadcastminimessage", "Broadcast (minimessage) command", Collections.singletonList("scbcastm"));
+        super(SpaceChat.getInstance().getPlugin(), "broadcastminimessage", "Broadcast (minimessage) command", Collections.singletonList("bcastm"));
     }
 
     @Override
