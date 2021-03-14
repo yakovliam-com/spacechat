@@ -5,6 +5,9 @@ import dev.spaceseries.spaceapi.command.Permissible;
 import dev.spaceseries.spaceapi.command.SpaceCommandSender;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.command.spacechat.BroadcastCommand;
+import dev.spaceseries.spacechat.command.spacechat.BroadcastMinimessageCommand;
+import dev.spaceseries.spacechat.command.spacechat.ReloadCommand;
 
 @Permissible("space.chat")
 public class SpaceChatCommand extends Command {
@@ -14,7 +17,9 @@ public class SpaceChatCommand extends Command {
 
         // add sub commands
         addSubCommands(
-                new ReloadCommand()
+                new ReloadCommand(),
+                new BroadcastCommand(),
+                new BroadcastMinimessageCommand()
         );
     }
 

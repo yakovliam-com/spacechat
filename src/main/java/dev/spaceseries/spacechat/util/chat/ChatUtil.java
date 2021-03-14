@@ -23,6 +23,16 @@ public class ChatUtil {
     }
 
     /**
+     * Send a raw component to all players
+     *
+     * @param component component
+     */
+    public static void sendComponentMessage(Component component) {
+        // get all online players, loop through, send chat message
+        Message.getAudienceProvider().players().sendMessage(component);
+    }
+
+    /**
      * Send a chat message
      *
      * @param component component

@@ -25,12 +25,15 @@ public final class Config extends dev.spaceseries.spaceapi.config.obj.Config {
     public static ConfigKey<Boolean> REDIS_ENABLED = ConfigKeyTypes.booleanKey("redis.enabled", false);
     public static ConfigKey<String> REDIS_URL = ConfigKeyTypes.stringKey("redis.url", null);
     public static ConfigKey<String> REDIS_CHAT_CHANNEL = ConfigKeyTypes.stringKey("redis.chat-channel", null);
+    public static ConfigKey<String> REDIS_BROADCAST_CHANNEL = ConfigKeyTypes.stringKey("redis.broadcast-channel", null);
     public static ConfigKey<String> REDIS_SERVER_IDENTIFIER = ConfigKeyTypes.stringKey("redis.server.identifier", null);
     public static ConfigKey<String> REDIS_SERVER_DISPLAYNAME = ConfigKeyTypes.stringKey("redis.server.displayName", null);
 
     public static ConfigKey<Boolean> LOGGING_CHAT_LOG_TO_STORAGE = ConfigKeyTypes.booleanKey("logging.chat.log-to-storage", true);
 
     public static ConfigKey<String> PERMISSIONS_USE_CHAT_COLORS = ConfigKeyTypes.stringKey("permissions.use-chat-colors", null);
+
+    public static  ConfigKey<Boolean> BROADCAST_USE_LANG_WRAPPER = ConfigKeyTypes.booleanKey("broadcast.use-lang-wrapper", false);
 
     public static Configuration get() {
         return SpaceChat.getInstance().getSpaceChatConfig().getConfig();

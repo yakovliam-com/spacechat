@@ -4,9 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.dc.Supervisor;
-import dev.spaceseries.spacechat.dc.redis.RedisChatMessage;
-import dev.spaceseries.spacechat.dc.redis.RedisChatMessageDeserializer;
-import dev.spaceseries.spacechat.dc.redis.RedisChatMessageSerializer;
+import dev.spaceseries.spacechat.dc.redis.packet.broadcast.RedisBroadcastPacket;
+import dev.spaceseries.spacechat.dc.redis.packet.broadcast.RedisBroadcastPacketDeserializer;
+import dev.spaceseries.spacechat.dc.redis.packet.broadcast.RedisBroadcastPacketSerializer;
+import dev.spaceseries.spacechat.dc.redis.packet.chat.RedisChatPacket;
+import dev.spaceseries.spacechat.dc.redis.packet.chat.RedisChatPacketDeserializer;
+import dev.spaceseries.spacechat.dc.redis.packet.chat.RedisChatPacketSerializer;
 import dev.spaceseries.spacechat.dc.redis.connector.RedisConnector;
 import dev.spaceseries.spacechat.util.chat.ChatUtil;
 
@@ -34,8 +37,10 @@ public class RedisSupervisor extends Supervisor<RedisConnector> {
 
         // initialize my super-duper gson adapter
         gson = new GsonBuilder()
-                .registerTypeAdapter(RedisChatMessage.class, new RedisChatMessageSerializer())
-                .registerTypeAdapter(RedisChatMessage.class, new RedisChatMessageDeserializer())
+                .registerTypeAdapter(RedisChatPacket.class, new RedisChatPacketSerializer())
+                .registerTypeAdapter(RedisChatPacket.class, new RedisChatPacketDeserializer())
+                .registerTypeAdapter(RedisBroadcastPacket.class, new RedisBroadcastPacketSerializer())
+                .registerTypeAdapter(RedisBroadcastPacket.class, new RedisBroadcastPacketDeserializer())
                 .create();
     }
 
@@ -53,14 +58,27 @@ public class RedisSupervisor extends Supervisor<RedisConnector> {
     /**
      * Publish a message
      *
-     * @param redisChatMessage redis chat message
+     * @param redisChatPacket redis chat message
      */
-    public void publishChatMessage(RedisChatMessage redisChatMessage) {
+    public void publishChatMessage(RedisChatPacket redisChatPacket) {
         // gson-ify the redis message
-        String json = gson.toJson(redisChatMessage, RedisChatMessage.class);
+        String json = gson.toJson(redisChatPacket, RedisChatPacket.class);
 
         // publish to redis
         this.getSupervised().publish(REDIS_CHAT_CHANNEL.get(Config.get()), json);
+    }
+
+    /**
+     * Publish a broadcast message
+     *
+     * @param redisBroadcastPacket redis broadcast packet
+     */
+    public void publishBroadcast(RedisBroadcastPacket redisBroadcastPacket) {
+        // gson-ify the redis message
+        String json = gson.toJson(redisBroadcastPacket, RedisBroadcastPacket.class);
+
+        // publish to redis
+        this.getSupervised().publish(REDIS_BROADCAST_CHANNEL.get(Config.get()), json);
     }
 
     /**
@@ -70,14 +88,32 @@ public class RedisSupervisor extends Supervisor<RedisConnector> {
      */
     public void receiveChatMessage(String raw) {
         // deserialize
-        RedisChatMessage chatMessage = gson.fromJson(raw, RedisChatMessage.class);
+        RedisChatPacket chatPacket = gson.fromJson(raw, RedisChatPacket.class);
 
         // if the message is from ourselves, then return
-        if (chatMessage.getServerIdentifier().equalsIgnoreCase(REDIS_SERVER_IDENTIFIER.get(Config.get()))) {
+        if (chatPacket.getServerIdentifier().equalsIgnoreCase(REDIS_SERVER_IDENTIFIER.get(Config.get()))) {
             return;
         }
 
         // send to all players
-        ChatUtil.sendComponentChatMessage(chatMessage.getComponent());
+        ChatUtil.sendComponentChatMessage(chatPacket.getComponent());
+    }
+
+    /**
+     * Receive incoming broadcast
+     *
+     * @param raw raw string
+     */
+    public void receiveBroadcast(String raw) {
+        // deserialize
+        RedisBroadcastPacket broadcastPacket = gson.fromJson(raw, RedisBroadcastPacket.class);
+
+        // if the message is from ourselves, then return
+        if (broadcastPacket.getServerIdentifier().equalsIgnoreCase(REDIS_SERVER_IDENTIFIER.get(Config.get()))) {
+            return;
+        }
+
+        // send to all players
+        ChatUtil.sendComponentMessage(broadcastPacket.getComponent());
     }
 }

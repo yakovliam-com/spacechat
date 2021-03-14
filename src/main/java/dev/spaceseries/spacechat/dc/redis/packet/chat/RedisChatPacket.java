@@ -1,10 +1,12 @@
-package dev.spaceseries.spacechat.dc.redis;
+package dev.spaceseries.spacechat.dc.redis.packet.chat;
 
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
+import dev.spaceseries.spacechat.dc.redis.packet.PacketType;
+import dev.spaceseries.spacechat.dc.redis.packet.RedisPacket;
 
 import java.util.UUID;
 
-public class RedisChatMessage {
+public class RedisChatPacket extends RedisPacket {
 
     /**
      * Who the message was sent by
@@ -34,7 +36,8 @@ public class RedisChatMessage {
     /**
      * Construct redis chat message
      */
-    public RedisChatMessage(UUID sender, String senderName, String serverIdentifier, String serverDisplayName, Component component) {
+    public RedisChatPacket(UUID sender, String senderName, String serverIdentifier, String serverDisplayName, Component component) {
+        this();
         this.sender = sender;
         this.senderName = senderName;
         this.serverIdentifier = serverIdentifier;
@@ -45,7 +48,8 @@ public class RedisChatMessage {
     /**
      * Construct redis chat message
      */
-    public RedisChatMessage() {
+    public RedisChatPacket() {
+        super(PacketType.CHAT);
     }
 
     /**

@@ -1,6 +1,8 @@
 package dev.spaceseries.spacechat;
 
 import dev.spaceseries.spaceapi.abstraction.plugin.BukkitPlugin;
+import dev.spaceseries.spacechat.command.BroadcastCommand;
+import dev.spaceseries.spacechat.command.BroadcastMinimessageCommand;
 import dev.spaceseries.spacechat.command.SpaceChatCommand;
 import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.configuration.FormatsConfig;
@@ -97,6 +99,8 @@ public final class SpaceChat extends JavaPlugin {
 
         // initialize commands
         new SpaceChatCommand();
+        new BroadcastCommand();
+        new BroadcastMinimessageCommand();
 
         // register chat listener
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
