@@ -94,9 +94,14 @@ public class ItemChatParser implements Parser<Pair<Player, Component>, Component
 
         // create a new component for the ACTUAL item message replacement (e.g. [Enchanted Sword x1]
         Component itemMessage = LegacyComponentSerializer.legacyAmpersand().deserialize(ITEM_CHAT_WITH_CHAT.get(get()))
-                .decoration(TextDecoration.BOLD, false)
                 .replaceText(nameReplacementConfig)
-                .replaceText(amountReplacementConfig);
+                .replaceText(amountReplacementConfig)
+                // remove all decoration from parent components above
+                .decoration(TextDecoration.BOLD, TextDecoration.State.NOT_SET)
+                .decoration(TextDecoration.ITALIC, TextDecoration.State.NOT_SET)
+                .decoration(TextDecoration.OBFUSCATED, TextDecoration.State.NOT_SET)
+                .decoration(TextDecoration.STRIKETHROUGH, TextDecoration.State.NOT_SET)
+                .decoration(TextDecoration.UNDERLINED, TextDecoration.State.NOT_SET);
 
         // set hover
         itemMessage = itemMessage.hoverEvent(HoverEvent.showText(loreBuilder.build()));
