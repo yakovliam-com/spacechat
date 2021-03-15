@@ -5,7 +5,6 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.TextComponent;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.TextReplacementConfig;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.event.HoverEvent;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.NamedTextColor;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.Style;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.TextDecoration;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import dev.spaceseries.spaceapi.util.Pair;
@@ -16,7 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import javax.xml.soap.Text;
 import java.util.Iterator;
 import java.util.List;
 
@@ -104,8 +102,13 @@ public class ItemChatParser implements Parser<Pair<Player, Component>, Component
         itemMessage = itemMessage.hoverEvent(HoverEvent.showText(loreBuilder.build()));
 
         Component finalItemMessage = itemMessage;
-        return message.replaceText(b ->
-                b.matchLiteral(Config.ITEM_CHAT_REPLACE.get(Config.get()))
-                        .replacement(finalItemMessage));
+
+        // replace [item] (and other aliases) with the item message
+        for (String s : ITEM_CHAT_REPLACE_ALIASES.get(get())) {
+            message = message.replaceText(b ->
+                    b.matchLiteral(s).replacement(finalItemMessage));
+        }
+
+        return message;
     }
 }

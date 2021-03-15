@@ -66,7 +66,9 @@ broadcast:
   use-lang-wrapper: false
 item-chat:
   enabled: false
-  replace: "[item]"
+  replace-aliases:
+    - "[item]"
+    - "{item}"
   with:
     chat: "&7[&f%name% &ox%amount%&7]"
     lore:

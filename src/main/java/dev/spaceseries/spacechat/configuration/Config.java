@@ -40,7 +40,7 @@ public final class Config extends dev.spaceseries.spaceapi.config.obj.Config {
     public static ConfigKey<Boolean> BROADCAST_USE_LANG_WRAPPER = ConfigKeyTypes.booleanKey("broadcast.use-lang-wrapper", false);
 
     public static ConfigKey<Boolean> ITEM_CHAT_ENABLED = ConfigKeyTypes.booleanKey("item-chat.enabled", false);
-    public static ConfigKey<String> ITEM_CHAT_REPLACE = ConfigKeyTypes.stringKey("item-chat.replace", null);
+    public static ConfigKey<List<String>> ITEM_CHAT_REPLACE_ALIASES = ConfigKeyTypes.stringListKey("item-chat.replace-aliases", new ArrayList<>());
     public static ConfigKey<String> ITEM_CHAT_WITH_CHAT = ConfigKeyTypes.stringKey("item-chat.with.chat", null);
     public static ConfigKey<Boolean> ITEM_CHAT_WITH_LORE_USE_CUSTOM = ConfigKeyTypes.booleanKey("item-chat.with.lore.use-custom", false);
     public static ConfigKey<List<String>> ITEM_CHAT_WITH_LORE_CUSTOM = ConfigKeyTypes.stringListKey("item-chat.with.lore.custom", new ArrayList<>());
