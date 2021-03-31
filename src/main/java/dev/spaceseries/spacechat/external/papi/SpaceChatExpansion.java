@@ -1,12 +1,12 @@
 package dev.spaceseries.spacechat.external.papi;
 
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.configuration.Config;
+import dev.spaceseries.spacechat.config.Config;
 import org.bukkit.OfflinePlayer;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 
-import static dev.spaceseries.spacechat.configuration.Config.REDIS_SERVER_DISPLAYNAME;
-import static dev.spaceseries.spacechat.configuration.Config.REDIS_SERVER_IDENTIFIER;
+import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_DISPLAYNAME;
+import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_IDENTIFIER;
 
 /**
  * This class will automatically register as a placeholder expansion

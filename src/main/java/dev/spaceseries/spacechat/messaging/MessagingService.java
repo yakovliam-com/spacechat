@@ -1,9 +1,9 @@
 package dev.spaceseries.spacechat.messaging;
 
-import dev.spaceseries.spacechat.configuration.Config;
+import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.messaging.redis.supervisor.RedisSupervisor;
 
-import static dev.spaceseries.spacechat.configuration.Config.REDIS_ENABLED;
+import static dev.spaceseries.spacechat.config.Config.REDIS_ENABLED;
 
 public class MessagingService extends InternalMessagingService<MessengerSupervisor> {
 

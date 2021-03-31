@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.configuration;
+package dev.spaceseries.spacechat.config;
 
 import dev.spaceseries.spaceapi.config.obj.Config;
 import dev.spaceseries.spacechat.SpaceChat;

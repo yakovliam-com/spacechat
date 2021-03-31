@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.storage.impl.mysql;
 
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.configuration.Config;
+import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
@@ -15,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import static dev.spaceseries.spacechat.configuration.Config.STORAGE_MYSQL_TABLES_CHAT_LOGS;
+import static dev.spaceseries.spacechat.config.Config.STORAGE_MYSQL_TABLES_CHAT_LOGS;
 
 public class MysqlStorage implements Storage {
 

@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.mysql.factory;
 
-import dev.spaceseries.spacechat.configuration.Config;
+import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.storage.impl.mysql.MysqlStorage;
 import dev.spaceseries.spacechat.storage.impl.mysql.SqlAble;
 import dev.spaceseries.spacechat.storage.impl.mysql.factory.o.ConnectionInfo;
@@ -9,7 +9,7 @@ import dev.spaceseries.spacechat.storage.impl.mysql.factory.o.Credentials;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static dev.spaceseries.spacechat.configuration.Config.*;
+import static dev.spaceseries.spacechat.config.Config.*;
 
 public final class MysqlConnectionManager extends SqlAble {
 

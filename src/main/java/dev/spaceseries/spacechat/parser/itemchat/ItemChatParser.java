@@ -8,7 +8,7 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.NamedTextCol
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.TextDecoration;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import dev.spaceseries.spaceapi.util.Pair;
-import dev.spaceseries.spacechat.configuration.Config;
+import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.parser.Parser;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
@@ -18,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Iterator;
 import java.util.List;
 
-import static dev.spaceseries.spacechat.configuration.Config.*;
+import static dev.spaceseries.spacechat.config.Config.*;
 
 public class ItemChatParser implements Parser<Pair<Player, Component>, Component> {
 

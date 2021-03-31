@@ -2,7 +2,7 @@ package dev.spaceseries.spacechat.builder.live;
 
 import dev.spaceseries.spaceapi.util.Trio;
 import dev.spaceseries.spacechat.builder.Builder;
-import dev.spaceseries.spacechat.configuration.Config;
+import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.model.Extra;
 import dev.spaceseries.spacechat.model.Format;
 import dev.spaceseries.spacechat.parser.MessageParser;
@@ -16,7 +16,7 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.minimessage.MiniMes
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
-import static dev.spaceseries.spacechat.configuration.Config.*;
+import static dev.spaceseries.spacechat.config.Config.*;
 
 public class LiveChatFormatBuilder implements Builder<Trio<Player, String, Format>, TextComponent> {
 

@@ -84,6 +84,11 @@ item-chat:
         - "&6Custom"
         - "&c&bLore!"
 
+# Enables or disables owner recognition
+# No need to change this value as it is set to "true" by default (and forced)
+# in every other version of SpaceChat
+owner-join: true
+
 #=#=#=#=#=#=#=#=#=#=#=#=#=#
 # Permissions             #
 #                         #
