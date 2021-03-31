@@ -30,7 +30,7 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
 
     // space api
-    implementation 'dev.spaceseries:spaceapi:1.0.8-SNAPSHOT'
+    implementation 'dev.spaceseries:spaceapi:1.0.9-SNAPSHOT'
 
     // bStats
     // https://repo.codemc.org/repository/maven-public
