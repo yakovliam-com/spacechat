@@ -1,6 +1,5 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "5.2.0"
-    id "me.bristermitten.pdm" version "0.0.31"
 }
 
 apply plugin: 'java'
@@ -8,7 +7,7 @@ apply plugin: 'java'
 // naming
 project.ext.majorVersion = '2'
 project.ext.midVersion = '0'
-project.ext.minorVersion = '11'
+project.ext.minorVersion = '12'
 project.ext.versionType = 'SNAPSHOT'
 version = project.ext.majorVersion + '.' + project.ext.midVersion + '.' + project.ext.minorVersion + "-" + project.ext.versionType
 group = 'dev.spaceseries'
@@ -24,7 +23,6 @@ repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
     maven { url 'https://oss.sonatype.org/content/repositories/central/' }
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-    maven { url 'https://repo.piggypiglet.me/repository/maven-releases/' }
 }
 
 dependencies {
@@ -32,7 +30,7 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
 
     // space api
-    implementation 'dev.spaceseries:spaceapi:1.0.8-SNAPSHOT'
+    implementation 'dev.spaceseries:spaceapi:1.0.9-SNAPSHOT'
 
     // bStats
     // https://repo.codemc.org/repository/maven-public
@@ -40,9 +38,6 @@ dependencies {
 
     // placeholderAPI
     compileOnly 'me.clip:placeholderapi:2.10.9'
-
-    // timeAPI
-    pdm 'me.piggypiglet:TimeAPI:1.9'
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -73,5 +68,3 @@ jar {
 artifacts {
     archives shadowJar
 }
-
-jar.dependsOn project.tasks.getByName("pdm") //Always run the pdm task when we build. Alternatively, just run [gradle pdm build]

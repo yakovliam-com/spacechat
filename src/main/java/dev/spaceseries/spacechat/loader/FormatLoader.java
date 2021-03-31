@@ -4,7 +4,7 @@ import dev.spaceseries.spaceapi.config.impl.Configuration;
 import dev.spaceseries.spacechat.builder.format.FormatBuilder;
 import dev.spaceseries.spacechat.manager.FormatManager;
 
-public class FormatLoader {
+public class FormatLoader implements Loader {
 
     /**
      * The format section

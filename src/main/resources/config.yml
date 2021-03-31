@@ -50,7 +50,11 @@ redis:
   # redis://[password@]host[:port][/databaseNumber]
   # redis-socket:///path/to/socket
   url: "redis://[password@]host[:port][/databaseNumber]"
+
+  # <!> 'chat-channel' and 'broadcast-channel' can ***NOT*** be the same <!>
+  # Please choose two different channels
   chat-channel: "spacechat-message"
+  broadcast-channel: "spacechat-broadcast"
 
 #=#=#=#=#=#=#=#=#=#=#=#=#
 #      Misc Settings    #
@@ -59,11 +63,34 @@ logging:
   chat:
     log-to-storage: true
 
-#=#=#=#=#=#=#=#=#=#=#=#=#
-# Permissions           #
-#                       #
-# Use chat colors (&)   #
-# space.chat.chatcolor  #
-#=#=#=#=#=#=#=#=#=#=#=#=#
+broadcast:
+  # If enabled, any 'broadcast commands' will broadcast using the wrapper specified
+  # in the lang.yml file. If disabled, all broadcasts will default to plain white with
+  # no prefixes or suffixes
+  use-lang-wrapper: false
+
+item-chat:
+  enabled: false
+  replace-aliases:
+    - "[item]"
+    - "{item}"
+  with:
+    chat: "&7[&f%name% &ox%amount%&7]"
+    lore:
+      # If enabled, all [item]s in chat will have ONLY the custom lore that is listed below
+      use-custom: false
+      custom:
+        - "&7This is"
+        - "&6Custom"
+        - "&c&bLore!"
+
+#=#=#=#=#=#=#=#=#=#=#=#=#=#
+# Permissions             #
+#                         #
+# For:                    #
+# Using chat colors (&)   #
+# Using item chat ([item])#
+#=#=#=#=#=#=#=#=#=#=#=#=#=#
 permissions:
   use-chat-colors: "space.chat.chatcolor"
+  use-item-chat: "space.chat.item-chat"
