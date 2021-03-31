@@ -1,6 +1,5 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "5.2.0"
-    id "me.bristermitten.pdm" version "0.0.31"
 }
 
 apply plugin: 'java'
@@ -24,7 +23,6 @@ repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
     maven { url 'https://oss.sonatype.org/content/repositories/central/' }
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-    maven { url 'https://repo.piggypiglet.me/repository/maven-releases/' }
 }
 
 dependencies {
@@ -40,9 +38,6 @@ dependencies {
 
     // placeholderAPI
     compileOnly 'me.clip:placeholderapi:2.10.9'
-
-    // timeAPI
-    pdm 'me.piggypiglet:TimeAPI:1.9'
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -73,5 +68,3 @@ jar {
 artifacts {
     archives shadowJar
 }
-
-jar.dependsOn project.tasks.getByName("pdm") //Always run the pdm task when we build. Alternatively, just run [gradle pdm build]

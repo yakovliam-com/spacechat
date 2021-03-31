@@ -9,7 +9,7 @@ import dev.spaceseries.spacechat.command.spacechat.BroadcastCommand;
 import dev.spaceseries.spacechat.command.spacechat.BroadcastMinimessageCommand;
 import dev.spaceseries.spacechat.command.spacechat.ReloadCommand;
 
-@Permissible("space.chat")
+@Permissible("space.chat.command")
 public class SpaceChatCommand extends Command {
 
     public SpaceChatCommand() {

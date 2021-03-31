@@ -10,7 +10,7 @@ import dev.spaceseries.spacechat.SpaceChat;
 import java.util.concurrent.CompletableFuture;
 
 @SubCommand
-@Permissible("space.chat.reload")
+@Permissible("space.chat.command.reload")
 public class ReloadCommand extends Command {
 
     public ReloadCommand() {

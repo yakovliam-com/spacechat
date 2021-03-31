@@ -1,11 +1,15 @@
-package dev.spaceseries.spacechat.dc.redis.connector;
+package dev.spaceseries.spacechat.messaging.redis.connector;
 
 import dev.spaceseries.spaceapi.lib.redis.jedis.Jedis;
 import dev.spaceseries.spaceapi.lib.redis.jedis.JedisPool;
 import dev.spaceseries.spaceapi.lib.redis.jedis.JedisPubSub;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.configuration.Config;
-import dev.spaceseries.spacechat.dc.redis.supervisor.RedisSupervisor;
+import dev.spaceseries.spacechat.messaging.SupervisedMessenger;
+import dev.spaceseries.spacechat.messaging.packet.MessageDataPacket;
+import dev.spaceseries.spacechat.messaging.redis.packet.RedisPublishDataPacket;
+import dev.spaceseries.spacechat.messaging.redis.packet.RedisStringReceiveDataPacket;
+import dev.spaceseries.spacechat.messaging.redis.supervisor.RedisSupervisor;
 import org.bukkit.Bukkit;
 
 import java.net.URI;
@@ -14,7 +18,7 @@ import java.util.logging.Level;
 
 import static dev.spaceseries.spacechat.configuration.Config.*;
 
-public class RedisConnector extends JedisPubSub {
+public class RedisConnector extends JedisPubSub implements SupervisedMessenger {
 
     /**
      * Redis client
@@ -75,9 +79,9 @@ public class RedisConnector extends JedisPubSub {
 
         // if it's the correct channel
         if (channel.equalsIgnoreCase(REDIS_CHAT_CHANNEL.get(Config.get())))
-            this.supervisor.receiveChatMessage(message);
+            this.supervisor.receiveChatMessage(new RedisStringReceiveDataPacket(message));
         else if (channel.equalsIgnoreCase(REDIS_BROADCAST_CHANNEL.get(Config.get())))
-            this.supervisor.receiveBroadcast(message);
+            this.supervisor.receiveBroadcast(new RedisStringReceiveDataPacket(message));
     }
 
     @Override
@@ -97,10 +101,14 @@ public class RedisConnector extends JedisPubSub {
     /**
      * Publish a message
      *
-     * @param channel channel
-     * @param message message
+     * @param dataPacket packet
      */
-    public void publish(String channel, String message) {
+    @Override
+    public void publish(MessageDataPacket dataPacket) {
+        RedisPublishDataPacket redisPublishDataPacket = (RedisPublishDataPacket) dataPacket;
+
+        String channel = redisPublishDataPacket.getChannel();
+        String message = redisPublishDataPacket.getMessage();
         // run async
         Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> {
             try (Jedis jedis = pool.getResource()) {

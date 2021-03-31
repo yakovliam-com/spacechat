@@ -4,12 +4,28 @@ general:
       - "&8&l[&d&lS&5&lS&8&l]&r &bChat &7&o(v2)&r &3help"
       - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/spacechat reload $&f&l(CLICK ME)$"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Reload plugin &7(chat formats, messages)"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/spacechat broadcast $&f&l(CLICK ME)$"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Broadcast a message to the server"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/spacechat broadcastminimessage $&f&l(CLICK ME)$"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Broadcast a message &7(using minimessage) &3to the server"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
     extras:
       1:
         tooltip:
           - "&bClick to reload chat formats"
         action: "RUN_COMMAND"
         content: "/spacechat reload"
+      2:
+        tooltip:
+          - "&bClick to broadcast a message"
+        action: "SUGGEST"
+        content: "/spacechat broadcast "
+      3:
+        tooltip:
+          - "&bClick to broadcast a message with minimessage"
+        action: "SUGGEST"
+        content: "/spacechat broadcastminimessage "
 reload:
   success:
     text:

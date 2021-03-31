@@ -1,19 +1,16 @@
 package dev.spaceseries.spacechat;
 
 import dev.spaceseries.spaceapi.abstraction.plugin.BukkitPlugin;
-import dev.spaceseries.spacechat.command.BroadcastCommand;
-import dev.spaceseries.spacechat.command.BroadcastMinimessageCommand;
 import dev.spaceseries.spacechat.command.SpaceChatCommand;
 import dev.spaceseries.spacechat.configuration.Config;
 import dev.spaceseries.spacechat.configuration.FormatsConfig;
 import dev.spaceseries.spacechat.configuration.LangConfig;
 import dev.spaceseries.spacechat.external.papi.SpaceChatExpansion;
-import dev.spaceseries.spacechat.internal.dependency.DependencyLoader;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
 import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import dev.spaceseries.spacechat.internal.space.SpacePlugin;
-import dev.spaceseries.spacechat.dc.DynamicConnectionManager;
+import dev.spaceseries.spacechat.messaging.MessagingService;
 import dev.spaceseries.spacechat.storage.StorageManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -60,9 +57,9 @@ public final class SpaceChat extends JavaPlugin {
     private StorageManager storageManager;
 
     /**
-     * Dynamic connection manager for redis
+     * Messaging service
      */
-    private DynamicConnectionManager dynamicConnectionManager;
+    private MessagingService messagingService;
 
     /**
      * Runs on load
@@ -70,8 +67,6 @@ public final class SpaceChat extends JavaPlugin {
     @Override
     public void onLoad() {
         instance = this;
-        // load dependencies
-        new DependencyLoader().load(this);
     }
 
     /**
@@ -99,8 +94,6 @@ public final class SpaceChat extends JavaPlugin {
 
         // initialize commands
         new SpaceChatCommand();
-        new BroadcastCommand();
-        new BroadcastMinimessageCommand();
 
         // register chat listener
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
@@ -115,7 +108,7 @@ public final class SpaceChat extends JavaPlugin {
     @Override
     public void onDisable() {
         // stop redis supervisor
-        this.getDynamicConnectionManager().getRedisSupervisor().stop();
+        this.messagingService.getSupervisor().stop();
     }
 
     /**
@@ -149,10 +142,10 @@ public final class SpaceChat extends JavaPlugin {
      */
     public void loadConnectionManagers() {
         // if currently exists, stop first
-        if(dynamicConnectionManager != null)
-            dynamicConnectionManager.getRedisSupervisor().stop();
+        if(messagingService != null)
+            messagingService.getSupervisor().stop();
 
-        dynamicConnectionManager = new DynamicConnectionManager();
+        messagingService = new MessagingService();
     }
 
     /**
@@ -230,11 +223,11 @@ public final class SpaceChat extends JavaPlugin {
     }
 
     /**
-     * Returns dynamic connection managers
+     * Returns messaging service
      *
-     * @return dynamic connection manager
+     * @return messaging service
      */
-    public DynamicConnectionManager getDynamicConnectionManager() {
-        return dynamicConnectionManager;
+    public MessagingService getMessagingService() {
+        return messagingService;
     }
 }

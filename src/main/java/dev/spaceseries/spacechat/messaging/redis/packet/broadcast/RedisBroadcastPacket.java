@@ -1,10 +1,11 @@
-package dev.spaceseries.spacechat.dc.redis.packet.broadcast;
+package dev.spaceseries.spacechat.messaging.redis.packet.broadcast;
 
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
-import dev.spaceseries.spacechat.dc.redis.packet.PacketType;
-import dev.spaceseries.spacechat.dc.redis.packet.RedisPacket;
+import dev.spaceseries.spacechat.messaging.packet.send.SendMessageDataPacket;
+import dev.spaceseries.spacechat.messaging.redis.packet.PacketType;
+import dev.spaceseries.spacechat.messaging.redis.packet.RedisPacket;
 
-public class RedisBroadcastPacket extends RedisPacket {
+public class RedisBroadcastPacket extends RedisPacket implements SendMessageDataPacket<Void> {
 
     /**
      * The broadcast component

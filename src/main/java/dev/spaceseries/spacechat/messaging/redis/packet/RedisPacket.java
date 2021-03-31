@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.dc.redis.packet;
+package dev.spaceseries.spacechat.messaging.redis.packet;
 
 public abstract class RedisPacket {
 

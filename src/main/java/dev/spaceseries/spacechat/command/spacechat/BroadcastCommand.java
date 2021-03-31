@@ -9,7 +9,7 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.L
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.configuration.Config;
-import dev.spaceseries.spacechat.dc.redis.packet.broadcast.RedisBroadcastPacket;
+import dev.spaceseries.spacechat.messaging.redis.packet.broadcast.RedisBroadcastPacket;
 import dev.spaceseries.spacechat.util.chat.ChatUtil;
 
 import java.util.Collections;
@@ -18,7 +18,7 @@ import static dev.spaceseries.spacechat.configuration.Config.BROADCAST_USE_LANG_
 import static dev.spaceseries.spacechat.configuration.Config.REDIS_SERVER_IDENTIFIER;
 
 @SubCommand
-@Permissible("space.chat.broadcast")
+@Permissible("space.chat.command.broadcast")
 public class BroadcastCommand extends Command {
 
     public BroadcastCommand() {
@@ -48,7 +48,7 @@ public class BroadcastCommand extends Command {
         }
 
         // send broadcast packet (redis)
-        SpaceChat.getInstance().getDynamicConnectionManager().getRedisSupervisor().publishBroadcast(new RedisBroadcastPacket(REDIS_SERVER_IDENTIFIER.get(Config.get()), component));
+        SpaceChat.getInstance().getMessagingService().getSupervisor().publishBroadcast(new RedisBroadcastPacket(REDIS_SERVER_IDENTIFIER.get(Config.get()), component));
 
         // output to game
         ChatUtil.sendComponentMessage(component);

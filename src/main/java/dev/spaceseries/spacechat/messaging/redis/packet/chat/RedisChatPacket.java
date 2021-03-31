@@ -1,12 +1,13 @@
-package dev.spaceseries.spacechat.dc.redis.packet.chat;
+package dev.spaceseries.spacechat.messaging.redis.packet.chat;
 
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
-import dev.spaceseries.spacechat.dc.redis.packet.PacketType;
-import dev.spaceseries.spacechat.dc.redis.packet.RedisPacket;
+import dev.spaceseries.spacechat.messaging.packet.send.SendMessageDataPacket;
+import dev.spaceseries.spacechat.messaging.redis.packet.PacketType;
+import dev.spaceseries.spacechat.messaging.redis.packet.RedisPacket;
 
 import java.util.UUID;
 
-public class RedisChatPacket extends RedisPacket {
+public class RedisChatPacket extends RedisPacket implements SendMessageDataPacket<Void> {
 
     /**
      * Who the message was sent by
