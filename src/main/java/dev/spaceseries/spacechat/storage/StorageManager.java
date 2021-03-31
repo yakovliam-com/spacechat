@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.storage;
 
-import dev.spaceseries.spacechat.configuration.Config;
+import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.storage.impl.mysql.MysqlStorage;
 import dev.spaceseries.spacechat.storage.impl.yaml.YamlStorage;
 

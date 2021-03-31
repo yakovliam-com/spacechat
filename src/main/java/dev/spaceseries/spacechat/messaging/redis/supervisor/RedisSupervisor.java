@@ -2,7 +2,7 @@ package dev.spaceseries.spacechat.messaging.redis.supervisor;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import dev.spaceseries.spacechat.configuration.Config;
+import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.messaging.MessengerSupervisor;
 import dev.spaceseries.spacechat.messaging.packet.receive.ReceiveMessageDataPacket;
 import dev.spaceseries.spacechat.messaging.packet.send.SendMessageDataPacket;
@@ -17,7 +17,7 @@ import dev.spaceseries.spacechat.messaging.redis.packet.chat.RedisChatPacketSeri
 import dev.spaceseries.spacechat.messaging.redis.connector.RedisConnector;
 import dev.spaceseries.spacechat.util.chat.ChatUtil;
 
-import static dev.spaceseries.spacechat.configuration.Config.*;
+import static dev.spaceseries.spacechat.config.Config.*;
 
 public class RedisSupervisor extends MessengerSupervisor {
 

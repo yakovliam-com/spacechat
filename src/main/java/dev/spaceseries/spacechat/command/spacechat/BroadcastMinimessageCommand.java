@@ -8,14 +8,14 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.minimessage.MiniMessage;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.configuration.Config;
+import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.messaging.redis.packet.broadcast.RedisBroadcastPacket;
 import dev.spaceseries.spacechat.util.chat.ChatUtil;
 
 import java.util.Collections;
 
-import static dev.spaceseries.spacechat.configuration.Config.BROADCAST_USE_LANG_WRAPPER;
-import static dev.spaceseries.spacechat.configuration.Config.REDIS_SERVER_IDENTIFIER;
+import static dev.spaceseries.spacechat.config.Config.BROADCAST_USE_LANG_WRAPPER;
+import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_IDENTIFIER;
 
 @SubCommand
 @Permissible("space.chat.command.broadcastminimessage")

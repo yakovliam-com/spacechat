@@ -10,7 +10,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.logging.Level;
 
-import static dev.spaceseries.spacechat.configuration.Config.*;
+import static dev.spaceseries.spacechat.config.Config.*;
 
 public class LogManagerImpl implements LogManager {
 

@@ -2,11 +2,12 @@ package dev.spaceseries.spacechat;
 
 import dev.spaceseries.spaceapi.abstraction.plugin.BukkitPlugin;
 import dev.spaceseries.spacechat.command.SpaceChatCommand;
-import dev.spaceseries.spacechat.configuration.Config;
-import dev.spaceseries.spacechat.configuration.FormatsConfig;
-import dev.spaceseries.spacechat.configuration.LangConfig;
+import dev.spaceseries.spacechat.config.Config;
+import dev.spaceseries.spacechat.config.FormatsConfig;
+import dev.spaceseries.spacechat.config.LangConfig;
 import dev.spaceseries.spacechat.external.papi.SpaceChatExpansion;
 import dev.spaceseries.spacechat.listener.ChatListener;
+import dev.spaceseries.spacechat.listener.JoinQuitListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
 import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import dev.spaceseries.spacechat.internal.space.SpacePlugin;
@@ -97,6 +98,8 @@ public final class SpaceChat extends JavaPlugin {
 
         // register chat listener
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
+        // register join listener
+        this.getServer().getPluginManager().registerEvents(new JoinQuitListener(), this);
 
         // register placeholder expansion
         new SpaceChatExpansion().register();
