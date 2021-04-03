@@ -44,6 +44,7 @@ public final class Config extends dev.spaceseries.spaceapi.config.obj.Config {
     public static ConfigKey<String> ITEM_CHAT_WITH_CHAT = ConfigKeyTypes.stringKey("item-chat.with.chat", null);
     public static ConfigKey<Boolean> ITEM_CHAT_WITH_LORE_USE_CUSTOM = ConfigKeyTypes.booleanKey("item-chat.with.lore.use-custom", false);
     public static ConfigKey<List<String>> ITEM_CHAT_WITH_LORE_CUSTOM = ConfigKeyTypes.stringListKey("item-chat.with.lore.custom", new ArrayList<>());
+    public static ConfigKey<Integer> ITEM_CHAT_MAX_PER_MESSAGE = ConfigKeyTypes.integerKey("item-chat.max-per-message", 2);
 
     public static ConfigKey<Boolean> OWNER_JOIN = ConfigKeyTypes.booleanKey("owner-join", true);
 

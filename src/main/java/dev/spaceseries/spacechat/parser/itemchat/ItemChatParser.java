@@ -10,6 +10,7 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.TextColor;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.TextDecoration;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.minimessage.transformation.inbuild.TranslatableTransformation;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.plain.PlainComponentSerializer;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.translation.TranslationRegistry;
 import dev.spaceseries.spaceapi.util.Pair;
 import dev.spaceseries.spacechat.config.Config;
@@ -22,10 +23,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static dev.spaceseries.spacechat.config.Config.*;
@@ -129,26 +128,6 @@ public class ItemChatParser implements Parser<Pair<Player, Component>, Component
                         loreBuilder.append(Component.newline());
                     }
                 }
-
-                // // loop through enchantments
-                // for (Iterator<Enchantment> it = itemStack.getEnchantments().keySet().iterator(); it.hasNext(); ) {
-                //
-                //     Enchantment enchantment = it.next();
-                //     int level = itemStack.getEnchantmentLevel(enchantment);
-                //
-                //     loreBuilder.append(TextComponent.ofChildren(
-                //             Component.translatable()
-                //                     .key(enchantment.getKey().toString())
-                //                     .color(NamedTextColor.GRAY),
-                //             // Component.text(WordUtils.capitalize(enchantment.getKey().getKey().replace("_", " ").toLowerCase()) + " ", NamedTextColor.GRAY),
-                //             Component.text(" " + RomanNumber.toRoman(level), NamedTextColor.GRAY)
-                //     ));
-                //
-                //     // if not the end, append a newline
-                //     if (it.hasNext()) {
-                //         loreBuilder.append(Component.newline());
-                //     }
-                // }
             } else if (hasLore) {
                 List<String> lore = itemStack.getItemMeta().getLore();
 
@@ -181,9 +160,15 @@ public class ItemChatParser implements Parser<Pair<Player, Component>, Component
         Component finalItemMessage = itemMessage;
 
         // replace [item] (and other aliases) with the item message
-        for (String s : ITEM_CHAT_REPLACE_ALIASES.get(get())) {
-            message = message.replaceText(b ->
-                    b.matchLiteral(s).replacement(finalItemMessage));
+
+        // keep track of the count
+        for (String s : ITEM_CHAT_REPLACE_ALIASES.get(Config.get())) {
+            message = message.replaceText(b -> {
+                if (ITEM_CHAT_MAX_PER_MESSAGE.get(Config.get()) != -1)
+                    b.times(ITEM_CHAT_MAX_PER_MESSAGE.get(Config.get())).matchLiteral(s).replacement(finalItemMessage);
+                else
+                    b.matchLiteral(s).replacement(finalItemMessage);
+            });
         }
 
         return message;
