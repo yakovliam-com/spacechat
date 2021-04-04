@@ -5,18 +5,27 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.TextComponent;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.TextReplacementConfig;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.event.HoverEvent;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.NamedTextColor;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.Style;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.TextColor;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.TextDecoration;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.minimessage.transformation.inbuild.TranslatableTransformation;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.plain.PlainComponentSerializer;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.translation.TranslationRegistry;
 import dev.spaceseries.spaceapi.util.Pair;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.parser.Parser;
+import dev.spaceseries.spacechat.util.number.RomanNumber;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static dev.spaceseries.spacechat.config.Config.*;
 
@@ -76,19 +85,61 @@ public class ItemChatParser implements Parser<Pair<Player, Component>, Component
             }
 
         } else { // not using custom lore, so just parse the lore regularly
-            // append lore
-            if (itemStack.hasItemMeta() && itemStack.getItemMeta().hasLore()) {
-                List<String> lore = itemStack.getItemMeta().getLore();
 
-                for (Iterator<String> it = lore.iterator(); it.hasNext(); ) {
-                    loreBuilder.append(LegacyComponentSerializer.legacySection().deserialize(it.next()));
+            // always append name to lore first
+            loreBuilder.append(LegacyComponentSerializer.legacySection().deserialize(name));
+
+            boolean hasLore = itemStack.hasItemMeta() && itemStack.getItemMeta().hasLore();
+            boolean hasEnchantments = itemStack.getEnchantments().size() >= 1 || (itemStack.hasItemMeta() && itemStack.getItemMeta() instanceof EnchantmentStorageMeta);
+
+            // if either lore or enchantments, append a newline
+            if (hasEnchantments || hasLore) loreBuilder.append(Component.newline());
+
+
+            // append enchantments
+            if (hasEnchantments) {
+                Map<Enchantment, Integer> enchantmentMap;
+
+                // if it is enchantment storage meta
+                if (itemStack.hasItemMeta() && itemStack.getItemMeta() instanceof EnchantmentStorageMeta) {
+                    // get meta
+                    EnchantmentStorageMeta meta = (EnchantmentStorageMeta) itemStack.getItemMeta();
+                    // set map
+                    enchantmentMap = meta.getStoredEnchants();
+                } else { // else regular enchantments
+                    enchantmentMap = itemStack.getEnchantments();
+                }
+
+                // credits to PlanetTeamSpeak#4157 for informing me about translatable locale components
+                List<TextComponent> enchantments = enchantmentMap.entrySet().stream().
+                        filter(entry -> "minecraft".equalsIgnoreCase(entry.getKey().getKey().getNamespace()))
+                        .map(entry -> Component.empty().style(Style.style(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false))
+                                .append(Component.translatable("enchantment.minecraft." + entry.getKey().getKey().getKey()))
+                                .append(entry.getKey().getMaxLevel() > 1 ? Component.space()
+                                        .append(Component.translatable("enchantment.level." + entry.getValue())) : Component.empty()))
+                        .collect(Collectors.toList());
+
+                // loop through enchantments and apply to lore
+                for (Iterator<TextComponent> it = enchantments.iterator(); it.hasNext(); ) {
+                    loreBuilder.append(it.next());
+
+                    // if there's a next enchantment, append a newline
                     if (it.hasNext()) {
                         loreBuilder.append(Component.newline());
                     }
                 }
-            } else {
-                // append name to lore instead since the lore doesn't exist/length is 0
-                loreBuilder.append(LegacyComponentSerializer.legacySection().deserialize(name));
+            } else if (hasLore) {
+                List<String> lore = itemStack.getItemMeta().getLore();
+
+                // loop through lore
+                for (Iterator<String> it = lore.iterator(); it.hasNext(); ) {
+                    loreBuilder.append(LegacyComponentSerializer.legacySection().deserialize(it.next()));
+
+                    // if not the end, append a newline
+                    if (it.hasNext()) {
+                        loreBuilder.append(Component.newline());
+                    }
+                }
             }
         }
 
@@ -109,9 +160,15 @@ public class ItemChatParser implements Parser<Pair<Player, Component>, Component
         Component finalItemMessage = itemMessage;
 
         // replace [item] (and other aliases) with the item message
-        for (String s : ITEM_CHAT_REPLACE_ALIASES.get(get())) {
-            message = message.replaceText(b ->
-                    b.matchLiteral(s).replacement(finalItemMessage));
+
+        // keep track of the count
+        for (String s : ITEM_CHAT_REPLACE_ALIASES.get(Config.get())) {
+            message = message.replaceText(b -> {
+                if (ITEM_CHAT_MAX_PER_MESSAGE.get(Config.get()) != -1)
+                    b.times(ITEM_CHAT_MAX_PER_MESSAGE.get(Config.get())).matchLiteral(s).replacement(finalItemMessage);
+                else
+                    b.matchLiteral(s).replacement(finalItemMessage);
+            });
         }
 
         return message;

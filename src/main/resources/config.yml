@@ -83,6 +83,10 @@ item-chat:
         - "&7This is"
         - "&6Custom"
         - "&c&bLore!"
+  # This dictates the maximum amount of times that players can use the item-chat feature in a single message
+  # Set to -1 to disable the maximum amount
+  max-per-message: 2
+
 
 # Enables or disables owner recognition
 # No need to change this value as it is set to "true" by default (and forced)
