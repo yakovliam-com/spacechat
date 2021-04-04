@@ -1,5 +1,6 @@
-package dev.spaceseries.spacechat.messaging;
+package dev.spaceseries.spacechat.messaging.empty;
 
+import dev.spaceseries.spacechat.messaging.MessengerSupervisor;
 import dev.spaceseries.spacechat.messaging.packet.receive.ReceiveMessageDataPacket;
 import dev.spaceseries.spacechat.messaging.packet.send.SendMessageDataPacket;
 

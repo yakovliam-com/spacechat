@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.messaging.redis.supervisor;
+package dev.spaceseries.spacechat.messaging.redis;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,7 +14,6 @@ import dev.spaceseries.spacechat.messaging.redis.packet.broadcast.RedisBroadcast
 import dev.spaceseries.spacechat.messaging.redis.packet.chat.RedisChatPacket;
 import dev.spaceseries.spacechat.messaging.redis.packet.chat.RedisChatPacketDeserializer;
 import dev.spaceseries.spacechat.messaging.redis.packet.chat.RedisChatPacketSerializer;
-import dev.spaceseries.spacechat.messaging.redis.connector.RedisConnector;
 import dev.spaceseries.spacechat.util.chat.ChatUtil;
 
 import static dev.spaceseries.spacechat.config.Config.*;
@@ -38,7 +37,7 @@ public class RedisSupervisor extends MessengerSupervisor {
     @Override
     public void initialize() {
         // set supervised
-        this.supervised = new RedisConnector(this);
+        this.supervised = new RedisMessenger(this);
 
         // initialize my super-duper gson adapter
         gson = new GsonBuilder()
