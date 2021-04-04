@@ -13,6 +13,7 @@ import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import dev.spaceseries.spacechat.internal.space.SpacePlugin;
 import dev.spaceseries.spacechat.messaging.MessagingService;
 import dev.spaceseries.spacechat.storage.StorageManager;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SpaceChat extends JavaPlugin {
@@ -105,7 +106,7 @@ public final class SpaceChat extends JavaPlugin {
         new SpaceChatExpansion().register();
 
         // initialize metrics
-        new MetricsHandler();
+        new Metrics(this, 7508);
     }
 
     @Override
