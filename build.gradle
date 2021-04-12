@@ -47,12 +47,13 @@ shadowJar {
 
     relocate 'org.bstats.bukkit', "${project.group}.spacechat.lib.bstats"
     relocate 'dev.spaceseries.spaceapi', "${project.group}.spacechat.lib.spaceapi"
+}
 
-    from(sourceSets.main.resources.srcDirs) {
+processResources {
+    from (sourceSets.main.resources.srcDirs) {
         filter ReplaceTokens, tokens: [version: project.version]
     }
 }
-
 
 jar {
     manifest {
