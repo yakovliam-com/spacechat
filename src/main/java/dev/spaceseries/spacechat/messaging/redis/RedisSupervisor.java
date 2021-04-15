@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.messaging.redis;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import dev.spaceseries.spaceapi.lib.google.gson.Gson;
+import dev.spaceseries.spaceapi.lib.google.gson.GsonBuilder;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.messaging.MessengerSupervisor;
 import dev.spaceseries.spacechat.messaging.packet.receive.ReceiveMessageDataPacket;

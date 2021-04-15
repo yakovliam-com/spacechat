@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.model.action;
 
-import com.google.common.base.Joiner;
+import dev.spaceseries.spaceapi.lib.google.common.base.Joiner;
 import me.clip.placeholderapi.PlaceholderAPI;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.event.HoverEvent;

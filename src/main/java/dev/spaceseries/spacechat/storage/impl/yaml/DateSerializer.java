@@ -1,9 +1,9 @@
 package dev.spaceseries.spacechat.storage.impl.yaml;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import dev.spaceseries.spaceapi.lib.google.gson.JsonElement;
+import dev.spaceseries.spaceapi.lib.google.gson.JsonPrimitive;
+import dev.spaceseries.spaceapi.lib.google.gson.JsonSerializationContext;
+import dev.spaceseries.spaceapi.lib.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
 import java.util.Date;

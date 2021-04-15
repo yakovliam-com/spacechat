@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.yaml;
 
-import com.google.gson.*;
+import dev.spaceseries.spaceapi.lib.google.gson.*;
 
 import java.lang.reflect.Type;
 import java.util.Date;

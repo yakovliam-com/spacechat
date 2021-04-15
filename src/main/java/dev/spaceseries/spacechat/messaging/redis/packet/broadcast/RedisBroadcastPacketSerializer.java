@@ -1,9 +1,9 @@
 package dev.spaceseries.spacechat.messaging.redis.packet.broadcast;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import dev.spaceseries.spaceapi.lib.google.gson.JsonElement;
+import dev.spaceseries.spaceapi.lib.google.gson.JsonObject;
+import dev.spaceseries.spaceapi.lib.google.gson.JsonSerializationContext;
+import dev.spaceseries.spaceapi.lib.google.gson.JsonSerializer;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.gson.GsonComponentSerializer;
 
 import java.lang.reflect.Type;

@@ -13,7 +13,8 @@ import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import dev.spaceseries.spacechat.internal.space.SpacePlugin;
 import dev.spaceseries.spacechat.messaging.MessagingService;
 import dev.spaceseries.spacechat.storage.StorageManager;
-import org.bstats.bukkit.Metrics;
+import dev.spaceseries.spacechat.util.metrics.Metrics;
+import dev.spaceseries.spacechat.util.version.VersionUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SpaceChat extends JavaPlugin {
@@ -107,6 +108,9 @@ public final class SpaceChat extends JavaPlugin {
 
         // initialize metrics
         new Metrics(this, 7508);
+
+        // log initialization method
+        this.getLogger().info("Detected that SpaceChat is running under " + VersionUtil.getServerBukkitVersion().toString());
     }
 
     @Override

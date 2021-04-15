@@ -4,7 +4,7 @@ import dev.spaceseries.spaceapi.config.impl.Configuration;
 import dev.spaceseries.spacechat.builder.format.FormatBuilder;
 import dev.spaceseries.spacechat.manager.FormatManager;
 
-public class FormatLoader implements Loader {
+public class FormatLoader implements Loader<FormatManager> {
 
     /**
      * The format section
@@ -21,6 +21,7 @@ public class FormatLoader implements Loader {
     /**
      * Loads chat formats
      */
+    @Override
     public void load(FormatManager formatManager) {
         // loop through section keys
         for (String handle : formatSection.getKeys()) {

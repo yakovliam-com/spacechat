@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.storage.impl.yaml;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import dev.spaceseries.spaceapi.lib.google.gson.Gson;
+import dev.spaceseries.spaceapi.lib.google.gson.GsonBuilder;
 import dev.spaceseries.spaceapi.config.obj.Config;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
