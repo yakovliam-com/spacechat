@@ -3,7 +3,7 @@ package dev.spaceseries.spacechat.storage.impl.mysql.factory.o;
 import dev.spaceseries.spaceapi.lib.hikari.HikariConfig;
 import dev.spaceseries.spaceapi.lib.hikari.HikariDataSource;
 
-public final class ConnectionInfo {
+public final class MysqlConnectionInfo {
 
     /**
      * The url to connect to
@@ -23,7 +23,7 @@ public final class ConnectionInfo {
     /**
      * The connection credentials
      */
-    private final Credentials credentials;
+    private final MysqlCredentials credentials;
 
     /**
      * Use ssl?
@@ -48,7 +48,7 @@ public final class ConnectionInfo {
     /**
      * Initializes new connection info
      */
-    public ConnectionInfo(String address, int port, String database, Credentials credentials, boolean useSSL, boolean verifyServerCertificate) {
+    public MysqlConnectionInfo(String address, int port, String database, MysqlCredentials credentials, boolean useSSL, boolean verifyServerCertificate) {
         this.address = address;
         this.port = port;
         this.database = database;
@@ -104,7 +104,7 @@ public final class ConnectionInfo {
      *
      * @return credentials
      */
-    public Credentials getCredentials() {
+    public MysqlCredentials getCredentials() {
         return credentials;
     }
 

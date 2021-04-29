@@ -6,8 +6,8 @@ apply plugin: 'java'
 
 // naming
 project.ext.majorVersion = '2'
-project.ext.midVersion = '0'
-project.ext.minorVersion = '14'
+project.ext.midVersion = '1'
+project.ext.minorVersion = '0'
 project.ext.versionType = 'SNAPSHOT'
 version = project.ext.majorVersion + '.' + project.ext.midVersion + '.' + project.ext.minorVersion + "-" + project.ext.versionType
 group = 'dev.spaceseries'
@@ -30,14 +30,22 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
 
     // space api
-    implementation 'dev.spaceseries:spaceapi:1.0.9-SNAPSHOT'
-
-    // bStats
-    // https://repo.codemc.org/repository/maven-public
-    implementation 'org.bstats:bstats-bukkit:1.7'
+    compileOnly 'dev.spaceseries:spaceapi:1.0.11-SNAPSHOT'
 
     // placeholderAPI
     compileOnly 'me.clip:placeholderapi:2.10.9'
+
+    // https://mvnrepository.com/artifact/org.jetbrains/annotations
+    implementation group: 'org.jetbrains', name: 'annotations', version: '16.0.1'
+
+    // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
+    compileOnly group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
+
+    // https://mvnrepository.com/artifact/org.ow2.asm/asm
+    compileOnly group: 'org.ow2.asm', name: 'asm', version: '9.1'
+
+    // https://mvnrepository.com/artifact/org.ow2.asm/asm-commons
+    compileOnly group: 'org.ow2.asm', name: 'asm-commons', version: '9.1'
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
@@ -45,12 +53,11 @@ import org.apache.tools.ant.filters.ReplaceTokens
 shadowJar {
     archiveName("SpaceChat-${project.version}.jar")
 
-    relocate 'org.bstats.bukkit', "${project.group}.spacechat.lib.bstats"
     relocate 'dev.spaceseries.spaceapi', "${project.group}.spacechat.lib.spaceapi"
 }
 
 processResources {
-    from (sourceSets.main.resources.srcDirs) {
+    from(sourceSets.main.resources.srcDirs) {
         filter ReplaceTokens, tokens: [version: project.version]
     }
 }

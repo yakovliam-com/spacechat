@@ -1,8 +1,10 @@
 package dev.spaceseries.spacechat.storage;
 
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
+import dev.spaceseries.spacechat.storage.impl.empty.EmptyStorage;
 import dev.spaceseries.spacechat.storage.impl.mysql.MysqlStorage;
-import dev.spaceseries.spacechat.storage.impl.yaml.YamlStorage;
+import dev.spaceseries.spacechat.storage.impl.sqlite.SqliteStorage;
 
 public class StorageManager {
 
@@ -19,10 +21,13 @@ public class StorageManager {
         String using = Config.STORAGE_USE.get(Config.get());
 
         // if type, etc....
-        if (using.equalsIgnoreCase("yaml")) {
-            current = new YamlStorage();
+        if (using.equalsIgnoreCase("sqlite")) {
+            current = new SqliteStorage();
         } else if (using.equalsIgnoreCase("mysql")) {
             current = new MysqlStorage();
+        } else {
+            SpaceChat.getInstance().getLogger().severe("Unknown storage medium '" + using + "'. The plugin is unable to function correctly.");
+            current = new EmptyStorage();
         }
     }
 

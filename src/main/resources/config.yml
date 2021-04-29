@@ -9,11 +9,11 @@
 # Storage Configuration #
 #                       #
 # Storage types:        #
-# -> yaml               #
+# -> sqlite             #
 # -> mysql              #
 #=#=#=#=#=#=#=#=#=#=#=#=#
 storage:
-  use: "yaml" # which storage type should we use?
+  use: "sqlite" # which storage type should we use?
   mysql: # mysql configuration settings
     address: ""
     port: 3306
@@ -22,6 +22,10 @@ storage:
     database: ""
     use-ssl: false
     verify-server-certificate: false
+    tables:
+      chat-logs: "spacechat_chatlogs"
+  sqlite:
+    database: "storage"
     tables:
       chat-logs: "spacechat_chatlogs"
 

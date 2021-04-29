@@ -3,8 +3,8 @@ package dev.spaceseries.spacechat.storage.impl.mysql.factory;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.storage.impl.mysql.MysqlStorage;
 import dev.spaceseries.spacechat.storage.impl.mysql.SqlAble;
-import dev.spaceseries.spacechat.storage.impl.mysql.factory.o.ConnectionInfo;
-import dev.spaceseries.spacechat.storage.impl.mysql.factory.o.Credentials;
+import dev.spaceseries.spacechat.storage.impl.mysql.factory.o.MysqlConnectionInfo;
+import dev.spaceseries.spacechat.storage.impl.mysql.factory.o.MysqlCredentials;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,18 +16,18 @@ public final class MysqlConnectionManager extends SqlAble {
     /**
      * The connection info
      */
-    private final ConnectionInfo connectionInfo;
+    private final MysqlConnectionInfo connectionInfo;
 
     /**
      * Initializes Mysql Connection Manager
      */
     public MysqlConnectionManager() {
         // create connection info
-        connectionInfo = new ConnectionInfo(
+        connectionInfo = new MysqlConnectionInfo(
                 STORAGE_MYSQL_ADDRESS.get(Config.get()),
                 STORAGE_MYSQL_PORT.get(Config.get()),
                 STORAGE_MYSQL_DATABASE.get(Config.get()),
-                new Credentials(
+                new MysqlCredentials(
                         STORAGE_MYSQL_USERNAME.get(Config.get()),
                         STORAGE_MYSQL_PASSWORD.get(Config.get())
                 ),
@@ -62,7 +62,7 @@ public final class MysqlConnectionManager extends SqlAble {
      * Returns connection info
      * @return connection info
      */
-    public ConnectionInfo getConnectionInfo() {
+    public MysqlConnectionInfo getConnectionInfo() {
         return connectionInfo;
     }
 }
