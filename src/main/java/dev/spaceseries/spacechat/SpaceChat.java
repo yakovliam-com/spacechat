@@ -6,6 +6,7 @@ import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.config.FormatsConfig;
 import dev.spaceseries.spacechat.config.LangConfig;
 import dev.spaceseries.spacechat.external.papi.SpaceChatExpansion;
+import dev.spaceseries.spacechat.internal.dependency.DependencyInstantiation;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.listener.JoinQuitListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
@@ -77,6 +78,11 @@ public final class SpaceChat extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+        // load dependencies
+        this.getLogger().info(
+                "Starting Dependency Tasks... This may take a while depending on your environment!");
+        new DependencyInstantiation().startTasks();
+
         // initialize space api
         plugin = new SpacePlugin(this);
 
@@ -150,7 +156,7 @@ public final class SpaceChat extends JavaPlugin {
      */
     public void loadConnectionManagers() {
         // if currently exists, stop first
-        if(messagingService != null)
+        if (messagingService != null)
             messagingService.getSupervisor().stop();
 
         messagingService = new MessagingService();

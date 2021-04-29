@@ -30,7 +30,7 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
 
     // space api
-    implementation 'dev.spaceseries:spaceapi:1.0.11-SNAPSHOT'
+    compileOnly 'dev.spaceseries:spaceapi:1.0.11-SNAPSHOT'
 
     // placeholderAPI
     compileOnly 'me.clip:placeholderapi:2.10.9'
@@ -39,7 +39,13 @@ dependencies {
     implementation group: 'org.jetbrains', name: 'annotations', version: '16.0.1'
 
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
-    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
+    compileOnly group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
+
+    // https://mvnrepository.com/artifact/org.ow2.asm/asm
+    compileOnly group: 'org.ow2.asm', name: 'asm', version: '9.1'
+
+    // https://mvnrepository.com/artifact/org.ow2.asm/asm-commons
+    compileOnly group: 'org.ow2.asm', name: 'asm-commons', version: '9.1'
 }
 
 import org.apache.tools.ant.filters.ReplaceTokens
