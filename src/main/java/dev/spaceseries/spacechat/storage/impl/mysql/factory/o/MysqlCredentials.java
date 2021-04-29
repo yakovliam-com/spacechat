@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.mysql.factory.o;
 
-public class Credentials {
+public class MysqlCredentials {
 
     /**
      * The username
@@ -36,7 +36,7 @@ public class Credentials {
      * @param username username
      * @param password password
      */
-    public Credentials(String username, String password) {
+    public MysqlCredentials(String username, String password) {
         this.username = username;
         this.password = password;
     }
