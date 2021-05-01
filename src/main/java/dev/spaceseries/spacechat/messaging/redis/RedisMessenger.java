@@ -65,10 +65,13 @@ public class RedisMessenger extends JedisPubSub implements SupervisedMessenger {
      * Shuts down the client
      */
     public void shutdown() {
-        // unsubscribe from chat channel
-        unsubscribe(REDIS_CHAT_CHANNEL.get(Config.get()));
-        unsubscribe(REDIS_BROADCAST_CHANNEL.get(Config.get()));
-        pool.close();
+        if (this.pool != null && this.pool.getResource().getClient() != null) {
+            // unsubscribe from chat channel
+            unsubscribe(REDIS_CHAT_CHANNEL.get(Config.get()));
+            unsubscribe(REDIS_BROADCAST_CHANNEL.get(Config.get()));
+
+            pool.close();
+        }
     }
 
     @Override

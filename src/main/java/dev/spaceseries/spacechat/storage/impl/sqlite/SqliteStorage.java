@@ -54,6 +54,11 @@ public class SqliteStorage implements Storage {
         }
     }
 
+    @Override
+    public void close() {
+        this.sqliteConnectionManager.close();
+    }
+
     /**
      * Logs chat to the SqLite database
      *

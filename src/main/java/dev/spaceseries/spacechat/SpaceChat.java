@@ -7,6 +7,7 @@ import dev.spaceseries.spacechat.config.FormatsConfig;
 import dev.spaceseries.spacechat.config.LangConfig;
 import dev.spaceseries.spacechat.external.papi.SpaceChatExpansion;
 import dev.spaceseries.spacechat.internal.dependency.DependencyInstantiation;
+import dev.spaceseries.spacechat.io.watcher.FileWatcher;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.listener.JoinQuitListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
@@ -14,8 +15,8 @@ import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import dev.spaceseries.spacechat.internal.space.SpacePlugin;
 import dev.spaceseries.spacechat.messaging.MessagingService;
 import dev.spaceseries.spacechat.storage.StorageManager;
-import dev.spaceseries.spacechat.util.metrics.Metrics;
 import dev.spaceseries.spacechat.util.version.VersionUtil;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SpaceChat extends JavaPlugin {
@@ -79,8 +80,6 @@ public final class SpaceChat extends JavaPlugin {
     @Override
     public void onEnable() {
         // load dependencies
-        this.getLogger().info(
-                "Starting Dependency Tasks... This may take a while depending on your environment!");
         new DependencyInstantiation().startTasks();
 
         // initialize space api
@@ -117,12 +116,22 @@ public final class SpaceChat extends JavaPlugin {
 
         // log initialization method
         this.getLogger().info("Detected that SpaceChat is running under " + VersionUtil.getServerBukkitVersion().toString());
+
+        // initialize file watcher
+        new FileWatcher();
     }
 
     @Override
     public void onDisable() {
         // stop redis supervisor
-        this.messagingService.getSupervisor().stop();
+        if (messagingService != null)
+            messagingService.getSupervisor().stop();
+        // close the connection pool (if applicable)
+        if (storageManager != null)
+            storageManager.getCurrent().close();
+        // close messaging services
+        if (messagingService != null)
+            messagingService.getSupervisor().stop();
     }
 
     /**

@@ -8,4 +8,9 @@ public class EmptyStorage implements Storage {
     @Override
     public void log(LogWrapper data) {
     }
+
+    @Override
+    public void close() {
+
+    }
 }

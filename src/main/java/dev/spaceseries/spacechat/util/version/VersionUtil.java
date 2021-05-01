@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class VersionUtil {
+
     public static final BukkitVersion v1_7_5_R01 = BukkitVersion.fromString("1.7.5-R0.1-SNAPSHOT");
     public static final BukkitVersion v1_7_8_R01 = BukkitVersion.fromString("1.7.8-R0.1-SNAPSHOT");
     public static final BukkitVersion v1_7_9_R01 = BukkitVersion.fromString("1.7.9-R0.1-SNAPSHOT");
@@ -76,7 +77,7 @@ public class VersionUtil {
                 if (!Bukkit.getName().equals("Essentials Fake Server")) {
                     throw new IllegalArgumentException(string + " is not in valid version format. e.g. 1.8.8-R0.1");
                 }
-                matcher = VERSION_PATTERN.matcher(v1_14_R01.toString());
+                matcher = VERSION_PATTERN.matcher(v1_8_8_R01.toString());
                 Preconditions.checkArgument(matcher.matches(), string + " is not in valid version format. e.g. 1.8.8-R0.1");
             }
 

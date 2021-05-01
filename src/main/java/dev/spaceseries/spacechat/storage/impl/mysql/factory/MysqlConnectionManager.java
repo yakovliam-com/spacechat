@@ -59,7 +59,16 @@ public final class MysqlConnectionManager extends SqlAble {
     }
 
     /**
+     * Closes the connection pool
+     */
+    public void close() {
+        // close
+        this.getConnectionInfo().getDataSource().close();
+    }
+
+    /**
      * Returns connection info
+     *
      * @return connection info
      */
     public MysqlConnectionInfo getConnectionInfo() {
