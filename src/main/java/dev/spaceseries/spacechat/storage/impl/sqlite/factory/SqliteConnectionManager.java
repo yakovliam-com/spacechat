@@ -51,6 +51,14 @@ public final class SqliteConnectionManager extends SqlAble {
     }
 
     /**
+     * Close the connection pool
+     */
+    public void close() {
+        // close
+        this.getConnectionInfo().getDataSource().close();
+    }
+
+    /**
      * Returns connection info
      *
      * @return connection info

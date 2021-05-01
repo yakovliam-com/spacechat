@@ -1,16 +1,14 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 plugins {
     id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "java"
 }
 
-apply plugin: 'java'
-
 // naming
-project.ext.majorVersion = '2'
-project.ext.midVersion = '1'
-project.ext.minorVersion = '0'
-project.ext.versionType = 'SNAPSHOT'
-version = project.ext.majorVersion + '.' + project.ext.midVersion + '.' + project.ext.minorVersion + "-" + project.ext.versionType
+version = '2.1.1-SNAPSHOT'
 group = 'dev.spaceseries'
+def packageGroup = group + '.spacechat'
 
 repositories {
     mavenCentral()
@@ -26,6 +24,9 @@ repositories {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/org.jetbrains/annotations
+    compileOnly group: 'org.jetbrains', name: 'annotations', version: '16.0.1'
+
     // spigot
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
 
@@ -35,9 +36,6 @@ dependencies {
     // placeholderAPI
     compileOnly 'me.clip:placeholderapi:2.10.9'
 
-    // https://mvnrepository.com/artifact/org.jetbrains/annotations
-    implementation group: 'org.jetbrains', name: 'annotations', version: '16.0.1'
-
     // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
     compileOnly group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
 
@@ -46,26 +44,19 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.ow2.asm/asm-commons
     compileOnly group: 'org.ow2.asm', name: 'asm-commons', version: '9.1'
+
+    // bstats
+    implementation "org.bstats:bstats-bukkit:2.2.1"
 }
 
-import org.apache.tools.ant.filters.ReplaceTokens
-
-shadowJar {
-    archiveName("SpaceChat-${project.version}.jar")
-
-    relocate 'dev.spaceseries.spaceapi', "${project.group}.spacechat.lib.spaceapi"
-}
-
-processResources {
-    from(sourceSets.main.resources.srcDirs) {
-        filter ReplaceTokens, tokens: [version: project.version]
-    }
+artifacts {
+    archives shadowJar
 }
 
 jar {
     manifest {
         attributes(
-                'Main-Class': "${project.group}.spacechat.SpaceChat"
+                'Main-Class': "${packageGroup}.SpaceChat"
         )
     }
     from {
@@ -73,6 +64,14 @@ jar {
     }
 }
 
-artifacts {
-    archives shadowJar
+shadowJar {
+    archiveName("SpaceChat-${project.version}.jar")
+
+    relocate 'org.bstats', "${packageGroup}.lib.bstats"
+    relocate 'dev.spaceseries.spaceapi', "${packageGroup}.lib.spaceapi"
 }
+
+processResources {
+    filter ReplaceTokens, tokens: [version: project.version]
+}
+

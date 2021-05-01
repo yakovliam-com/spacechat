@@ -25,6 +25,7 @@ storage:
     tables:
       chat-logs: "spacechat_chatlogs"
   sqlite:
+    # This generates a file under "plugins/SpaceChat/storage/<database>" where <database> = the config option below
     database: "storage"
     tables:
       chat-logs: "spacechat_chatlogs"

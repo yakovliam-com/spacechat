@@ -10,4 +10,9 @@ public interface Storage {
      * @param data The data to log
      */
     void log(LogWrapper data);
+
+    /**
+     * Closes the storage medium
+     */
+    void close();
 }

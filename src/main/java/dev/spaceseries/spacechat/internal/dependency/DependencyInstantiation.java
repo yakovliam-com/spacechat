@@ -18,6 +18,9 @@ public final class DependencyInstantiation {
      * Starts dependency tasks.
      */
     public void startTasks() {
+        // load dependencies
+        SpaceChat.getInstance().getLogger().info(
+                "Starting Dependency Tasks... This may take a while depending on your environment!");
         assignClassLoader();
         try {
             CompletableFuture.allOf(

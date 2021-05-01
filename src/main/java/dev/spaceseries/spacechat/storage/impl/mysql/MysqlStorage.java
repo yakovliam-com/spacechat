@@ -53,6 +53,11 @@ public class MysqlStorage implements Storage {
         }
     }
 
+    @Override
+    public void close() {
+        this.mysqlConnectionManager.close();
+    }
+
     /**
      * Logs chat to the MySQL database
      *
