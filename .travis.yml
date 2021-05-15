@@ -3,3 +3,13 @@ language: java
 branches:
   only:
   - master
+
+deploy:
+  provider: releases
+  api_key: ${api_key}
+  file_glob: true
+  file: "build/libs/SpaceChat-*.jar"
+  skip_cleanup: true
+  on:
+    all_branches: true
+    tags: true
