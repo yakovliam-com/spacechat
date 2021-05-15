@@ -69,4 +69,3 @@ shadowJar {
 processResources {
     filter ReplaceTokens, tokens: [version: project.version]
 }
-
