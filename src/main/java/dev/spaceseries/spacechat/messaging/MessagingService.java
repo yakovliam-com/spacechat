@@ -9,6 +9,11 @@ import static dev.spaceseries.spacechat.config.Config.REDIS_ENABLED;
 public class MessagingService extends InternalMessagingService<MessengerSupervisor> {
 
     /**
+     * Is it actually implemented?
+     */
+    private boolean isImplemented;
+
+    /**
      * Construct messaging service
      */
     public MessagingService() {
@@ -17,12 +22,23 @@ public class MessagingService extends InternalMessagingService<MessengerSupervis
         if (REDIS_ENABLED.get(Config.get())) {
             // instantiate and initialize supervisor
             this.supervisor = new RedisSupervisor();
+            this.isImplemented = true;
         } else {
             // else nothing...no need for a supervisor or any kind of dynamic connection
             this.supervisor = new EmptyMessengerSupervisor();
+            this.isImplemented = false;
         }
 
         // initialize supervisor
         this.supervisor.initialize();
+    }
+
+    /**
+     * Returns if the service is actually implemented
+     *
+     * @return is implemented?
+     */
+    public boolean isImplemented() {
+        return isImplemented;
     }
 }
