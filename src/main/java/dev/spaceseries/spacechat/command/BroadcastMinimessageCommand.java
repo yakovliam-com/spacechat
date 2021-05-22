@@ -1,11 +1,11 @@
-package dev.spaceseries.spacechat.command.spacechat;
+package dev.spaceseries.spacechat.command;
 
 import dev.spaceseries.spaceapi.command.Command;
 import dev.spaceseries.spaceapi.command.Permissible;
 import dev.spaceseries.spaceapi.command.SpaceCommandSender;
 import dev.spaceseries.spaceapi.command.SubCommand;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import dev.spaceseries.spaceapi.lib.adventure.adventure.text.minimessage.MiniMessage;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
@@ -17,12 +17,11 @@ import java.util.Collections;
 import static dev.spaceseries.spacechat.config.Config.BROADCAST_USE_LANG_WRAPPER;
 import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_IDENTIFIER;
 
-@SubCommand
-@Permissible("space.chat.command.broadcast")
-public class BroadcastCommand extends Command {
+@Permissible("space.chat.command.broadcastminimessage")
+public class BroadcastMinimessageCommand extends Command {
 
-    public BroadcastCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "broadcast", "Broadcast command", Collections.singletonList("bcast"));
+    public BroadcastMinimessageCommand() {
+        super(SpaceChat.getInstance().getPlugin(), "broadcastminimessage", "Broadcast (minimessage) command", Collections.singletonList("bcastm"));
     }
 
     @Override
@@ -36,8 +35,8 @@ public class BroadcastCommand extends Command {
         // compile args into single message
         String message = String.join(" ", args);
 
-        // convert to component
-        Component component = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
+        // parse through minimessage
+        Component component = MiniMessage.get().deserialize(message);
 
         // use lang wrapper?
         if (BROADCAST_USE_LANG_WRAPPER.get(Config.get())) {

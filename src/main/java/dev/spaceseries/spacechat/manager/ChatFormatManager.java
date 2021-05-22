@@ -2,23 +2,49 @@ package dev.spaceseries.spacechat.manager;
 
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
+import dev.spaceseries.spacechat.loader.ChatFormatLoader;
+import dev.spaceseries.spacechat.loader.FormatLoader;
+import dev.spaceseries.spacechat.loader.FormatManager;
 import dev.spaceseries.spacechat.loader.FormatType;
-import dev.spaceseries.spacechat.model.Format;
+import dev.spaceseries.spacechat.model.ChatFormat;
 import dev.spaceseries.spacechat.util.chat.ChatUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Comparator;
+import java.util.Locale;
 
 import static dev.spaceseries.spacechat.config.Config.USE_RELATIONAL_PLACEHOLDERS;
 
-public class ChatFormatManager extends FormatManager {
+public class ChatFormatManager extends FormatManager<ChatFormat> {
+
+    /**
+     * The format loader
+     */
+    private final FormatLoader<ChatFormat> chatFormatFormatLoader;
 
     /**
      * Initializes
      */
     public ChatFormatManager() {
-        super(FormatType.CHAT);
+        // create format manager
+        this.chatFormatFormatLoader = new ChatFormatLoader(SpaceChat.getInstance()
+                .getFormatsConfig()
+                .getConfig()
+                .getSection(
+                        FormatType.CHAT.getSectionKey().toLowerCase(Locale.ROOT)
+                )
+        );
+
+        // load
+        this.loadFormats();
+    }
+
+    /**
+     * Loads formats
+     */
+    public void loadFormats() {
+        chatFormatFormatLoader.load(this);
     }
 
     /**
@@ -32,11 +58,11 @@ public class ChatFormatManager extends FormatManager {
         Player player = event.getPlayer();
 
         // get applicable format
-        Format applicableFormat = getAll()
+        ChatFormat applicableFormat = getAll()
                 .values()
                 .stream()
                 .filter(format -> player.hasPermission(format.getPermission()) || format.getHandle().equals("default")) // player has permission OR the format is default
-                .max(Comparator.comparing(Format::getPriority))
+                .max(Comparator.comparing(ChatFormat::getPriority))
                 .orElse(null);
 
         // if relational

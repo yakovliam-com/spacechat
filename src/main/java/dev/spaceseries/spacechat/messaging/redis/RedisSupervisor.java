@@ -3,7 +3,7 @@ package dev.spaceseries.spacechat.messaging.redis;
 import dev.spaceseries.spaceapi.lib.google.gson.Gson;
 import dev.spaceseries.spaceapi.lib.google.gson.GsonBuilder;
 import dev.spaceseries.spacechat.config.Config;
-import dev.spaceseries.spacechat.messaging.MessengerSupervisor;
+import dev.spaceseries.spacechat.messaging.MessageHandlerSupervisor;
 import dev.spaceseries.spacechat.messaging.packet.receive.ReceiveMessageDataPacket;
 import dev.spaceseries.spacechat.messaging.packet.send.SendMessageDataPacket;
 import dev.spaceseries.spacechat.messaging.redis.packet.RedisPublishDataPacket;
@@ -18,7 +18,7 @@ import dev.spaceseries.spacechat.util.chat.ChatUtil;
 
 import static dev.spaceseries.spacechat.config.Config.*;
 
-public class RedisSupervisor extends MessengerSupervisor {
+public class RedisSupervisor extends MessageHandlerSupervisor {
 
     /**
      * Gson
@@ -106,6 +106,8 @@ public class RedisSupervisor extends MessengerSupervisor {
         if (chatPacket.getServerIdentifier().equalsIgnoreCase(REDIS_SERVER_IDENTIFIER.get(Config.get()))) {
             return;
         }
+
+        // TODO parse channels, use util to apply formatting and send to correct recipients
 
         // send to all players
         ChatUtil.sendComponentChatMessage(chatPacket.getComponent());

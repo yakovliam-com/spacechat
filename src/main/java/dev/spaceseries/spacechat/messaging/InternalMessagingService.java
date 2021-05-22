@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.messaging;
 
-public abstract class InternalMessagingService<T extends MessengerSupervisor> {
+public abstract class InternalMessagingService<T extends MessageHandlerSupervisor> {
 
     /**
      * Supervisor

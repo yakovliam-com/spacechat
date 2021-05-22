@@ -28,6 +28,9 @@ public class ReloadCommand extends Command {
                 // reload formats
                 SpaceChat.getInstance().loadFormats();
 
+                // reload channels
+                SpaceChat.getInstance().loadChannels();
+
                 // reload storage
                 SpaceChat.getInstance().loadStorage();
 

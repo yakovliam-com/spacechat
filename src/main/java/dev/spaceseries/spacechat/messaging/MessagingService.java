@@ -6,12 +6,12 @@ import dev.spaceseries.spacechat.messaging.redis.RedisSupervisor;
 
 import static dev.spaceseries.spacechat.config.Config.REDIS_ENABLED;
 
-public class MessagingService extends InternalMessagingService<MessengerSupervisor> {
+public class MessagingService extends InternalMessagingService<MessageHandlerSupervisor> {
 
     /**
      * Is it actually implemented?
      */
-    private boolean isImplemented;
+    private final boolean isImplemented;
 
     /**
      * Construct messaging service

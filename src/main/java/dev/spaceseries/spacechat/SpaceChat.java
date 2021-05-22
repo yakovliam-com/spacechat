@@ -1,6 +1,8 @@
 package dev.spaceseries.spacechat;
 
 import dev.spaceseries.spaceapi.abstraction.plugin.BukkitPlugin;
+import dev.spaceseries.spacechat.command.BroadcastCommand;
+import dev.spaceseries.spacechat.command.BroadcastMinimessageCommand;
 import dev.spaceseries.spacechat.command.SpaceChatCommand;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.config.FormatsConfig;
@@ -11,6 +13,7 @@ import dev.spaceseries.spacechat.io.watcher.FileWatcher;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.listener.JoinQuitListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
+import dev.spaceseries.spacechat.manager.ChannelManager;
 import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import dev.spaceseries.spacechat.internal.space.SpacePlugin;
 import dev.spaceseries.spacechat.messaging.MessagingService;
@@ -67,6 +70,11 @@ public final class SpaceChat extends JavaPlugin {
     private MessagingService messagingService;
 
     /**
+     * Channel manager
+     */
+    private ChannelManager channelManager;
+
+    /**
      * Runs on load
      */
     @Override
@@ -91,6 +99,9 @@ public final class SpaceChat extends JavaPlugin {
         // load formats
         loadFormats();
 
+        // load channels
+        loadChannels();
+
         // load storage
         loadStorage();
 
@@ -102,6 +113,8 @@ public final class SpaceChat extends JavaPlugin {
 
         // initialize commands
         new SpaceChatCommand();
+        new BroadcastCommand();
+        new BroadcastMinimessageCommand();
 
         // register chat listener
         this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
@@ -150,6 +163,13 @@ public final class SpaceChat extends JavaPlugin {
     public void loadFormats() {
         // initialize chat format manager (also loads all formats!)
         chatFormatManager = new ChatFormatManager();
+    }
+
+    /**
+     * Loads channels
+     */
+    public void loadChannels() {
+        this.channelManager = new ChannelManager();
     }
 
     /**
@@ -225,6 +245,15 @@ public final class SpaceChat extends JavaPlugin {
      */
     public ChatFormatManager getChatFormatManager() {
         return chatFormatManager;
+    }
+
+    /**
+     * Returns channel manager
+     *
+     * @return channel manager
+     */
+    public ChannelManager getChannelManager() {
+        return channelManager;
     }
 
     /**

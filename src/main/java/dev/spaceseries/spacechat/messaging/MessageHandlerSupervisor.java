@@ -3,26 +3,26 @@ package dev.spaceseries.spacechat.messaging;
 import dev.spaceseries.spacechat.messaging.packet.receive.ReceiveMessageDataPacket;
 import dev.spaceseries.spacechat.messaging.packet.send.SendMessageDataPacket;
 
-public abstract class MessengerSupervisor {
+public abstract class MessageHandlerSupervisor {
 
     /**
      * Supervised
      */
-    protected SupervisedMessenger supervised;
+    protected SupervisedMessageHandler supervised;
 
     /**
      * Construct supervisor
      *
      * @param supervised supervised
      */
-    public MessengerSupervisor(SupervisedMessenger supervised) {
+    public MessageHandlerSupervisor(SupervisedMessageHandler supervised) {
         this.supervised = supervised;
     }
 
     /**
      * Construct supervisor
      */
-    public MessengerSupervisor() {
+    public MessageHandlerSupervisor() {
     }
 
     /**
@@ -30,7 +30,7 @@ public abstract class MessengerSupervisor {
      *
      * @return supervised
      */
-    public SupervisedMessenger getSupervised() {
+    public SupervisedMessageHandler getSupervised() {
         return supervised;
     }
 

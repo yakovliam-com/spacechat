@@ -5,22 +5,6 @@ import java.util.List;
 public class Format {
 
     /**
-     * The handle of the format
-     * Same as "identifier" meaning
-     */
-    private String handle;
-
-    /**
-     * The priority of the format
-     */
-    private Integer priority;
-
-    /**
-     * The applicable permission node for the format
-     */
-    private String permission;
-
-    /**
      * The list of format parts
      */
     private List<FormatPart> formatParts;
@@ -28,76 +12,10 @@ public class Format {
     /**
      * Construct format
      *
-     * @param handle      handle
-     * @param priority    priority
-     * @param permission  permission
      * @param formatParts format parts
      */
-    public Format(String handle, Integer priority, String permission, List<FormatPart> formatParts) {
-        this.handle = handle;
-        this.priority = priority;
-        this.permission = permission;
+    public Format(List<FormatPart> formatParts) {
         this.formatParts = formatParts;
-    }
-
-    /**
-     * Construct format
-     */
-    public Format() {
-    }
-
-    /**
-     * Returns handle
-     *
-     * @return handle
-     */
-    public String getHandle() {
-        return handle;
-    }
-
-    /**
-     * Sets handle
-     *
-     * @param handle handle
-     */
-    public void setHandle(String handle) {
-        this.handle = handle;
-    }
-
-    /**
-     * Returns priority
-     *
-     * @return priority
-     */
-    public Integer getPriority() {
-        return priority;
-    }
-
-    /**
-     * Sets priority
-     *
-     * @param priority priority
-     */
-    public void setPriority(Integer priority) {
-        this.priority = priority;
-    }
-
-    /**
-     * Returns permission
-     *
-     * @return permission
-     */
-    public String getPermission() {
-        return permission;
-    }
-
-    /**
-     * Sets permission
-     *
-     * @param permission permission
-     */
-    public void setPermission(String permission) {
-        this.permission = permission;
     }
 
     /**

@@ -4,6 +4,7 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
 import dev.spaceseries.spacechat.messaging.packet.send.SendMessageDataPacket;
 import dev.spaceseries.spacechat.messaging.redis.packet.PacketType;
 import dev.spaceseries.spacechat.messaging.redis.packet.RedisPacket;
+import dev.spaceseries.spacechat.model.Channel;
 
 import java.util.UUID;
 
@@ -18,6 +19,11 @@ public class RedisChatPacket extends RedisPacket implements SendMessageDataPacke
      * Sender name
      */
     private String senderName;
+
+    /**
+     * The chat channel that the user is currently in
+     */
+    private Channel channel;
 
     /**
      * The identifier of the server that the chat message is from
@@ -37,10 +43,11 @@ public class RedisChatPacket extends RedisPacket implements SendMessageDataPacke
     /**
      * Construct redis chat message
      */
-    public RedisChatPacket(UUID sender, String senderName, String serverIdentifier, String serverDisplayName, Component component) {
+    public RedisChatPacket(UUID sender, String senderName, Channel channel, String serverIdentifier, String serverDisplayName, Component component) {
         this();
         this.sender = sender;
         this.senderName = senderName;
+        this.channel = channel;
         this.serverIdentifier = serverIdentifier;
         this.serverDisplayName = serverDisplayName;
         this.component = component;
@@ -105,6 +112,24 @@ public class RedisChatPacket extends RedisPacket implements SendMessageDataPacke
      */
     public void setSenderName(String senderName) {
         this.senderName = senderName;
+    }
+
+    /**
+     * Returns channel
+     *
+     * @return channel
+     */
+    public Channel getChannel() {
+        return channel;
+    }
+
+    /**
+     * Sets channel
+     *
+     * @param channel channel
+     */
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 
     /**

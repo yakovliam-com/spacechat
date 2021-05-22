@@ -6,6 +6,8 @@ import dev.spaceseries.spaceapi.lib.google.gson.JsonElement;
 import dev.spaceseries.spaceapi.lib.google.gson.JsonObject;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.gson.GsonComponentSerializer;
+import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.model.Channel;
 
 import java.lang.reflect.Type;
 import java.util.UUID;
@@ -24,6 +26,11 @@ public class RedisChatPacketDeserializer implements JsonDeserializer<RedisChatPa
         // get sender name
         String senderName = object.get("senderName").getAsString();
 
+        // get channel string
+        String channelStringHandle = object.get("channel").getAsString();
+        // deserialize / get (null = global)
+        Channel channel = SpaceChat.getInstance().getChannelManager().get(channelStringHandle, null);
+
         // get server identifier
         String serverIdentifier = object.get("serverIdentifier").getAsString();
         // get server display name
@@ -35,6 +42,6 @@ public class RedisChatPacketDeserializer implements JsonDeserializer<RedisChatPa
         Component component = GsonComponentSerializer.gson().deserialize(componentString);
 
         // return a new message
-        return new RedisChatPacket(sender, senderName, serverIdentifier, serverDisplayName, component);
+        return new RedisChatPacket(sender, senderName, channel, serverIdentifier, serverDisplayName, component);
     }
 }

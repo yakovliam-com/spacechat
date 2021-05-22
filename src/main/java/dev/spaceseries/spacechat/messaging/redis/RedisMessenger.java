@@ -5,7 +5,7 @@ import dev.spaceseries.spaceapi.lib.redis.jedis.JedisPool;
 import dev.spaceseries.spaceapi.lib.redis.jedis.JedisPubSub;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
-import dev.spaceseries.spacechat.messaging.SupervisedMessenger;
+import dev.spaceseries.spacechat.messaging.SupervisedMessageHandler;
 import dev.spaceseries.spacechat.messaging.packet.MessageDataPacket;
 import dev.spaceseries.spacechat.messaging.redis.packet.RedisPublishDataPacket;
 import dev.spaceseries.spacechat.messaging.redis.packet.RedisStringReceiveDataPacket;
@@ -17,7 +17,7 @@ import java.util.logging.Level;
 
 import static dev.spaceseries.spacechat.config.Config.*;
 
-public class RedisMessenger extends JedisPubSub implements SupervisedMessenger {
+public class RedisMessenger extends JedisPubSub implements SupervisedMessageHandler {
 
     /**
      * Redis client

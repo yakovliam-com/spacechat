@@ -13,7 +13,7 @@ import dev.spaceseries.spacechat.builder.live.RelationalLiveChatFormatBuilder;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
-import dev.spaceseries.spacechat.model.Format;
+import dev.spaceseries.spacechat.model.ChatFormat;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -50,7 +50,7 @@ public class ChatUtil {
      * @param applicable applicable format
      * @param event      event
      */
-    public static void sendChatMessage(Player from, String message, Format applicable, AsyncPlayerChatEvent event) {
+    public static void sendChatMessage(Player from, String message, ChatFormat applicable, AsyncPlayerChatEvent event) {
         dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component components;
 
         // if null, return
@@ -64,7 +64,7 @@ public class ChatUtil {
                     .build();
         } else { // if not null
             // get baseComponents from live builder
-            components = new NormalLiveChatFormatBuilder().build(new Trio<>(from, message, applicable));
+            components = new NormalLiveChatFormatBuilder().build(new Trio<>(from, message, applicable.getFormat()));
         }
 
         // get all online players, loop through, send chat message
@@ -112,7 +112,7 @@ public class ChatUtil {
      * @param applicable applicable format
      * @param event      event
      */
-    public static void sendRelationalChatMessage(Player from, String message, Format applicable, AsyncPlayerChatEvent event) {
+    public static void sendRelationalChatMessage(Player from, String message, ChatFormat applicable, AsyncPlayerChatEvent event) {
         // component to use with storage and logging
         dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component sampledComponent;
 
@@ -126,7 +126,7 @@ public class ChatUtil {
                     .build();
         } else { // if not null
             // get baseComponents from live builder
-            sampledComponent = new NormalLiveChatFormatBuilder().build(new Trio<>(from, message, applicable));
+            sampledComponent = new NormalLiveChatFormatBuilder().build(new Trio<>(from, message, applicable.getFormat()));
         }
 
         // do relational parsing
@@ -143,7 +143,7 @@ public class ChatUtil {
                         .build();
             } else { // if not null
                 // get baseComponents from live builder
-                component = new RelationalLiveChatFormatBuilder().build(new Quad<>(from, to, message, applicable));
+                component = new RelationalLiveChatFormatBuilder().build(new Quad<>(from, to, message, applicable.getFormat()));
             }
 
             // send to 'to-player'

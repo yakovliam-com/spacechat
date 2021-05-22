@@ -1,10 +1,10 @@
 package dev.spaceseries.spacechat.messaging.empty;
 
-import dev.spaceseries.spacechat.messaging.MessengerSupervisor;
+import dev.spaceseries.spacechat.messaging.MessageHandlerSupervisor;
 import dev.spaceseries.spacechat.messaging.packet.receive.ReceiveMessageDataPacket;
 import dev.spaceseries.spacechat.messaging.packet.send.SendMessageDataPacket;
 
-public class EmptyMessengerSupervisor extends MessengerSupervisor {
+public class EmptyMessengerSupervisor extends MessageHandlerSupervisor {
 
     /**
      * Construct supervisor

@@ -2,7 +2,7 @@ package dev.spaceseries.spacechat.messaging;
 
 import dev.spaceseries.spacechat.messaging.packet.MessageDataPacket;
 
-public interface SupervisedMessenger {
+public interface SupervisedMessageHandler {
 
     void shutdown();
 
