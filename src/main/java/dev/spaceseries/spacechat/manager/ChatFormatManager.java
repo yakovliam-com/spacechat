@@ -40,10 +40,12 @@ public class ChatFormatManager extends FormatManager {
                 .orElse(null);
 
         // if relational
-        if (USE_RELATIONAL_PLACEHOLDERS.get(Config.get()) && SpaceChat.getInstance().getMessagingService().isImplemented()) {
+        if (USE_RELATIONAL_PLACEHOLDERS.get(Config.get()) && !SpaceChat.getInstance().getMessagingService().isImplemented()) {
+            System.out.println("is relational");
             // send relational
             ChatUtil.sendRelationalChatMessage(player, message, applicableFormat, event);
         } else {
+            System.out.println("is not relational");
             ChatUtil.sendChatMessage(player, message, applicableFormat, event);
         }
     }

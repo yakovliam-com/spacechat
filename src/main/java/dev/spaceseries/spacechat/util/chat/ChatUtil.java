@@ -8,7 +8,6 @@ import dev.spaceseries.spaceapi.util.ColorUtil;
 import dev.spaceseries.spaceapi.util.Quad;
 import dev.spaceseries.spaceapi.util.Trio;
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.builder.live.LiveChatFormatBuilder;
 import dev.spaceseries.spacechat.builder.live.NormalLiveChatFormatBuilder;
 import dev.spaceseries.spacechat.builder.live.RelationalLiveChatFormatBuilder;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;

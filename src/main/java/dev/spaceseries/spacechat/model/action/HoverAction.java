@@ -1,6 +1,8 @@
 package dev.spaceseries.spacechat.model.action;
 
 import dev.spaceseries.spaceapi.lib.google.common.base.Joiner;
+import dev.spaceseries.spacechat.replacer.AmpersandReplacer;
+import dev.spaceseries.spacechat.replacer.SectionReplacer;
 import me.clip.placeholderapi.PlaceholderAPI;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.event.HoverEvent;
@@ -10,6 +12,16 @@ import org.bukkit.entity.Player;
 import java.util.List;
 
 public class HoverAction {
+
+    /**
+     * Ampersand replacer
+     */
+    private static final AmpersandReplacer AMPERSAND_REPLACER = new AmpersandReplacer();
+
+    /**
+     * Section replacer
+     */
+    private static final SectionReplacer SECTION_REPLACER = new SectionReplacer();
 
     /**
      * The list of lines in the
@@ -46,6 +58,29 @@ public class HoverAction {
 
         // build & return
         return HoverEvent.hoverEvent(action, LegacyComponentSerializer.legacyAmpersand().deserialize(line));
+    }
+
+    /**
+     * Converts the hover action to a BungeeCord / Spigot hover event
+     * <p>
+     * Uses relational placeholders, instead of regular
+     *
+     * @param player The player
+     * @param player2 The second player
+     * @return The hover event
+     */
+    public HoverEvent<Component> toHoverEventRelational(Player player, Player player2) {
+        // parse action
+        HoverEvent.Action<Component> action = HoverEvent.Action.SHOW_TEXT;
+
+        String line = Joiner.on("\n").join(lines);
+
+        String text = SECTION_REPLACER.apply(PlaceholderAPI.setPlaceholders(player, AMPERSAND_REPLACER.apply(line, player)), player);
+        // set relational placeholders
+        text = SECTION_REPLACER.apply(PlaceholderAPI.setRelationalPlaceholders(player, player2, text), player);
+
+        // build & return
+        return HoverEvent.hoverEvent(action, LegacyComponentSerializer.legacyAmpersand().deserialize(text));
     }
 
     /**

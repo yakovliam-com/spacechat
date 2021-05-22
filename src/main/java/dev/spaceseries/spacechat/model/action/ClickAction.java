@@ -1,10 +1,22 @@
 package dev.spaceseries.spacechat.model.action;
 
+import dev.spaceseries.spacechat.replacer.AmpersandReplacer;
+import dev.spaceseries.spacechat.replacer.SectionReplacer;
 import me.clip.placeholderapi.PlaceholderAPI;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.event.ClickEvent;
 import org.bukkit.entity.Player;
 
 public class ClickAction {
+
+    /**
+     * Ampersand replacer
+     */
+    private static final AmpersandReplacer AMPERSAND_REPLACER = new AmpersandReplacer();
+
+    /**
+     * Section replacer
+     */
+    private static final SectionReplacer SECTION_REPLACER = new SectionReplacer();
 
     /**
      * The type of action for the click action
@@ -46,6 +58,27 @@ public class ClickAction {
 
         // build & return
         return ClickEvent.clickEvent(action, PlaceholderAPI.setPlaceholders(player, value));
+    }
+
+    /**
+     * Converts the click action to a BungeeCord / Spigot click event
+     * <p>
+     * Uses relational placeholders, instead of regular
+     *
+     * @param player  The player
+     * @param player2 The second player
+     * @return The click event
+     */
+    public ClickEvent toClickEventRelational(Player player, Player player2) {
+        // parse action
+        ClickEvent.Action action = ClickEvent.Action.valueOf(clickActionType.toString().toUpperCase());
+
+        String text = SECTION_REPLACER.apply(PlaceholderAPI.setPlaceholders(player, AMPERSAND_REPLACER.apply(value, player)), player);
+        // set relational placeholders
+        text = PlaceholderAPI.setRelationalPlaceholders(player, player2, text);
+
+        // build & return
+        return ClickEvent.clickEvent(action, text);
     }
 
     /**

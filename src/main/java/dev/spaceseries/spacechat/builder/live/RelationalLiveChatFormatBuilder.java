@@ -6,7 +6,6 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.TextComponent;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.minimessage.MiniMessage;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import dev.spaceseries.spaceapi.util.Quad;
-import dev.spaceseries.spaceapi.util.Trio;
 import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.model.Extra;
@@ -112,13 +111,13 @@ public class RelationalLiveChatFormatBuilder implements Builder<Quad<Player, Pla
                 // if contains click action
                 if (extra.getClickAction() != null) {
                     // apply
-                    parsedText = parsedText.clickEvent(extra.getClickAction().toClickEvent(player));
+                    parsedText = parsedText.clickEvent(extra.getClickAction().toClickEventRelational(player, player2));
                 }
 
                 // if contains hover action
                 if (extra.getHoverAction() != null) {
                     // apply
-                    parsedText = parsedText.hoverEvent(extra.getHoverAction().toHoverEvent(player));
+                    parsedText = parsedText.hoverEvent(extra.getHoverAction().toHoverEventRelational(player, player2));
                 }
             }
 
