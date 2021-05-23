@@ -40,11 +40,10 @@ public class SqliteStorage implements Storage {
      * Initializes new mysql storage
      */
     public SqliteStorage() {
-        System.out.println("\n\nIn Sqlite storage constructor\n\n");
         // storage file
         SqliteStorageFile sqliteStorageFile = new SqliteStorageFile();
         // initialize new connection manager
-        sqliteConnectionManager = new SqliteConnectionManager(sqliteStorageFile);
+        this.sqliteConnectionManager = new SqliteConnectionManager(sqliteStorageFile);
         sqliteConnectionManager.init();
     }
 
