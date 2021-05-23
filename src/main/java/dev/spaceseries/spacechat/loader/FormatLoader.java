@@ -7,15 +7,15 @@ public abstract class FormatLoader<T> implements Loader<FormatManager<T>> {
     /**
      * The format section
      */
-    protected final Configuration formatSection;
+    protected final Configuration formatsSection;
 
     /**
      * Construct format loader
      *
-     * @param formatSection section
+     * @param formatsSection section
      */
-    public FormatLoader(Configuration formatSection) {
-        this.formatSection = formatSection;
+    public FormatLoader(Configuration formatsSection) {
+        this.formatsSection = formatsSection;
     }
 
     /**

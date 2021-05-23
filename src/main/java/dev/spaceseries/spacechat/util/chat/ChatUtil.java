@@ -10,16 +10,22 @@ import dev.spaceseries.spaceapi.util.Trio;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.builder.live.NormalLiveChatFormatBuilder;
 import dev.spaceseries.spacechat.builder.live.RelationalLiveChatFormatBuilder;
+import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
+import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.model.ChatFormat;
+import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Date;
 import java.util.stream.Collectors;
+
+import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_DISPLAYNAME;
+import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_IDENTIFIER;
 
 public class ChatUtil {
 
@@ -77,6 +83,11 @@ public class ChatUtil {
                         LogType.CHAT,
                         LogToType.STORAGE
                 );
+
+        // get player's current channel, and send through that (if null, that means 'global')
+        Channel applicableChannel = SpaceChat.getInstance().getServerSyncServiceManager().getDataService().getCurrentChannel(from.getUniqueId());
+        // send via redis (it won't do anything if redis isn't enabled, so we can be sure that we aren't using dead methods that will throw an exception)
+        SpaceChat.getInstance().getServerSyncServiceManager().getStreamService().publishChat(new RedisChatPacket(from.getUniqueId(), from.getName(), applicableChannel, REDIS_SERVER_IDENTIFIER.get(Config.get()), REDIS_SERVER_DISPLAYNAME.get(Config.get()), components));
 
         // log to console
         if (event != null) // if there's an event, log w/ the event

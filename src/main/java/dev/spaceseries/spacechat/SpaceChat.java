@@ -4,6 +4,7 @@ import dev.spaceseries.spaceapi.abstraction.plugin.BukkitPlugin;
 import dev.spaceseries.spacechat.command.BroadcastCommand;
 import dev.spaceseries.spacechat.command.BroadcastMinimessageCommand;
 import dev.spaceseries.spacechat.command.SpaceChatCommand;
+import dev.spaceseries.spacechat.config.ChannelsConfig;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.config.FormatsConfig;
 import dev.spaceseries.spacechat.config.LangConfig;
@@ -16,8 +17,8 @@ import dev.spaceseries.spacechat.logging.LogManagerImpl;
 import dev.spaceseries.spacechat.manager.ChannelManager;
 import dev.spaceseries.spacechat.manager.ChatFormatManager;
 import dev.spaceseries.spacechat.internal.space.SpacePlugin;
-import dev.spaceseries.spacechat.messaging.MessagingService;
 import dev.spaceseries.spacechat.storage.StorageManager;
+import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 import dev.spaceseries.spacechat.util.version.VersionUtil;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -65,14 +66,19 @@ public final class SpaceChat extends JavaPlugin {
     private StorageManager storageManager;
 
     /**
-     * Messaging service
+     * Server sync service manager
      */
-    private MessagingService messagingService;
+    private ServerSyncServiceManager serverSyncServiceManager;
 
     /**
      * Channel manager
      */
     private ChannelManager channelManager;
+
+    /**
+     * Channels config
+     */
+    private ChannelsConfig channelsConfig;
 
     /**
      * Runs on load
@@ -106,7 +112,7 @@ public final class SpaceChat extends JavaPlugin {
         loadStorage();
 
         // load connection managers
-        loadConnectionManagers();
+        loadSyncServices();
 
         // initialize log manager
         logManagerImpl = new LogManagerImpl();
@@ -137,14 +143,12 @@ public final class SpaceChat extends JavaPlugin {
     @Override
     public void onDisable() {
         // stop redis supervisor
-        if (messagingService != null)
-            messagingService.getSupervisor().stop();
-        // close the connection pool (if applicable)
+        if (serverSyncServiceManager != null)
+            serverSyncServiceManager.end();
+
+        // close the storage connection pool (if applicable)
         if (storageManager != null)
             storageManager.getCurrent().close();
-        // close messaging services
-        if (messagingService != null)
-            messagingService.getSupervisor().stop();
     }
 
     /**
@@ -154,6 +158,7 @@ public final class SpaceChat extends JavaPlugin {
         // initialize configs
         spaceChatConfig = new Config();
         formatsConfig = new FormatsConfig();
+        channelsConfig = new ChannelsConfig();
         langConfig = new LangConfig();
     }
 
@@ -181,14 +186,15 @@ public final class SpaceChat extends JavaPlugin {
     }
 
     /**
-     * Load connection managers
+     * Loads connection managers
      */
-    public void loadConnectionManagers() {
-        // if currently exists, stop first
-        if (messagingService != null)
-            messagingService.getSupervisor().stop();
+    public void loadSyncServices() {
+        // stop sync service supervisor
+        if (serverSyncServiceManager != null)
+            serverSyncServiceManager.end();
 
-        messagingService = new MessagingService();
+        // initialize
+        this.serverSyncServiceManager = new ServerSyncServiceManager();
     }
 
     /**
@@ -218,6 +224,15 @@ public final class SpaceChat extends JavaPlugin {
      */
     public FormatsConfig getFormatsConfig() {
         return formatsConfig;
+    }
+
+    /**
+     * Returns channels config
+     *
+     * @return channels config
+     */
+    public ChannelsConfig getChannelsConfig() {
+        return channelsConfig;
     }
 
     /**
@@ -275,11 +290,11 @@ public final class SpaceChat extends JavaPlugin {
     }
 
     /**
-     * Returns messaging service
+     * Returns server sync service manager
      *
-     * @return messaging service
+     * @return server sync service manager
      */
-    public MessagingService getMessagingService() {
-        return messagingService;
+    public ServerSyncServiceManager getServerSyncServiceManager() {
+        return serverSyncServiceManager;
     }
 }

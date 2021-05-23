@@ -2,7 +2,7 @@ package dev.spaceseries.spacechat.builder.chatformat;
 
 import dev.spaceseries.spaceapi.config.impl.Configuration;
 import dev.spaceseries.spacechat.builder.Builder;
-import dev.spaceseries.spacechat.builder.part.FormatPartBuilder;
+import dev.spaceseries.spacechat.builder.format.FormatBuilder;
 import dev.spaceseries.spacechat.model.ChatFormat;
 import dev.spaceseries.spacechat.model.Format;
 
@@ -26,7 +26,7 @@ public class ChatFormatBuilder implements Builder<Configuration, ChatFormat> {
         String permission = input.getString("permission");
 
         // get parts
-        Format parts = new Format(new FormatPartBuilder().build(input.getSection("format")));
+        Format parts = new FormatBuilder().build(input.getSection("format"));
 
         // return
         return new ChatFormat(handle, priority, permission, parts);

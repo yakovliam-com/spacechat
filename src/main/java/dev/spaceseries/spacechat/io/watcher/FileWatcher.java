@@ -36,6 +36,9 @@ public class FileWatcher {
                             // reload formats
                             SpaceChat.getInstance().loadFormats();
 
+                            // reload channels
+                            SpaceChat.getInstance().loadChannels();
+
                             // reload storage
                             SpaceChat.getInstance().loadStorage();
 
@@ -43,7 +46,7 @@ public class FileWatcher {
                             SpaceChat.getInstance().loadMessages();
 
                             // load dynamic connections
-                            SpaceChat.getInstance().loadConnectionManagers();
+                            SpaceChat.getInstance().loadSyncServices();
                         } catch (Exception e) {
                             Messages.getInstance().reloadFailure.msg(new BukkitSpaceCommandSender(Bukkit.getConsoleSender()));
                             e.printStackTrace();

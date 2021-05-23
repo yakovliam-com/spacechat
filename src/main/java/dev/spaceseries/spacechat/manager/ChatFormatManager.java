@@ -5,7 +5,7 @@ import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.loader.ChatFormatLoader;
 import dev.spaceseries.spacechat.loader.FormatLoader;
 import dev.spaceseries.spacechat.loader.FormatManager;
-import dev.spaceseries.spacechat.loader.FormatType;
+import dev.spaceseries.spacechat.model.FormatType;
 import dev.spaceseries.spacechat.model.ChatFormat;
 import dev.spaceseries.spacechat.util.chat.ChatUtil;
 import org.bukkit.entity.Player;
@@ -66,7 +66,7 @@ public class ChatFormatManager extends FormatManager<ChatFormat> {
                 .orElse(null);
 
         // if relational
-        if (USE_RELATIONAL_PLACEHOLDERS.get(Config.get()) && !SpaceChat.getInstance().getMessagingService().isImplemented()) {
+        if (USE_RELATIONAL_PLACEHOLDERS.get(Config.get()) && !SpaceChat.getInstance().getServerSyncServiceManager().isUsingNetwork()) {
             // send relational
             ChatUtil.sendRelationalChatMessage(player, message, applicableFormat, event);
         } else {

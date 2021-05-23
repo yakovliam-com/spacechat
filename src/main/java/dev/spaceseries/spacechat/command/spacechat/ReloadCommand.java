@@ -38,7 +38,7 @@ public class ReloadCommand extends Command {
                 SpaceChat.getInstance().loadMessages();
 
                 // load dynamic connections
-                SpaceChat.getInstance().loadConnectionManagers();
+                SpaceChat.getInstance().loadSyncServices();
             } catch (Exception e) {
                 Messages.getInstance().reloadFailure.msg(sender);
                 e.printStackTrace();

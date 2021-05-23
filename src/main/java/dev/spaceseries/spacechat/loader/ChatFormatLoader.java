@@ -9,8 +9,8 @@ public class ChatFormatLoader extends FormatLoader<ChatFormat> {
     /**
      * Initializes
      */
-    public ChatFormatLoader(Configuration formatSection) {
-        super(formatSection);
+    public ChatFormatLoader(Configuration formatsSection) {
+        super(formatsSection);
     }
 
     /**
@@ -19,9 +19,9 @@ public class ChatFormatLoader extends FormatLoader<ChatFormat> {
     @Override
     public void load(FormatManager<ChatFormat> formatManager) {
         // loop through section keys
-        for (String handle : formatSection.getKeys()) {
+        for (String handle : formatsSection.getKeys()) {
             // add to manager
-            formatManager.add(handle, new ChatFormatBuilder().build(formatSection.getSection(handle)));
+            formatManager.add(handle, new ChatFormatBuilder().build(formatsSection.getSection(handle)));
         }
     }
 }
