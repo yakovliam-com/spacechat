@@ -1,13 +1,13 @@
-package dev.spaceseries.spacechat.storage.impl.mysql;
+package dev.spaceseries.spacechat.storage.impl.sql.mysql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract class SqlAble {
+public abstract class SqlHelper {
 
-    protected void execute(Connection connection, String sql, Object... replacements) {
+    public static void execute(Connection connection, String sql, Object... replacements) {
         // try catch prepare
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             int i = 1;
@@ -50,7 +50,7 @@ public abstract class SqlAble {
         }
     }
 
-    protected ResultSet executeQuery(Connection connection, String sql, Object... replacements) {
+    public static ResultSet executeQuery(Connection connection, String sql, Object... replacements) {
 
         // try catch prepare
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {

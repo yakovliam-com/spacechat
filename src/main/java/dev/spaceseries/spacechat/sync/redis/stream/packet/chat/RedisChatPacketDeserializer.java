@@ -27,9 +27,9 @@ public class RedisChatPacketDeserializer implements JsonDeserializer<RedisChatPa
         String senderName = object.get("senderName").getAsString();
 
         // get channel string
-        String channelStringHandle = object.get("channel").getAsString();
+        String channelStringHandle = object.get("channel") == null ? null : object.get("channel").getAsString();
         // deserialize / get (null = global)
-        Channel channel = SpaceChat.getInstance().getChannelManager().get(channelStringHandle, null);
+        Channel channel = channelStringHandle == null ? null : SpaceChat.getInstance().getChannelManager().get(channelStringHandle, null);
 
         // get server identifier
         String serverIdentifier = object.get("serverIdentifier").getAsString();

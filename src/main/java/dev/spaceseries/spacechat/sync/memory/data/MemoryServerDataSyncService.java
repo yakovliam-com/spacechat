@@ -78,7 +78,9 @@ public class MemoryServerDataSyncService extends ServerDataSyncService {
         // in memory is because it's possible that the channels won't line up if there is POSSIBLY a network connection
         // still going on AND the configurations are different between servers. It's VERY unlikely, but I still like to
         // account for every situation.
-        return SpaceChat.getInstance().getChannelManager().get(this.playerCurrentChannelManager.get(uuid).getHandle(), null);
+        Channel channel = this.playerCurrentChannelManager.get(uuid, null);
+
+        return channel == null ? null : SpaceChat.getInstance().getChannelManager().get(channel.getHandle(), null);
     }
 
     private static class PlayerSubscribedChannelManager extends MapManager<UUID, List<Channel>> {

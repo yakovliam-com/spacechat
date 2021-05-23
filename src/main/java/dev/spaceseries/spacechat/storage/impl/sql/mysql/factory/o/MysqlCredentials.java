@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.storage.impl.mysql.factory.o;
+package dev.spaceseries.spacechat.storage.impl.sql.mysql.factory.o;
 
 public class MysqlCredentials {
 

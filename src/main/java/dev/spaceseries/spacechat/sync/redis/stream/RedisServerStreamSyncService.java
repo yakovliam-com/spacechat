@@ -140,6 +140,6 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
      */
     @Override
     public void end() {
-
+        this.redisMessenger.shutdown();
     }
 }

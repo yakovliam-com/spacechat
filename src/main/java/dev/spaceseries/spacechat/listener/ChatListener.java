@@ -21,6 +21,8 @@ public class ChatListener implements Listener {
         // clear recipients to "cancel"
         event.getRecipients().clear();
 
+        // TODO if player has a current channel, then use the channel manager to send instead of the chat format manager
+
         // get chat format manager, send chat packet (this method also sets the format in console)
         SpaceChat.getInstance().getChatFormatManager().send(event, event.getMessage());
     }

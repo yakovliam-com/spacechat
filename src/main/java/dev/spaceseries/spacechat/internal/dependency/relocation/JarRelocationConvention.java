@@ -16,9 +16,6 @@ public enum JarRelocationConvention {
   /** ASM Commons Jar Relocation Convention */
   ASM_COMMONS("org{}ow2{}asm{}commons", "dev{}spaceseries{}spacechat{}lib{}asm{}commons"),
 
-  /** SQLITE JDBC Jar Relocation Convention */
-  SQLITE_JDBC("org{}sqlite", "dev{}spaceseries{}spacechat{}lib{}sqlite"),
-
   /** SPACEAPI Jar Relocation Convention */
   SPACE_API("dev{}spaceseries{}spaceapi", "dev{}spaceseries{}spacechat{}lib{}spaceapi");
 

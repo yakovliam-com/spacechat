@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.internal.dependency;
 
+import com.google.common.collect.ImmutableSet;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.internal.dependency.relocation.JarRelocationConvention;
 import dev.spaceseries.spacechat.internal.dependency.relocation.JarRelocator;
@@ -8,13 +9,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,7 +25,7 @@ import java.util.stream.Collectors;
  * folder for the relocated jars. After that, the methods are up to the user to decide when to
  * install, load, or relocate the binaries.
  */
-public class DependencyManagement {
+public class DependencyManagement<Dependency> {
 
     private static final ExecutorService EXECUTOR_SERVICE;
 
@@ -114,7 +112,7 @@ public class DependencyManagement {
                 logger.info(String.format("Could NOT find %s in Jitpack Central Repository!", artifact));
                 e.printStackTrace();
             }
-        }else if (dependency.getResolution() == DependencyResolution.YAKO_DEPENDENCY) {
+        } else if (dependency.getResolution() == DependencyResolution.YAKO_DEPENDENCY) {
             logger.info(String.format("Checking Yakovliam Releases Repository for %s", artifact));
             try {
                 file = DependencyUtilities.downloadYakoDependency(dependency, dir.getAbsolutePath());
@@ -135,7 +133,7 @@ public class DependencyManagement {
         for (final File f : Objects.requireNonNull(dir.listFiles())) {
             if (f.getName().contains("asm")) {
                 try {
-                    DependencyUtilities.loadDependency(f);
+                    DependencyUtilities.loadDependency(f, false);
                     files.remove(f);
                 } catch (final IOException e) {
                     e.printStackTrace();
@@ -171,7 +169,10 @@ public class DependencyManagement {
     public void load() {
         for (final File f : Objects.requireNonNull(relocatedDir.listFiles())) {
             try {
-                DependencyUtilities.loadDependency(f);
+                // should we isolate?
+                boolean isolate = f.getName().toLowerCase(Locale.ROOT).contains(RepositoryDependency.SQLITE_JDBC.getArtifact().toLowerCase(Locale.ROOT));
+
+                DependencyUtilities.loadDependency(f, isolate);
             } catch (final IOException e) {
                 e.printStackTrace();
             }

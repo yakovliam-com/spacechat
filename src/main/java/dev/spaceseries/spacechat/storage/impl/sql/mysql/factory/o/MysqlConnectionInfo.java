@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.storage.impl.mysql.factory.o;
+package dev.spaceseries.spacechat.storage.impl.sql.mysql.factory.o;
 
 import dev.spaceseries.spaceapi.lib.hikari.HikariConfig;
 import dev.spaceseries.spaceapi.lib.hikari.HikariDataSource;

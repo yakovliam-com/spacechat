@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.storage.impl.sqlite;
+package dev.spaceseries.spacechat.storage.impl.sql.file.sqlite;
 
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
@@ -6,7 +6,7 @@ import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.storage.Storage;
-import dev.spaceseries.spacechat.storage.impl.sqlite.factory.SqliteConnectionManager;
+import dev.spaceseries.spacechat.storage.impl.sql.file.sqlite.factory.SqliteConnectionManager;
 import dev.spaceseries.spacechat.util.date.DateUtil;
 import org.bukkit.Bukkit;
 
@@ -56,7 +56,7 @@ public class SqliteStorage implements Storage {
 
     @Override
     public void close() {
-        this.sqliteConnectionManager.close();
+        this.sqliteConnectionManager.shutdown();
     }
 
     /**
@@ -112,6 +112,5 @@ public class SqliteStorage implements Storage {
             return file;
         }
     }
-
 }
 

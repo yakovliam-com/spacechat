@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.storage.impl.mysql;
+package dev.spaceseries.spacechat.storage.impl.sql.mysql;
 
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
@@ -6,7 +6,7 @@ import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.storage.Storage;
-import dev.spaceseries.spacechat.storage.impl.mysql.factory.MysqlConnectionManager;
+import dev.spaceseries.spacechat.storage.impl.sql.mysql.factory.MysqlConnectionManager;
 import dev.spaceseries.spacechat.util.date.DateUtil;
 import org.bukkit.Bukkit;
 
@@ -43,6 +43,7 @@ public class MysqlStorage implements Storage {
     public MysqlStorage() {
         // initialize new connection manager
         mysqlConnectionManager = new MysqlConnectionManager();
+        this.mysqlConnectionManager.init();
     }
 
     @Override
@@ -55,7 +56,7 @@ public class MysqlStorage implements Storage {
 
     @Override
     public void close() {
-        this.mysqlConnectionManager.close();
+        this.mysqlConnectionManager.shutdown();
     }
 
     /**

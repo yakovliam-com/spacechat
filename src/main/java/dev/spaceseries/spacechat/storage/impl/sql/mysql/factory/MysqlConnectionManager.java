@@ -1,17 +1,18 @@
-package dev.spaceseries.spacechat.storage.impl.mysql.factory;
+package dev.spaceseries.spacechat.storage.impl.sql.mysql.factory;
 
 import dev.spaceseries.spacechat.config.Config;
-import dev.spaceseries.spacechat.storage.impl.mysql.MysqlStorage;
-import dev.spaceseries.spacechat.storage.impl.mysql.SqlAble;
-import dev.spaceseries.spacechat.storage.impl.mysql.factory.o.MysqlConnectionInfo;
-import dev.spaceseries.spacechat.storage.impl.mysql.factory.o.MysqlCredentials;
+import dev.spaceseries.spacechat.storage.impl.ConnectionFactory;
+import dev.spaceseries.spacechat.storage.impl.sql.mysql.MysqlStorage;
+import dev.spaceseries.spacechat.storage.impl.sql.mysql.SqlHelper;
+import dev.spaceseries.spacechat.storage.impl.sql.mysql.factory.o.MysqlConnectionInfo;
+import dev.spaceseries.spacechat.storage.impl.sql.mysql.factory.o.MysqlCredentials;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import static dev.spaceseries.spacechat.config.Config.*;
 
-public final class MysqlConnectionManager extends SqlAble {
+public final class MysqlConnectionManager implements ConnectionFactory {
 
     /**
      * The connection info
@@ -34,13 +35,22 @@ public final class MysqlConnectionManager extends SqlAble {
                 STORAGE_MYSQL_USE_SSL.get(Config.get()),
                 STORAGE_MYSQL_VERIFY_SERVER_CERTIFICATE.get(Config.get())
         );
+    }
 
+    @Override
+    public void init() {
         // If not exists, create chat logging table
         try {
-            execute(connectionInfo.getDataSource().getConnection(), String.format(MysqlStorage.LOG_CHAT_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_CHAT_LOGS.get(Config.get())));
+            SqlHelper.execute(connectionInfo.getDataSource().getConnection(), String.format(MysqlStorage.LOG_CHAT_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_CHAT_LOGS.get(Config.get())));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    @Override
+    public void shutdown() {
+        // close
+        this.getConnectionInfo().getDataSource().close();
     }
 
     /**
@@ -48,6 +58,7 @@ public final class MysqlConnectionManager extends SqlAble {
      *
      * @return The connection
      */
+    @Override
     public Connection getConnection() {
         try {
             return connectionInfo.getDataSource().getConnection();
@@ -56,14 +67,6 @@ public final class MysqlConnectionManager extends SqlAble {
         }
 
         return null;
-    }
-
-    /**
-     * Closes the connection pool
-     */
-    public void close() {
-        // close
-        this.getConnectionInfo().getDataSource().close();
     }
 
     /**

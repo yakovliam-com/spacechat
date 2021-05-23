@@ -4,6 +4,8 @@ import dev.spaceseries.spacechat.SpaceChat;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;

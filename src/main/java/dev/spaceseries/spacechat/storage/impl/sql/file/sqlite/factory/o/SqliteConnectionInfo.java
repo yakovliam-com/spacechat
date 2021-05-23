@@ -1,8 +1,7 @@
-package dev.spaceseries.spacechat.storage.impl.sqlite.factory.o;
+package dev.spaceseries.spacechat.storage.impl.sql.file.sqlite.factory.o;
 
 import dev.spaceseries.spaceapi.lib.hikari.HikariConfig;
 import dev.spaceseries.spaceapi.lib.hikari.HikariDataSource;
-import dev.spaceseries.spacechat.SpaceChat;
 
 public final class SqliteConnectionInfo {
 
@@ -31,6 +30,7 @@ public final class SqliteConnectionInfo {
 
         // create jdbc url
         String jdbc = "jdbc:sqlite:" + path;
+
 
         config.setDriverClassName("org.sqlite.JDBC");
         config.setJdbcUrl(jdbc);

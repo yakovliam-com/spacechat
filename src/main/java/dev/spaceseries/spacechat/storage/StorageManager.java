@@ -3,15 +3,15 @@ package dev.spaceseries.spacechat.storage;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.storage.impl.empty.EmptyStorage;
-import dev.spaceseries.spacechat.storage.impl.mysql.MysqlStorage;
-import dev.spaceseries.spacechat.storage.impl.sqlite.SqliteStorage;
+import dev.spaceseries.spacechat.storage.impl.sql.mysql.MysqlStorage;
+import dev.spaceseries.spacechat.storage.impl.sql.file.sqlite.SqliteStorage;
 
 public class StorageManager {
 
     /**
      * The current storage medium
      */
-    private Storage current;
+    private final Storage current;
 
     /**
      * Initializes storage
