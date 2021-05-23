@@ -21,6 +21,7 @@ public final class SqliteConnectionManager extends SqliteConnectionFactory {
 
     @Override
     public void init() {
+        System.out.println("\n\nIn sqlite connection manager init\n\n");
         super.init();
 
         // If not exists, create chat logging table

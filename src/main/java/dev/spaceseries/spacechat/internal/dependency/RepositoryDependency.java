@@ -13,28 +13,29 @@ public enum RepositoryDependency {
     /**
      * ASM Maven Dependency
      */
-    ASM("org{}ow2{}asm", "asm", "9{}1", DependencyResolution.MAVEN_DEPENDENCY),
+    ASM("org{}ow2{}asm", "asm", "9{}1", DependencyResolution.MAVEN_DEPENDENCY, false),
 
     /**
      * ASM Commons Maven Dependency
      */
-    ASM_COMMONS("org{}ow2{}asm", "asm-commons", "9{}1", DependencyResolution.MAVEN_DEPENDENCY),
+    ASM_COMMONS("org{}ow2{}asm", "asm-commons", "9{}1", DependencyResolution.MAVEN_DEPENDENCY, false),
 
     /**
      * SQLITE JDBC Maven Dependency
      */
-    SQLITE_JDBC("org.xerial", "sqlite-jdbc", "3{}34{}0", DependencyResolution.MAVEN_DEPENDENCY),
+    SQLITE_JDBC("org.xerial", "sqlite-jdbc", "3{}34{}0", DependencyResolution.MAVEN_DEPENDENCY, true),
 
     /**
      * SPACEAPI Yako Dependency
      */
-    SPACE_API("dev.spaceseries", "spaceapi", "1{}0{}11", DependencyResolution.YAKO_DEPENDENCY);
+    SPACE_API("dev.spaceseries", "spaceapi", "1{}0{}11", DependencyResolution.YAKO_DEPENDENCY, false);
 
 
     private final String group;
     private final String artifact;
     private final String version;
     private final DependencyResolution resolution;
+    private final boolean isolated;
 
     /**
      * Instantiates a RepositoryDependency
@@ -48,11 +49,13 @@ public enum RepositoryDependency {
             @NotNull final String group,
             @NotNull final String artifact,
             @NotNull final String version,
-            @NotNull final DependencyResolution resolution) {
+            @NotNull final DependencyResolution resolution,
+            @NotNull final boolean isolated) {
         this.group = group.replaceAll("\\{}", ".");
         this.artifact = artifact.replaceAll("\\{}", ".");
         this.version = version.replaceAll("\\{}", ".");
         this.resolution = resolution;
+        this.isolated = isolated;
     }
 
     /**
@@ -89,5 +92,14 @@ public enum RepositoryDependency {
      */
     public DependencyResolution getResolution() {
         return resolution;
+    }
+
+    /**
+     * Gets Is isolated?
+     *
+     * @return is isolated?
+     */
+    public boolean isIsolated() {
+        return isolated;
     }
 }

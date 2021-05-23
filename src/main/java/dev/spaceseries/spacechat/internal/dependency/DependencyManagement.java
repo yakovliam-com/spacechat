@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
@@ -37,6 +38,7 @@ public class DependencyManagement<Dependency> {
     private final File dir;
     private final File relocatedDir;
     private final Logger logger;
+    private IsolatedClassLoader isolatedClassLoader;
 
     /**
      * Instantiates a new DependencyManagement.
@@ -133,7 +135,7 @@ public class DependencyManagement<Dependency> {
         for (final File f : Objects.requireNonNull(dir.listFiles())) {
             if (f.getName().contains("asm")) {
                 try {
-                    DependencyUtilities.loadDependency(f, false);
+                    DependencyUtilities.loadDependency(f);
                     files.remove(f);
                 } catch (final IOException e) {
                     e.printStackTrace();
@@ -168,11 +170,28 @@ public class DependencyManagement<Dependency> {
      */
     public void load() {
         for (final File f : Objects.requireNonNull(relocatedDir.listFiles())) {
-            try {
-                // should we isolate?
-                boolean isolate = f.getName().toLowerCase(Locale.ROOT).contains(RepositoryDependency.SQLITE_JDBC.getArtifact().toLowerCase(Locale.ROOT));
+            // set ip isolated classloader for this specific dependency
+            RepositoryDependency matched = Arrays.stream(RepositoryDependency.values())
+                    .filter(d -> f.getName().toLowerCase(Locale.ROOT).contains(d.getArtifact().toLowerCase(Locale.ROOT))).findFirst()
+                    .orElse(null);
+            if (matched != null) {
+                List<URL> urls;
+                if (isolatedClassLoader != null)
+                    urls = Arrays.stream(isolatedClassLoader.getURLs()).collect(Collectors.toList());
+                else
+                    urls = new ArrayList<>();
+                try {
+                    urls.add(f.toURI().toURL());
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
 
-                DependencyUtilities.loadDependency(f, isolate);
+                // update isolated class loader
+                isolatedClassLoader = new IsolatedClassLoader(urls.toArray(new URL[0]));
+            }
+
+            try {
+                DependencyUtilities.loadDependency(f);
             } catch (final IOException e) {
                 e.printStackTrace();
             }
@@ -207,4 +226,14 @@ public class DependencyManagement<Dependency> {
     public Set<File> getFiles() {
         return files;
     }
+
+    /**
+     * Returns isolated classloader
+     *
+     * @return classloader
+     */
+    public IsolatedClassLoader getIsolatedClassLoader() {
+        return this.isolatedClassLoader;
+    }
+
 }

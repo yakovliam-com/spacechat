@@ -81,6 +81,11 @@ public final class SpaceChat extends JavaPlugin {
     private ChannelsConfig channelsConfig;
 
     /**
+     * Dependency instantiation
+     */
+    private DependencyInstantiation dependencyInstantiation;
+
+    /**
      * Runs on load
      */
     @Override
@@ -94,7 +99,8 @@ public final class SpaceChat extends JavaPlugin {
     @Override
     public void onEnable() {
         // load dependencies
-        new DependencyInstantiation().startTasks();
+        this.dependencyInstantiation = new DependencyInstantiation();
+        dependencyInstantiation.startTasks();
 
         // initialize space api
         plugin = new SpacePlugin(this);
@@ -296,5 +302,14 @@ public final class SpaceChat extends JavaPlugin {
      */
     public ServerSyncServiceManager getServerSyncServiceManager() {
         return serverSyncServiceManager;
+    }
+
+    /**
+     * Returns dependency instantiation
+     *
+     * @return dependency instantiation
+     */
+    public DependencyInstantiation getDependencyInstantiation() {
+        return dependencyInstantiation;
     }
 }

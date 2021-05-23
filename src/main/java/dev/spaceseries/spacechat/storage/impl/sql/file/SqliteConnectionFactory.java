@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.sql.file;
 
-import dev.spaceseries.spacechat.internal.dependency.DependencyUtilities;
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.internal.dependency.IsolatedClassLoader;
 
 import java.lang.reflect.Constructor;
@@ -18,7 +18,8 @@ public class SqliteConnectionFactory extends FlatfileConnectionFactory {
 
     @Override
     public void init() {
-        IsolatedClassLoader classLoader = DependencyUtilities.getIsolatedClassloader();
+        System.out.println("\n\n\nInitializing\n\n\n");
+        IsolatedClassLoader classLoader = SpaceChat.getInstance().getDependencyInstantiation().getDependencyManagement().getIsolatedClassLoader();
         try {
             Class<?> connectionClass = classLoader.loadClass("org.sqlite.jdbc4.JDBC4Connection");
             this.connectionConstructor = connectionClass.getConstructor(String.class, String.class, Properties.class);

@@ -17,6 +17,11 @@ import java.util.concurrent.ExecutionException;
 public final class DependencyInstantiation {
 
     /**
+     * Dependency management
+     */
+    private DependencyManagement dependencyManagement;
+
+    /**
      * Starts dependency tasks.
      */
     public void startTasks() {
@@ -45,7 +50,7 @@ public final class DependencyInstantiation {
      * Downloads/Loads Jitpack/Maven dependencies.
      */
     private void loadDependencies() {
-        final DependencyManagement dependencyManagement = new DependencyManagement(new File(SpaceChat.getInstance().getDataFolder(), "libs"));
+        dependencyManagement = new DependencyManagement(new File(SpaceChat.getInstance().getDataFolder(), "libs"));
         dependencyManagement.install();
         dependencyManagement.relocate();
         dependencyManagement.load();
@@ -65,5 +70,14 @@ public final class DependencyInstantiation {
             }
         }
         files.clear();
+    }
+
+    /**
+     * Returns dependency management
+     *
+     * @return dependency management
+     */
+    public DependencyManagement getDependencyManagement() {
+        return dependencyManagement;
     }
 }

@@ -29,7 +29,6 @@ public final class DependencyUtilities {
 
     private static Method ADD_URL_METHOD;
     private static URLClassLoader CLASSLOADER;
-    private static IsolatedClassLoader ISOLATED_CLASSLOADER;
 
     static {
         SpaceChat.getInstance().getLogger().info("Attempting to Open Reflection Module...");
@@ -126,7 +125,7 @@ public final class DependencyUtilities {
             @NotNull final DependencyResolution resolution)
             throws IOException {
         final File f = downloadFile(groupId, artifactId, version, directory, resolution);
-        loadDependency(f, false);
+        loadDependency(f);
         return f;
     }
 
@@ -152,7 +151,7 @@ public final class DependencyUtilities {
             @NotNull final LongConsumer consumer)
             throws IOException {
         final File f = downloadFile(groupId, artifactId, version, directory, resolution, consumer);
-        loadDependency(f, false);
+        loadDependency(f);
         return f;
     }
 
@@ -403,19 +402,12 @@ public final class DependencyUtilities {
      * @param file the file
      * @throws IOException the io exception
      */
-    public static void loadDependency(@NotNull final File file, boolean isolate) throws IOException {
-        URLClassLoader originalClassLoader = CLASSLOADER;
-        IsolatedClassLoader isolatedClassLoader = new IsolatedClassLoader(new URL[]{file.toURI().toURL()});
-
+    public static void loadDependency(@NotNull final File file) throws IOException {
         Preconditions.checkArgument(
                 file.exists(), String.format("Dependency File %s doesn't exist!", file.getAbsolutePath()));
         SpaceChat.getInstance().getLogger().info(String.format("Loading JAR Dependency at: %s", file.getAbsolutePath()));
         try {
-            if (isolate) {
-                ADD_URL_METHOD.invoke(isolatedClassLoader, file.toURI().toURL());
-            } else {
-                ADD_URL_METHOD.invoke(originalClassLoader, file.toURI().toURL());
-            }
+            ADD_URL_METHOD.invoke(CLASSLOADER, file.toURI().toURL());
         } catch (final IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -429,24 +421,5 @@ public final class DependencyUtilities {
      */
     public static void setClassloader(final URLClassLoader CLASSLOADER) {
         DependencyUtilities.CLASSLOADER = CLASSLOADER;
-    }
-
-    /**
-     * Sets the isolated classloader used for dependency loading.
-     *
-     * @param CLASSLOADER the classloader
-     */
-    public static void setIsolatedClassloader(final IsolatedClassLoader CLASSLOADER) {
-        DependencyUtilities.CLASSLOADER = CLASSLOADER;
-        DependencyUtilities.ISOLATED_CLASSLOADER = CLASSLOADER;
-    }
-
-    /**
-     * Returns the isolated classloader used for dependency loading.
-     *
-     * @return the classloader
-     */
-    public static IsolatedClassLoader getIsolatedClassloader() {
-        return ISOLATED_CLASSLOADER;
     }
 }
