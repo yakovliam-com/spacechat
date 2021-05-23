@@ -10,10 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.net.*;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
@@ -341,7 +338,12 @@ public final class DependencyUtilities {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(url), "URL cannot be empty or null!");
         SpaceChat.getInstance().getLogger().info(String.format("Downloading Dependency at %s into folder %s", url, p));
         final File file = p.toFile();
-        try (final InputStream inputStream = new URL(url).openStream();
+
+        URLConnection connection = new URL(url).openConnection();
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36");
+        connection.connect();
+
+        try (final InputStream inputStream = connection.getInputStream();
              final ReadableByteChannel readableByteChannel = Channels.newChannel(inputStream);
              final FileOutputStream fileOutputStream = new FileOutputStream(file)) {
             fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);
