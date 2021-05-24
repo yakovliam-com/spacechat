@@ -88,6 +88,15 @@ public class ChatUtil {
         List<Player> playerList = SpaceChat.getInstance().getServerSyncServiceManager().getDataService().getSubscribedUUIDs(channel)
                 .stream().map(Bukkit::getPlayer)
                 .collect(Collectors.toList());
+
+        // if a player in the list doesn't have permission to view it, then unsubscribe them
+        Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> playerList.forEach(p -> {
+            if (!p.hasPermission(channel.getPermission())) {
+                SpaceChat.getInstance().getServerSyncServiceManager().getDataService().unsubscribeFromChannel(p.getUniqueId(), channel);
+            }
+        }));
+
+
         playerList.forEach(p -> sendComponentMessage(component, p));
     }
 

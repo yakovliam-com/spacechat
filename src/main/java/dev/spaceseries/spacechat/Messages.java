@@ -59,6 +59,30 @@ public class Messages {
             .build();
 
     /**
+     * Channel
+     */
+
+    // join
+    public Message channelJoin = Message.fromConfigurationSection(getLangConfiguration().getSection("channel.join"), "channel.join")
+            .build();
+
+    // leave
+    public Message channelLeave = Message.fromConfigurationSection(getLangConfiguration().getSection("channel.leave"), "channel.leave")
+            .build();
+
+    // listen
+    public Message channelListen = Message.fromConfigurationSection(getLangConfiguration().getSection("channel.listen"), "channel.listen")
+            .build();
+
+    // mute
+    public Message channelMute = Message.fromConfigurationSection(getLangConfiguration().getSection("channel.mute"), "channel.mute")
+            .build();
+
+    // invalid
+    public Message channelInvalid = Message.fromConfigurationSection(getLangConfiguration().getSection("channel.invalid"), "channel.invalid")
+            .build();
+
+    /**
      * Gets the lang configuration from the main class
      *
      * @return The lang configuration

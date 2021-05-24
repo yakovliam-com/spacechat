@@ -89,8 +89,16 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
     public void updateCurrentChannel(UUID uuid, Channel channel) {
         try (Jedis jedis = pool.getResource()) {
             // update key
-            jedis.set(REDIS_PLAYER_CURRENT_CHANNEL_KEY.get(Config.get())
-                    .replace("%uuid%", uuid.toString()), channel.getHandle());
+            if (channel != null)
+                jedis.set(REDIS_PLAYER_CURRENT_CHANNEL_KEY.get(Config.get())
+                        .replace("%uuid%", uuid.toString()), channel.getHandle());
+            else {
+                // get current
+                Channel current = getCurrentChannel(uuid);
+                if (current != null)
+                    jedis.del(REDIS_PLAYER_CURRENT_CHANNEL_KEY.get(Config.get())
+                            .replace("%uuid%", uuid.toString()), current.getHandle());
+            }
         }
     }
 
