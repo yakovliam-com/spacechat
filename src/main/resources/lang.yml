@@ -74,6 +74,10 @@ channel:
   invalid:
     text:
       - "&8&l[&d&lS&5&lS&8&l]&r &cOops! We can't find a channel with the name of &7%channel%&c."
+ignore:
+  player-not-found:
+    text:
+      - "&cCould not find specified player."
 reload:
   success:
     text:

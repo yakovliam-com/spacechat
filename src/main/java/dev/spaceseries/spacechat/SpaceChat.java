@@ -1,10 +1,7 @@
 package dev.spaceseries.spacechat;
 
 import dev.spaceseries.spaceapi.abstraction.plugin.BukkitPlugin;
-import dev.spaceseries.spacechat.command.BroadcastCommand;
-import dev.spaceseries.spacechat.command.BroadcastMinimessageCommand;
-import dev.spaceseries.spacechat.command.ChannelCommand;
-import dev.spaceseries.spacechat.command.SpaceChatCommand;
+import dev.spaceseries.spacechat.command.*;
 import dev.spaceseries.spacechat.config.ChannelsConfig;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.config.FormatsConfig;
@@ -127,6 +124,7 @@ public final class SpaceChat extends JavaPlugin {
         // initialize commands
         new SpaceChatCommand();
         new ChannelCommand();
+        new IgnoreCommand();
         new BroadcastCommand();
         new BroadcastMinimessageCommand();
 

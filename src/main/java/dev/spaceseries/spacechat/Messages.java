@@ -83,6 +83,14 @@ public class Messages {
             .build();
 
     /**
+     * Ignore
+     */
+
+    // player not found
+    public Message playerNotFound = Message.fromConfigurationSection(getLangConfiguration().getSection("ignore.player-not-found"), "ignore.player-not-found")
+            .build();
+
+    /**
      * Gets the lang configuration from the main class
      *
      * @return The lang configuration
