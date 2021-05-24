@@ -2,7 +2,7 @@ package dev.spaceseries.spacechat.builder.extra;
 
 import dev.spaceseries.spaceapi.config.impl.Configuration;
 import dev.spaceseries.spacechat.builder.Builder;
-import dev.spaceseries.spacechat.model.Extra;
+import dev.spaceseries.spacechat.model.formatting.Extra;
 
 public class ExtraBuilder implements Builder<Configuration, Extra> {
 

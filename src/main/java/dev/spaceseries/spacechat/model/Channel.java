@@ -1,5 +1,7 @@
 package dev.spaceseries.spacechat.model;
 
+import dev.spaceseries.spacechat.model.formatting.Format;
+
 public class Channel {
 
     /**

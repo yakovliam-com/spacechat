@@ -2,7 +2,7 @@ package dev.spaceseries.spacechat.loader;
 
 import dev.spaceseries.spaceapi.config.impl.Configuration;
 import dev.spaceseries.spacechat.builder.channel.ChannelBuilder;
-import dev.spaceseries.spacechat.manager.MapManager;
+import dev.spaceseries.spacechat.model.manager.MapManager;
 import dev.spaceseries.spacechat.model.Channel;
 
 public class ChannelLoader implements Loader<MapManager<String, Channel>> {

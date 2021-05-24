@@ -24,11 +24,13 @@ storage:
     verify-server-certificate: false
     tables:
       chat-logs: "spacechat_chatlogs"
+      users: "spacechat_users"
   sqlite:
     # This generates a file under "plugins/SpaceChat/storage/<database>" where <database> = the config option below
     database: "storage"
     tables:
       chat-logs: "spacechat_chatlogs"
+      users: "spacechat_users"
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#
 # Redis Configuration     #

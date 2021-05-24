@@ -12,11 +12,12 @@ import dev.spaceseries.spacechat.io.watcher.FileWatcher;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.listener.JoinQuitListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
-import dev.spaceseries.spacechat.manager.ChannelManager;
-import dev.spaceseries.spacechat.manager.ChatFormatManager;
+import dev.spaceseries.spacechat.channel.ChannelManager;
+import dev.spaceseries.spacechat.chat.ChatFormatManager;
 import dev.spaceseries.spacechat.internal.space.SpacePlugin;
 import dev.spaceseries.spacechat.storage.StorageManager;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
+import dev.spaceseries.spacechat.user.UserManager;
 import dev.spaceseries.spacechat.util.version.VersionUtil;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -57,6 +58,11 @@ public final class SpaceChat extends JavaPlugin {
      * The log manager
      */
     private LogManagerImpl logManagerImpl;
+
+    /**
+     * User manager
+     */
+    private UserManager userManager;
 
     /**
      * The storage manager
@@ -105,16 +111,14 @@ public final class SpaceChat extends JavaPlugin {
 
         // load configs
         loadConfigs();
-
         // load formats
         loadFormats();
-
         // load channels
         loadChannels();
-
         // load storage
         loadStorage();
-
+        // load users
+        loadUsers();
         // load connection managers
         loadSyncServices();
 
@@ -189,6 +193,16 @@ public final class SpaceChat extends JavaPlugin {
     public void loadStorage() {
         // initialize storage
         storageManager = new StorageManager();
+    }
+
+    /**
+     * Loads users
+     * <p>
+     * More often than not, this will NOT be called on the reload command
+     */
+    public void loadUsers() {
+        // initialize users
+        userManager = new UserManager(this);
     }
 
     /**
@@ -311,5 +325,14 @@ public final class SpaceChat extends JavaPlugin {
      */
     public DependencyInstantiation getDependencyInstantiation() {
         return dependencyInstantiation;
+    }
+
+    /**
+     * Returns user manager
+     *
+     * @return user manager
+     */
+    public UserManager getUserManager() {
+        return userManager;
     }
 }

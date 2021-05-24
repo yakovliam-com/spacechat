@@ -1,12 +1,12 @@
-package dev.spaceseries.spacechat.manager;
+package dev.spaceseries.spacechat.chat;
 
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.loader.ChatFormatLoader;
 import dev.spaceseries.spacechat.loader.FormatLoader;
 import dev.spaceseries.spacechat.loader.FormatManager;
-import dev.spaceseries.spacechat.model.FormatType;
-import dev.spaceseries.spacechat.model.ChatFormat;
+import dev.spaceseries.spacechat.model.formatting.FormatType;
+import dev.spaceseries.spacechat.model.formatting.ChatFormat;
 import dev.spaceseries.spacechat.util.chat.ChatUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;

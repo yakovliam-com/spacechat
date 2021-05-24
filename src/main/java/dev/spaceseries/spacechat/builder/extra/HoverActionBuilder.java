@@ -2,7 +2,7 @@ package dev.spaceseries.spacechat.builder.extra;
 
 import dev.spaceseries.spaceapi.config.impl.Configuration;
 import dev.spaceseries.spacechat.builder.Builder;
-import dev.spaceseries.spacechat.model.action.HoverAction;
+import dev.spaceseries.spacechat.model.formatting.action.HoverAction;
 
 import java.util.Collections;
 import java.util.List;

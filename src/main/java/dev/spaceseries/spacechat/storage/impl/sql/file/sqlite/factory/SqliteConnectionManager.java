@@ -26,6 +26,7 @@ public final class SqliteConnectionManager extends SqliteConnectionFactory {
         // If not exists, create chat logging table
         try {
             SqlHelper.execute(getConnection(), String.format(SqliteStorage.LOG_CHAT_CREATION_STATEMENT, STORAGE_SQLITE_TABLES_CHAT_LOGS.get(Config.get())));
+            SqlHelper.execute(getConnection(), String.format(SqliteStorage.USERS_CREATION_STATEMENT, STORAGE_SQLITE_TABLES_USERS.get(Config.get())));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

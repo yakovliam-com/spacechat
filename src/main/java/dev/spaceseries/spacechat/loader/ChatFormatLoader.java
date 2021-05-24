@@ -2,7 +2,7 @@ package dev.spaceseries.spacechat.loader;
 
 import dev.spaceseries.spaceapi.config.impl.Configuration;
 import dev.spaceseries.spacechat.builder.chatformat.ChatFormatBuilder;
-import dev.spaceseries.spacechat.model.ChatFormat;
+import dev.spaceseries.spacechat.model.formatting.ChatFormat;
 
 public class ChatFormatLoader extends FormatLoader<ChatFormat> {
 

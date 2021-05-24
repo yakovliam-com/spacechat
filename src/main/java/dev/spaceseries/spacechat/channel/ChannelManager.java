@@ -1,19 +1,15 @@
-package dev.spaceseries.spacechat.manager;
+package dev.spaceseries.spacechat.channel;
 
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.loader.ChannelLoader;
 import dev.spaceseries.spacechat.model.ChannelType;
 import dev.spaceseries.spacechat.model.Channel;
-import dev.spaceseries.spacechat.model.ChatFormat;
+import dev.spaceseries.spacechat.model.manager.MapManager;
 import dev.spaceseries.spacechat.util.chat.ChatUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
-import java.util.Comparator;
 import java.util.Locale;
-
-import static dev.spaceseries.spacechat.config.Config.USE_RELATIONAL_PLACEHOLDERS;
 
 public class ChannelManager extends MapManager<String, Channel> {
 

@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.sync.memory.data;
 
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.manager.MapManager;
+import dev.spaceseries.spacechat.model.manager.MapManager;
 import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.sync.ServerDataSyncService;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;

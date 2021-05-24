@@ -1,8 +1,8 @@
-package dev.spaceseries.spacechat.manager;
+package dev.spaceseries.spacechat.model.manager;
 
 import java.util.*;
 
-public abstract class MapManager<K, V> {
+public abstract class MapManager<K, V> implements Manager {
 
     /**
      * Map

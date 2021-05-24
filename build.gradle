@@ -47,6 +47,9 @@ dependencies {
 
     // bstats
     implementation "org.bstats:bstats-bukkit:2.2.1"
+
+    // caffeine
+    compileOnly 'com.github.ben-manes.caffeine:caffeine:3.0.2'
 }
 
 artifacts {

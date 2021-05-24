@@ -3,7 +3,7 @@ package dev.spaceseries.spacechat.builder.format;
 import dev.spaceseries.spaceapi.config.impl.Configuration;
 import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.builder.format.part.FormatPartBuilder;
-import dev.spaceseries.spacechat.model.Format;
+import dev.spaceseries.spacechat.model.formatting.Format;
 
 public class FormatBuilder implements Builder<Configuration, Format> {
 

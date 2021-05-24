@@ -1,7 +1,7 @@
-package dev.spaceseries.spacechat.model;
+package dev.spaceseries.spacechat.model.formatting;
 
-import dev.spaceseries.spacechat.model.action.ClickAction;
-import dev.spaceseries.spacechat.model.action.HoverAction;
+import dev.spaceseries.spacechat.model.formatting.action.ClickAction;
+import dev.spaceseries.spacechat.model.formatting.action.HoverAction;
 
 public class Extra {
 

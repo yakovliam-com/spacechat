@@ -3,6 +3,7 @@ package dev.spaceseries.spacechat.command.ignore;
 import dev.spaceseries.spaceapi.command.*;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.model.User;
 import org.bukkit.OfflinePlayer;
 
 @SubCommand
@@ -22,9 +23,9 @@ public class RemoveCommand extends Command {
             return;
         }
 
-        // understood this is deprecated, but should be fine as it's just a reference to get a player -- not used as storage
-        OfflinePlayer target = SpaceChat.getInstance().getServer().getOfflinePlayer(args[0]);
-        if (!target.hasPlayedBefore()) {
+        // get user
+        User user = SpaceChat.getInstance().getUserManager().getByName(args[0]).join();
+        if (user == null) {
             Messages.getInstance().playerNotFound.msg(sender);
             return;
         }

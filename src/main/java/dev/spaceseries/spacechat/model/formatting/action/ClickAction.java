@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.model.action;
+package dev.spaceseries.spacechat.model.formatting.action;
 
 import dev.spaceseries.spacechat.replacer.AmpersandReplacer;
 import dev.spaceseries.spacechat.replacer.SectionReplacer;

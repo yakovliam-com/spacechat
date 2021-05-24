@@ -2,12 +2,15 @@ package dev.spaceseries.spacechat.listener;
 
 import dev.spaceseries.spaceapi.command.BukkitSpaceCommandSender;
 import dev.spaceseries.spaceapi.text.Message;
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
+import dev.spaceseries.spacechat.model.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,7 +24,21 @@ public class JoinQuitListener implements Listener {
     private static final UUID OWNER_UUID = UUID.fromString("8ab4dbe1-634e-4954-ad19-5cfbedf3b11b");
 
     @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        // invalidate
+        SpaceChat.getInstance().getUserManager().invalidate(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        // handle with user manager
+        SpaceChat.getInstance().getUserManager().get(event.getPlayer().getUniqueId()).thenAccept((user) -> {
+            // if username not equal, update
+            if (!event.getPlayer().getName().equals(user.getUsername())) {
+                SpaceChat.getInstance().getUserManager().update(new User(user.getUuid(), event.getPlayer().getName(), user.getDate()));
+            }
+        });
+
         // if owner join is enabled
         if (Config.OWNER_JOIN.get(Config.get())) {
             if (event.getPlayer().getUniqueId().equals(OWNER_UUID)) {

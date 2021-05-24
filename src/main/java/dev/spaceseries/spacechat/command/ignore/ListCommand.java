@@ -3,6 +3,7 @@ package dev.spaceseries.spacechat.command.ignore;
 import dev.spaceseries.spaceapi.command.*;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.model.User;
 
 @SubCommand
 @PlayersOnly

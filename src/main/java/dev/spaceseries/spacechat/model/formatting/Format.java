@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.model;
+package dev.spaceseries.spacechat.model.formatting;
 
 import java.util.List;
 

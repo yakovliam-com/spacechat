@@ -24,9 +24,11 @@ public final class Config extends dev.spaceseries.spaceapi.config.obj.Config {
     public static ConfigKey<Boolean> STORAGE_MYSQL_USE_SSL = ConfigKeyTypes.booleanKey("storage.mysql.use-ssl", false);
     public static ConfigKey<Boolean> STORAGE_MYSQL_VERIFY_SERVER_CERTIFICATE = ConfigKeyTypes.booleanKey("storage.mysql.verify-server-certificate", false);
     public static ConfigKey<String> STORAGE_MYSQL_TABLES_CHAT_LOGS = ConfigKeyTypes.stringKey("storage.mysql.tables.chat-logs", null);
+    public static ConfigKey<String> STORAGE_MYSQL_TABLES_USERS = ConfigKeyTypes.stringKey("storage.mysql.tables.users", null);
 
     public static ConfigKey<String> STORAGE_SQLITE_DATABASE = ConfigKeyTypes.stringKey("storage.sqlite.database", null);
     public static ConfigKey<String> STORAGE_SQLITE_TABLES_CHAT_LOGS = ConfigKeyTypes.stringKey("storage.sqlite.tables.chat-logs", null);
+    public static ConfigKey<String> STORAGE_SQLITE_TABLES_USERS = ConfigKeyTypes.stringKey("storage.sqlite.tables.users", null);
 
     public static ConfigKey<Boolean> REDIS_ENABLED = ConfigKeyTypes.booleanKey("redis.enabled", false);
     public static ConfigKey<String> REDIS_URL = ConfigKeyTypes.stringKey("redis.url", null);

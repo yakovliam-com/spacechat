@@ -65,7 +65,7 @@ public class LogManagerImpl implements LogManager {
      */
     private void storage(LogWrapper data) {
         // get storage manager and log
-        SpaceChat.getInstance().getStorageManager().getCurrent().log(data);
+        SpaceChat.getInstance().getStorageManager().getCurrent().log(data, true);
     }
 
     /**

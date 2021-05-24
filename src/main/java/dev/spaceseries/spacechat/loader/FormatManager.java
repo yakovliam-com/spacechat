@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.loader;
 
 
-import dev.spaceseries.spacechat.manager.MapManager;
+import dev.spaceseries.spacechat.model.manager.MapManager;
 
 public abstract class FormatManager<V> extends MapManager<String, V> {
 }

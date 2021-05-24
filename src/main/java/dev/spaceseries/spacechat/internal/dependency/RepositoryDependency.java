@@ -23,12 +23,17 @@ public enum RepositoryDependency {
     /**
      * SQLITE JDBC Maven Dependency
      */
-    SQLITE_JDBC("org.xerial", "sqlite-jdbc", "3{}34{}0", DependencyResolution.MAVEN_DEPENDENCY, true),
+    SQLITE_JDBC("org{}xerial", "sqlite-jdbc", "3{}34{}0", DependencyResolution.MAVEN_DEPENDENCY, true),
 
     /**
      * SPACEAPI Yako Dependency
      */
-    SPACE_API("dev.spaceseries", "spaceapi", "1{}0{}11", DependencyResolution.YAKO_DEPENDENCY, false);
+    SPACE_API("dev{}spaceseries", "spaceapi", "1{}0{}11", DependencyResolution.YAKO_DEPENDENCY, false),
+
+    /**
+     * CAFFEINE Maven Dependency
+     */
+    CAFFEINE("com[}github{}ben-manes{}caffeine", "caffeine", "3{}0{}2", DependencyResolution.MAVEN_DEPENDENCY, false);
 
 
     private final String group;

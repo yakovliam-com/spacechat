@@ -8,8 +8,8 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.L
 import dev.spaceseries.spaceapi.util.Quad;
 import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.config.Config;
-import dev.spaceseries.spacechat.model.Extra;
-import dev.spaceseries.spacechat.model.Format;
+import dev.spaceseries.spacechat.model.formatting.Extra;
+import dev.spaceseries.spacechat.model.formatting.Format;
 import dev.spaceseries.spacechat.parser.MessageParser;
 import dev.spaceseries.spacechat.replacer.AmpersandReplacer;
 import dev.spaceseries.spacechat.replacer.SectionReplacer;

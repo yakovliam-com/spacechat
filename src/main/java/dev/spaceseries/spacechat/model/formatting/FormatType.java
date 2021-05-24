@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.model;
+package dev.spaceseries.spacechat.model.formatting;
 
 public enum FormatType {
 

@@ -1,4 +1,4 @@
-package dev.spaceseries.spacechat.model.action;
+package dev.spaceseries.spacechat.model.formatting.action;
 
 public enum  ClickActionType {
     RUN_COMMAND,

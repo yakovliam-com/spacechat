@@ -2,6 +2,7 @@ package dev.spaceseries.spacechat.storage.impl.sql.mysql.factory;
 
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.storage.impl.ConnectionFactory;
+import dev.spaceseries.spacechat.storage.impl.sql.file.sqlite.SqliteStorage;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.MysqlStorage;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.SqlHelper;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.factory.o.MysqlConnectionInfo;
@@ -42,6 +43,7 @@ public final class MysqlConnectionManager implements ConnectionFactory {
         // If not exists, create chat logging table
         try {
             SqlHelper.execute(connectionInfo.getDataSource().getConnection(), String.format(MysqlStorage.LOG_CHAT_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_CHAT_LOGS.get(Config.get())));
+            SqlHelper.execute(getConnection(), String.format(MysqlStorage.USERS_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_USERS.get(Config.get())));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
