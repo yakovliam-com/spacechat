@@ -63,8 +63,9 @@ redis:
 
   # This is the key that should be used to define where spacechat looks for a player's current subscribed channels list
   # If you do not know how to configure redis data structures and keys, DO NOT TOUCH THIS VALUE
-  player-subscribed-channels-list-key: "spacechat:channels:%uuid%:channels"
+  player-subscribed-channels-list-key: "spacechat:subscribedchannels:%uuid%:channels"
   player-current-channel-key: "spacechat:channels:%uuid%:current"
+  channels-subscribed-uuids-list-key: "spacechat:channels:%channel%"
 
 #=#=#=#=#=#=#=#=#=#=#=#=#
 #      Misc Settings    #

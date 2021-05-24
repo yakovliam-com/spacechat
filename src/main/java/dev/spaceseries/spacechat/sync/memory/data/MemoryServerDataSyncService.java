@@ -8,7 +8,9 @@ import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class MemoryServerDataSyncService extends ServerDataSyncService {
 
@@ -34,14 +36,29 @@ public class MemoryServerDataSyncService extends ServerDataSyncService {
     }
 
     /**
-     * Updates the list of subscribed channels
+     * Subscribes a player to a channel
      *
-     * @param uuid       uuid
-     * @param subscribed subscribed
+     * @param uuid    uuid
+     * @param channel channel
      */
     @Override
-    public void updateSubscribedChannels(UUID uuid, List<Channel> subscribed) {
-        this.playerSubscribedChannelManager.add(uuid, subscribed);
+    public void subscribeToChannel(UUID uuid, Channel channel) {
+        List<Channel> subscribed = this.playerSubscribedChannelManager.get(uuid, new ArrayList<>());
+        subscribed.add(channel);
+        // this.playerSubscribedChannelManager.add(uuid, subscribed);
+    }
+
+    /**
+     * Unsubscribes a player from a channel
+     *
+     * @param uuid              uuid
+     * @param subscribedChannel subscribed channel
+     */
+    @Override
+    public void unsubscribeFromChannel(UUID uuid, Channel subscribedChannel) {
+        List<Channel> subscribed = this.playerSubscribedChannelManager.get(uuid, new ArrayList<>());
+        subscribed.removeIf(c -> c.getHandle().equals(subscribedChannel.getHandle()));
+        // this.playerSubscribedChannelManager.add(uuid, subscribed);
     }
 
     /**
@@ -81,6 +98,25 @@ public class MemoryServerDataSyncService extends ServerDataSyncService {
         Channel channel = this.playerCurrentChannelManager.get(uuid, null);
 
         return channel == null ? null : SpaceChat.getInstance().getChannelManager().get(channel.getHandle(), null);
+    }
+
+    /**
+     * Gets a list of all of the uuids of players who are currently subscribed to a given channel
+     * <p>
+     * This only includes the uuids of players who are currently online
+     *
+     * @param channel channel
+     * @return uuids
+     */
+    @Override
+    public List<UUID> getSubscribedUUIDs(Channel channel) {
+        return this.playerSubscribedChannelManager.getAll()
+                .entrySet()
+                .stream()
+                .filter((e -> e.getValue()
+                        .stream().anyMatch(c -> c.getHandle().equals(channel.getHandle()))))
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
     }
 
     private static class PlayerSubscribedChannelManager extends MapManager<UUID, List<Channel>> {

@@ -36,6 +36,7 @@ public final class Config extends dev.spaceseries.spaceapi.config.obj.Config {
     public static ConfigKey<String> REDIS_SERVER_DISPLAYNAME = ConfigKeyTypes.stringKey("redis.server.displayName", null);
     public static ConfigKey<String> REDIS_PLAYER_SUBSCRIBED_CHANNELS_LIST_KEY = ConfigKeyTypes.stringKey("redis.player-subscribed-channels-list-key", null);
     public static ConfigKey<String> REDIS_PLAYER_CURRENT_CHANNEL_KEY = ConfigKeyTypes.stringKey("redis.player-current-channel-key", null);
+    public static ConfigKey<String> REDIS_CHANNELS_SUBSCRIBED_UUIDS_LIST_KEY = ConfigKeyTypes.stringKey("redis.channels-subscribed-uuids-list-key", null);
 
     public static ConfigKey<Boolean> LOGGING_CHAT_LOG_TO_STORAGE = ConfigKeyTypes.booleanKey("logging.chat.log-to-storage", true);
 

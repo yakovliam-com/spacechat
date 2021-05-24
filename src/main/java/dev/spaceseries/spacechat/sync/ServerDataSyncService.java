@@ -17,12 +17,20 @@ public abstract class ServerDataSyncService extends ServerSyncService {
     }
 
     /**
-     * Updates the list of subscribed channels
+     * Subscribes a player to a channel
      *
-     * @param uuid       uuid
-     * @param subscribed subscribed
+     * @param uuid    uuid
+     * @param channel channel
      */
-    public abstract void updateSubscribedChannels(UUID uuid, List<Channel> subscribed);
+    public abstract void subscribeToChannel(UUID uuid, Channel channel);
+
+    /**
+     * Unsubscribes a player from a channel
+     *
+     * @param uuid              uuid
+     * @param subscribedChannel subscribed channel
+     */
+    public abstract void unsubscribeFromChannel(UUID uuid, Channel subscribedChannel);
 
     /**
      * Updates the current channel that a player is talking in
@@ -48,4 +56,13 @@ public abstract class ServerDataSyncService extends ServerSyncService {
      */
     public abstract Channel getCurrentChannel(UUID uuid);
 
+    /**
+     * Gets a list of all of the uuids of players who are currently subscribed to a given channel
+     * <p>
+     * This only includes the uuids of players who are currently online
+     *
+     * @param channel channel
+     * @return uuids
+     */
+    public abstract List<UUID> getSubscribedUUIDs(Channel channel);
 }
