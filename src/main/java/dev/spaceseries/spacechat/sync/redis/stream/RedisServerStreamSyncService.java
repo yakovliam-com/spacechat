@@ -2,6 +2,7 @@ package dev.spaceseries.spacechat.sync.redis.stream;
 
 import dev.spaceseries.spaceapi.lib.google.gson.Gson;
 import dev.spaceseries.spaceapi.lib.google.gson.GsonBuilder;
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
@@ -92,7 +93,11 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
             return;
         }
 
-        // TODO parse channels, use util to apply formatting and send to correct recipients
+        // if channel exists, send through that instead
+        if (chatPacket.getChannel() != null && SpaceChat.getInstance().getChannelManager().get(chatPacket.getChannel().getHandle()) != null) {
+            ChatUtil.sendComponentChannelMessage(chatPacket.getComponent(), chatPacket.getChannel());
+            return;
+        }
 
         // send to all players
         ChatUtil.sendComponentChatMessage(chatPacket.getComponent());

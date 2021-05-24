@@ -16,12 +16,14 @@ import dev.spaceseries.spacechat.logging.wrap.LogToType;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.model.ChatFormat;
+import dev.spaceseries.spacechat.model.Format;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacket;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_DISPLAYNAME;
@@ -31,11 +33,27 @@ public class ChatUtil {
 
     /**
      * Send a chat message
+     * <p>
+     * This does the same thing as {@link ChatUtil#sendComponentMessage(Component)} but I just made it different for the sake
+     * of understanding
      *
      * @param component component
      */
     public static void sendComponentChatMessage(Component component) {
         sendComponentMessage(component);
+    }
+
+    /**
+     * Send a chat message to a specific player
+     * <p>
+     * This does the same thing as {@link ChatUtil#sendComponentMessage(Component, Player)} but I just made it different for the sake
+     * of understanding
+     *
+     * @param component component
+     * @param to        to
+     */
+    public static void sendComponentChatMessage(Component component, Player to) {
+        sendComponentMessage(component, to);
     }
 
     /**
@@ -49,18 +67,46 @@ public class ChatUtil {
     }
 
     /**
+     * Send a raw component to a player
+     *
+     * @param component component
+     * @param to        to
+     */
+    public static void sendComponentMessage(Component component, Player to) {
+        // send chat message to all online players
+        Message.getAudienceProvider().player(to.getUniqueId()).sendMessage(component);
+    }
+
+    /**
+     * Send a raw component to a channel
+     *
+     * @param component component
+     * @param channel   channel
+     */
+    public static void sendComponentChannelMessage(Component component, Channel channel) {
+        // get all subscribed players to that channel
+        List<Player> playerList = SpaceChat.getInstance().getServerSyncServiceManager().getDataService().getSubscribedUUIDs(channel)
+                .stream().map(Bukkit::getPlayer)
+                .collect(Collectors.toList());
+        playerList.forEach(p -> sendComponentMessage(component, p));
+    }
+
+    /**
      * Send a chat message
      *
-     * @param from       player that the message is from
-     * @param message    message
-     * @param applicable applicable format
-     * @param event      event
+     * @param from    player that the message is from
+     * @param message message
+     * @param format  format
+     * @param event   event
      */
-    public static void sendChatMessage(Player from, String message, ChatFormat applicable, AsyncPlayerChatEvent event) {
+    public static void sendChatMessage(Player from, String message, Format format, AsyncPlayerChatEvent event) {
+        // get player's current channel, and send through that (if null, that means 'global')
+        Channel applicableChannel = SpaceChat.getInstance().getServerSyncServiceManager().getDataService().getCurrentChannel(from.getUniqueId());
+
         dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component components;
 
         // if null, return
-        if (applicable == null) {
+        if (format == null) {
             // build components default message
             // this only happens if it's not possible to find a chat format
             components = Component.text()
@@ -70,11 +116,16 @@ public class ChatUtil {
                     .build();
         } else { // if not null
             // get baseComponents from live builder
-            components = new NormalLiveChatFormatBuilder().build(new Trio<>(from, message, applicable.getFormat()));
+            components = new NormalLiveChatFormatBuilder().build(new Trio<>(from, message, format));
         }
 
-        // get all online players, loop through, send chat message
-        Message.getAudienceProvider().players().sendMessage(components);
+        // if channel exists, then send through it
+        if (applicableChannel != null) {
+            sendComponentChannelMessage(components, applicableChannel);
+        } else {
+            // send component message to entire server
+            sendComponentChatMessage(components);
+        }
 
         // log to storage
         SpaceChat.getInstance()
@@ -84,8 +135,6 @@ public class ChatUtil {
                         LogToType.STORAGE
                 );
 
-        // get player's current channel, and send through that (if null, that means 'global')
-        Channel applicableChannel = SpaceChat.getInstance().getServerSyncServiceManager().getDataService().getCurrentChannel(from.getUniqueId());
         // send via redis (it won't do anything if redis isn't enabled, so we can be sure that we aren't using dead methods that will throw an exception)
         SpaceChat.getInstance().getServerSyncServiceManager().getStreamService().publishChat(new RedisChatPacket(from.getUniqueId(), from.getName(), applicableChannel, REDIS_SERVER_IDENTIFIER.get(Config.get()), REDIS_SERVER_DISPLAYNAME.get(Config.get()), components));
 
@@ -118,16 +167,16 @@ public class ChatUtil {
     /**
      * Send a chat message with relational placeholders
      *
-     * @param from       player that the message is from
-     * @param message    message
-     * @param applicable applicable format
-     * @param event      event
+     * @param from    player that the message is from
+     * @param message message
+     * @param format  format format
+     * @param event   event
      */
-    public static void sendRelationalChatMessage(Player from, String message, ChatFormat applicable, AsyncPlayerChatEvent event) {
+    public static void sendRelationalChatMessage(Player from, String message, Format format, AsyncPlayerChatEvent event) {
         // component to use with storage and logging
         dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component sampledComponent;
 
-        if (applicable == null) {
+        if (format == null) {
             // build components default message
             // this only happens if it's not possible to find a chat format
             sampledComponent = Component.text()
@@ -137,14 +186,14 @@ public class ChatUtil {
                     .build();
         } else { // if not null
             // get baseComponents from live builder
-            sampledComponent = new NormalLiveChatFormatBuilder().build(new Trio<>(from, message, applicable.getFormat()));
+            sampledComponent = new NormalLiveChatFormatBuilder().build(new Trio<>(from, message, format));
         }
 
         // do relational parsing
         Bukkit.getOnlinePlayers().forEach(to -> {
             dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component component;
 
-            if (applicable == null) {
+            if (format == null) {
                 // build components default message
                 // this only happens if it's not possible to find a chat format
                 component = Component.text()
@@ -154,11 +203,11 @@ public class ChatUtil {
                         .build();
             } else { // if not null
                 // get baseComponents from live builder
-                component = new RelationalLiveChatFormatBuilder().build(new Quad<>(from, to, message, applicable.getFormat()));
+                component = new RelationalLiveChatFormatBuilder().build(new Quad<>(from, to, message, format));
             }
 
             // send to 'to-player'
-            Message.getAudienceProvider().player(to.getUniqueId()).sendMessage(component);
+            sendComponentChatMessage(component, to);
         });
 
         // log to storage

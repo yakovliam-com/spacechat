@@ -68,9 +68,9 @@ public class ChatFormatManager extends FormatManager<ChatFormat> {
         // if relational
         if (USE_RELATIONAL_PLACEHOLDERS.get(Config.get()) && !SpaceChat.getInstance().getServerSyncServiceManager().isUsingNetwork()) {
             // send relational
-            ChatUtil.sendRelationalChatMessage(player, message, applicableFormat, event);
+            ChatUtil.sendRelationalChatMessage(player, message, applicableFormat == null ? null : applicableFormat.getFormat(), event);
         } else {
-            ChatUtil.sendChatMessage(player, message, applicableFormat, event);
+            ChatUtil.sendChatMessage(player, message, applicableFormat == null ? null : applicableFormat.getFormat(), event);
         }
     }
 }

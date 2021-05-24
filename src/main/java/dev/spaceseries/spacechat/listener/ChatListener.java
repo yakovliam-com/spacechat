@@ -1,6 +1,7 @@
 package dev.spaceseries.spacechat.listener;
 
 import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.model.Channel;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,12 +17,19 @@ public class ChatListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerAsyncChat(AsyncPlayerChatEvent event) {
-        if(event.isCancelled()) return;
+        if (event.isCancelled()) return;
 
         // clear recipients to "cancel"
         event.getRecipients().clear();
 
-        // TODO if player has a current channel, then use the channel manager to send instead of the chat format manager
+        // get player's current channel
+        Channel current = SpaceChat.getInstance().getServerSyncServiceManager().getDataService().getCurrentChannel(event.getPlayer().getUniqueId());
+
+        // if not null, send through channel manager
+        if (current != null) {
+            SpaceChat.getInstance().getChannelManager().send(event, event.getMessage(), current);
+            return;
+        }
 
         // get chat format manager, send chat packet (this method also sets the format in console)
         SpaceChat.getInstance().getChatFormatManager().send(event, event.getMessage());
