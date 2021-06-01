@@ -5,6 +5,9 @@ import dev.spaceseries.spacechat.model.manager.MapManager;
 import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.sync.ServerDataSyncService;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +36,9 @@ public class MemoryServerDataSyncService extends ServerDataSyncService {
         super(serviceManager);
         this.playerSubscribedChannelManager = new PlayerSubscribedChannelManager();
         this.playerCurrentChannelManager = new PlayerCurrentChannelManager();
+
+        SpaceChat.getInstance().getServer().getPluginManager().registerEvents(playerSubscribedChannelManager, SpaceChat.getInstance());
+        SpaceChat.getInstance().getServer().getPluginManager().registerEvents(playerCurrentChannelManager, SpaceChat.getInstance());
     }
 
     /**
@@ -120,9 +126,17 @@ public class MemoryServerDataSyncService extends ServerDataSyncService {
                 .collect(Collectors.toList());
     }
 
-    private static class PlayerSubscribedChannelManager extends MapManager<UUID, List<Channel>> {
+    private static class PlayerSubscribedChannelManager extends MapManager<UUID, List<Channel>> implements Listener {
+        @EventHandler
+        public void onPlayerQuit(PlayerQuitEvent event) {
+            this.remove(event.getPlayer().getUniqueId());
+        }
     }
 
-    private static class PlayerCurrentChannelManager extends MapManager<UUID, Channel> {
+    private static class PlayerCurrentChannelManager extends MapManager<UUID, Channel> implements Listener {
+        @EventHandler
+        public void onPlayerQuit(PlayerQuitEvent event) {
+            this.remove(event.getPlayer().getUniqueId());
+        }
     }
 }

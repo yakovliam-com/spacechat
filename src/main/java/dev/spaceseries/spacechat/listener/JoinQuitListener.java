@@ -25,8 +25,14 @@ public class JoinQuitListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
+        User user = SpaceChat.getInstance().getUserManager().get(event.getPlayer().getUniqueId());
+
+        // update
+        SpaceChat.getInstance().getUserManager().update(user);
+        System.out.println("LEAVING -> " + user.getSubscribedChannels());
+
         // invalidate
-        SpaceChat.getInstance().getUserManager().invalidate(event.getPlayer().getUniqueId());
+        SpaceChat.getInstance().getUserManager().invalidate(user.getUuid());
     }
 
     @EventHandler
@@ -35,7 +41,7 @@ public class JoinQuitListener implements Listener {
         SpaceChat.getInstance().getUserManager().use(event.getPlayer().getUniqueId(), (user) -> {
             // if username not equal, update
             if (!event.getPlayer().getName().equals(user.getUsername())) {
-                SpaceChat.getInstance().getUserManager().update(new User(user.getUuid(), event.getPlayer().getName(), user.getDate()));
+                SpaceChat.getInstance().getUserManager().update(new User(user.getUuid(), event.getPlayer().getName(), user.getDate(), user.getSubscribedChannels()));
             }
         });
 

@@ -68,6 +68,15 @@ public abstract class MapManager<K, V> implements Manager {
     }
 
     /**
+     * Removes a K
+     *
+     * @param k k
+     */
+    public void remove(K k) {
+        this.map.remove(k);
+    }
+
+    /**
      * Clears the map
      */
     public void clear() {

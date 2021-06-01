@@ -27,6 +27,7 @@ public final class SqliteConnectionManager extends SqliteConnectionFactory {
         try {
             SqlHelper.execute(getConnection(), String.format(SqliteStorage.LOG_CHAT_CREATION_STATEMENT, STORAGE_SQLITE_TABLES_CHAT_LOGS.get(Config.get())));
             SqlHelper.execute(getConnection(), String.format(SqliteStorage.USERS_CREATION_STATEMENT, STORAGE_SQLITE_TABLES_USERS.get(Config.get())));
+            SqlHelper.execute(getConnection(), String.format(SqliteStorage.USERS_SUBSCRIBED_CHANNELS_CREATION_STATEMENT, STORAGE_SQLITE_TABLES_SUBSCRIBED_CHANNELS.get(Config.get())));
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

@@ -5,6 +5,7 @@ import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
+import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.storage.Storage;
 import dev.spaceseries.spacechat.storage.impl.sql.file.sqlite.factory.SqliteConnectionManager;
@@ -17,9 +18,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class SqliteStorage implements Storage {
 
@@ -41,7 +40,14 @@ public class SqliteStorage implements Storage {
     private static final String SELECT_USER = "SELECT * FROM " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + " WHERE uuid=?";
     private static final String SELECT_USER_USERNAME = "SELECT * FROM " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + " WHERE username=?";
     private static final String UPDATE_USER = "UPDATE " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + " SET username=? WHERE uuid=?";
-
+    public static final String USERS_SUBSCRIBED_CHANNELS_CREATION_STATEMENT = "CREATE TABLE IF NOT EXISTS `%s` (\n" +
+            "`uuid` TEXT NOT NULL,\n" +
+            "`channel` TEXT NOT NULL,\n" +
+            "`id` INTEGER PRIMARY KEY AUTOINCREMENT\n" +
+            ");";
+    private static final String SELECT_SUBSCRIBED_CHANNELS = "SELECT channel FROM " + Config.STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(Config.get()) + " WHERE uuid=?;";
+    private static final String DELETE_SUBSCRIBED_CHANNEL = "DELETE FROM " + Config.STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(Config.get()) + " WHERE uuid=? AND channel=?;";
+    private static final String INSERT_SUBSCRIBED_CHANNEL = "INSERT INTO " + Config.STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(Config.get()) + " (uuid, channel) VALUES(?, ?);";
 
     /**
      * The connection manager
@@ -83,9 +89,9 @@ public class SqliteStorage implements Storage {
             // execute
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (!resultSet.next() && (Bukkit.getPlayer(uuid) != null && Bukkit.getPlayer(uuid).isOnline())) {
+            if (!resultSet.next()) {
                 // create new user
-                User user = new User(uuid, Bukkit.getOfflinePlayer(uuid).getName(), new Date());
+                User user = new User(uuid, Bukkit.getOfflinePlayer(uuid).getName(), new Date(), new ArrayList<>());
                 createUser(user);
                 return user;
             }
@@ -94,11 +100,46 @@ public class SqliteStorage implements Storage {
             String username = resultSet.getString("username");
             Date date = DateUtil.fromString(resultSet.getString("date"));
 
-            return new User(uuid, username, date);
+            // get channels that are subscribed
+            List<Channel> subscribedChannels = getSubscribedChannels(uuid);
+
+            return new User(uuid, username, date, subscribedChannels);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
 
             return null;
+        }
+    }
+
+    /**
+     * Returns subscribed channels
+     *
+     * @return channels
+     */
+    private List<Channel> getSubscribedChannels(UUID uuid) {
+        try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SELECT_SUBSCRIBED_CHANNELS)) {
+            // replace
+            preparedStatement.setString(1, uuid.toString());
+
+            // execute
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<Channel> channels = new ArrayList<>();
+
+            while (resultSet.next()) {
+                String channelHandle = resultSet.getString("channel");
+
+                Channel channel = SpaceChat.getInstance().getChannelManager().get(channelHandle, null);
+                if (channel != null) {
+                    channels.add(channel);
+                }
+            }
+
+            return channels;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+
+            return new ArrayList<>();
         }
     }
 
@@ -126,7 +167,10 @@ public class SqliteStorage implements Storage {
             UUID uuid = UUID.fromString(resultSet.getString("uuid"));
             Date date = DateUtil.fromString(resultSet.getString("date"));
 
-            return new User(uuid, username, date);
+            // get channels that are subscribed
+            List<Channel> subscribedChannels = getSubscribedChannels(uuid);
+
+            return new User(uuid, username, date, subscribedChannels);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return null;
@@ -170,6 +214,62 @@ public class SqliteStorage implements Storage {
             // execute
             preparedStatement.execute();
 
+            // delete remaining channels that shouldn't be there
+            List<Channel> serverSideSubscribedList = getSubscribedChannels(user.getUuid());
+
+            serverSideSubscribedList.forEach(serverSideSubscribedChannel -> {
+                if (user.getSubscribedChannels().stream().noneMatch(c -> c.getHandle().equals(serverSideSubscribedChannel.getHandle()))) {
+                    deleteChannelRow(user.getUuid(), serverSideSubscribedChannel);
+                }
+            });
+
+            user.getSubscribedChannels().forEach(channel -> {
+                if (serverSideSubscribedList.stream().anyMatch(c -> c.getHandle().equals(channel.getHandle()))) {
+                    return;
+                }
+                insertChannelRow(user.getUuid(), channel);
+            });
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    /**
+     * Inserts a channel row
+     *
+     * @param uuid    uuid
+     * @param channel channel
+     */
+    private void insertChannelRow(UUID uuid, Channel channel) {
+        // create prepared statement
+        try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SUBSCRIBED_CHANNEL)) {
+            // replace
+            preparedStatement.setString(1, uuid.toString());
+            preparedStatement.setString(2, channel.getHandle());
+
+            // execute
+            preparedStatement.execute();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    /**
+     * Deletes a channel row
+     *
+     * @param uuid    uuid
+     * @param channel channel
+     */
+    private void deleteChannelRow(UUID uuid, Channel channel) {
+        // create prepared statement
+        try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SUBSCRIBED_CHANNEL)) {
+            // replace
+            preparedStatement.setString(1, uuid.toString());
+            preparedStatement.setString(2, channel.getHandle());
+
+            // execute
+            preparedStatement.execute();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }

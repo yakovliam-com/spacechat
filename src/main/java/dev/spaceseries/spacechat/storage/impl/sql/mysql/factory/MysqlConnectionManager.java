@@ -41,12 +41,9 @@ public final class MysqlConnectionManager implements ConnectionFactory {
     @Override
     public void init() {
         // If not exists, create chat logging table
-        try {
-            SqlHelper.execute(connectionInfo.getDataSource().getConnection(), String.format(MysqlStorage.LOG_CHAT_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_CHAT_LOGS.get(Config.get())));
-            SqlHelper.execute(getConnection(), String.format(MysqlStorage.USERS_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_USERS.get(Config.get())));
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        SqlHelper.execute(getConnection(), String.format(MysqlStorage.LOG_CHAT_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_CHAT_LOGS.get(Config.get())));
+        SqlHelper.execute(getConnection(), String.format(MysqlStorage.USERS_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_USERS.get(Config.get())));
+        SqlHelper.execute(getConnection(), String.format(MysqlStorage.USERS_SUBSCRIBED_CHANNELS_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(Config.get())));
     }
 
     @Override

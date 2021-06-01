@@ -113,14 +113,14 @@ public final class SpaceChat extends JavaPlugin {
         loadConfigs();
         // load formats
         loadFormats();
+        // load connection managers
+        loadSyncServices();
         // load channels
         loadChannels();
         // load storage
         loadStorage();
         // load users
         loadUsers();
-        // load connection managers
-        loadSyncServices();
 
         // initialize log manager
         logManagerImpl = new LogManagerImpl();
@@ -157,8 +157,11 @@ public final class SpaceChat extends JavaPlugin {
             serverSyncServiceManager.end();
 
         // close the storage connection pool (if applicable)
-        if (storageManager != null)
+        if (storageManager != null) {
+            // save all users
+            userManager.getAll().forEach((key, value) -> storageManager.getCurrent().updateUser(value));
             storageManager.getCurrent().close();
+        }
     }
 
     /**

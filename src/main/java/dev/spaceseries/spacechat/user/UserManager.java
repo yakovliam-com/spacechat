@@ -7,6 +7,7 @@ import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.model.manager.Manager;
 import org.bukkit.Bukkit;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +33,7 @@ public class UserManager implements Manager {
      * @param consumer consumer
      */
     public void use(UUID uuid, Consumer<User> consumer) {
-        userAsyncCache.get(uuid).thenAccept(consumer);
+        userAsyncCache.get(uuid).thenAccept(consumer).join();
     }
 
     /**
@@ -73,5 +74,14 @@ public class UserManager implements Manager {
      */
     public void getByName(String username, Consumer<User> consumer) {
         CompletableFuture.supplyAsync(() -> SpaceChat.getInstance().getStorageManager().getCurrent().getUser(username)).thenAccept(consumer);
+    }
+
+    /**
+     * Returns all
+     *
+     * @return all
+     */
+    public Map<UUID, User> getAll() {
+        return userAsyncCache.synchronous().asMap();
     }
 }
