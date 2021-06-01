@@ -35,9 +35,11 @@ public class LeaveCommand extends Command {
         }
 
         // update current channel (aka remove)
-        SpaceChat.getInstance().getServerSyncServiceManager().getDataService().updateCurrentChannel(sender.getUuid(), null);
+        SpaceChat.getInstance().getUserManager().use(sender.getUuid(), (user) -> {
+            user.leaveChannel(current);
 
-        // send message
-        Messages.getInstance().channelLeave.msg(sender, "%channel%", current.getHandle());
+            // send message
+            Messages.getInstance().channelLeave.msg(sender, "%channel%", current.getHandle());
+        });
     }
 }

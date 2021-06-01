@@ -41,10 +41,12 @@ public class MuteCommand extends Command {
             return;
         }
 
-        // unsubscribe from channel
-        SpaceChat.getInstance().getServerSyncServiceManager().getDataService().unsubscribeFromChannel(sender.getUuid(), applicable);
+        // set current channel
+        SpaceChat.getInstance().getUserManager().use(sender.getUuid(), (user) -> {
+            user.unsubscribeFromChannel(applicable);
 
-        // send message
-        Messages.getInstance().channelMute.msg(sender, "%channel%", channel);
+            // send message
+            Messages.getInstance().channelMute.msg(sender, "%channel%", channel);
+        });
     }
 }

@@ -41,10 +41,12 @@ public class ListenCommand extends Command {
             return;
         }
 
-        // subscribe to channel
-        SpaceChat.getInstance().getServerSyncServiceManager().getDataService().subscribeToChannel(sender.getUuid(), applicable);
+        // set current channel
+        SpaceChat.getInstance().getUserManager().use(sender.getUuid(), (user) -> {
+            user.subscribeToChannel(applicable);
 
-        // send message
-        Messages.getInstance().channelListen.msg(sender, "%channel%", channel);
+            // send message
+            Messages.getInstance().channelListen.msg(sender, "%channel%", channel);
+        });
     }
 }

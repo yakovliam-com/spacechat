@@ -42,9 +42,11 @@ public class JoinCommand extends Command {
         }
 
         // set current channel
-        SpaceChat.getInstance().getServerSyncServiceManager().getDataService().updateCurrentChannel(sender.getUuid(), applicable);
+        SpaceChat.getInstance().getUserManager().use(sender.getUuid(), (user) -> {
+            user.joinChannel(applicable);
 
-        // send message
-        Messages.getInstance().channelJoin.msg(sender, "%channel%", channel);
+            // send message
+            Messages.getInstance().channelJoin.msg(sender, "%channel%", channel);
+        });
     }
 }
