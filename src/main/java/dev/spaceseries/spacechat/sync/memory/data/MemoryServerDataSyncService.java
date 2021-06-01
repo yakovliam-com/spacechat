@@ -45,7 +45,8 @@ public class MemoryServerDataSyncService extends ServerDataSyncService {
     public void subscribeToChannel(UUID uuid, Channel channel) {
         List<Channel> subscribed = this.playerSubscribedChannelManager.get(uuid, new ArrayList<>());
         subscribed.add(channel);
-        // this.playerSubscribedChannelManager.add(uuid, subscribed);
+
+        this.playerSubscribedChannelManager.add(uuid, subscribed);
     }
 
     /**

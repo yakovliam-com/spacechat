@@ -24,12 +24,14 @@ public class AddCommand extends Command {
         }
 
         // get user
-        User user = SpaceChat.getInstance().getUserManager().getByName(args[0]).join();
-        if (user == null) {
-            Messages.getInstance().playerNotFound.msg(sender);
-            return;
-        }
+        SpaceChat.getInstance().getUserManager().getByName(args[0], (user -> {
+            if (user == null) {
+                Messages.getInstance().playerNotFound.msg(sender);
+                return;
+            }
 
-        // TODO Implement adding the target from the decided storage method
+            // TODO Implement adding the target from the decided storage method
+        }));
+
     }
 }

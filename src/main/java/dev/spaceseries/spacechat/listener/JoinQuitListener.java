@@ -32,7 +32,7 @@ public class JoinQuitListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         // handle with user manager
-        SpaceChat.getInstance().getUserManager().get(event.getPlayer().getUniqueId()).thenAccept((user) -> {
+        SpaceChat.getInstance().getUserManager().use(event.getPlayer().getUniqueId(), (user) -> {
             // if username not equal, update
             if (!event.getPlayer().getName().equals(user.getUsername())) {
                 SpaceChat.getInstance().getUserManager().update(new User(user.getUuid(), event.getPlayer().getName(), user.getDate()));

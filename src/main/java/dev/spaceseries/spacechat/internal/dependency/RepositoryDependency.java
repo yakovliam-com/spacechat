@@ -33,7 +33,7 @@ public enum RepositoryDependency {
     /**
      * CAFFEINE Maven Dependency
      */
-    CAFFEINE("com[}github{}ben-manes{}caffeine", "caffeine", "3{}0{}2", DependencyResolution.MAVEN_DEPENDENCY, false);
+    CAFFEINE("com{}github{}ben-manes{}caffeine", "caffeine", "3{}0{}2", DependencyResolution.MAVEN_DEPENDENCY, false);
 
 
     private final String group;

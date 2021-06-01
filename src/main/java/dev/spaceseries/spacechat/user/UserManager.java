@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class UserManager implements Manager {
 
@@ -25,13 +26,23 @@ public class UserManager implements Manager {
     }
 
     /**
-     * Returns user
+     * Uses user with a consumer
+     *
+     * @param uuid     uuid
+     * @param consumer consumer
+     */
+    public void use(UUID uuid, Consumer<User> consumer) {
+        userAsyncCache.get(uuid).thenAccept(consumer);
+    }
+
+    /**
+     * Returns a user
      *
      * @param uuid uuid
      * @return user
      */
-    public CompletableFuture<User> get(UUID uuid) {
-        return userAsyncCache.get(uuid);
+    public User get(UUID uuid) {
+        return userAsyncCache.get(uuid).join();
     }
 
     /**
@@ -55,12 +66,12 @@ public class UserManager implements Manager {
     }
 
     /**
-     * Gets user by username
+     * Uses user with a consumer
      *
      * @param username username
-     * @return user
+     * @param consumer consumer
      */
-    public CompletableFuture<User> getByName(String username) {
-        return CompletableFuture.supplyAsync(() -> SpaceChat.getInstance().getStorageManager().getCurrent().getUser(username));
+    public void getByName(String username, Consumer<User> consumer) {
+        CompletableFuture.supplyAsync(() -> SpaceChat.getInstance().getStorageManager().getCurrent().getUser(username)).thenAccept(consumer);
     }
 }

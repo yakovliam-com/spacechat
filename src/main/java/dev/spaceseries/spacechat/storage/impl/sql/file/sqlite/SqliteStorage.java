@@ -38,9 +38,9 @@ public class SqliteStorage implements Storage {
             "`id` INTEGER PRIMARY KEY AUTOINCREMENT\n" +
             ");";
     private static final String CREATE_USER = "INSERT INTO " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + " (uuid, username, date) VALUES(?, ?, ?)";
-    private static final String SELECT_USER = "SELECT * FROM " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + "WHERE uuid=?";
-    private static final String SELECT_USER_USERNAME = "SELECT * FROM " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + "WHERE username=?";
-    private static final String UPDATE_USER = "UPDATE " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + "SET username=? WHERE uuid=?";
+    private static final String SELECT_USER = "SELECT * FROM " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + " WHERE uuid=?";
+    private static final String SELECT_USER_USERNAME = "SELECT * FROM " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + " WHERE username=?";
+    private static final String UPDATE_USER = "UPDATE " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + " SET username=? WHERE uuid=?";
 
 
     /**
@@ -76,7 +76,7 @@ public class SqliteStorage implements Storage {
     @Override
     public User getUser(UUID uuid) {
         // create prepared statement
-        try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = Objects.requireNonNull(connection).prepareStatement(SELECT_USER)) {
+        try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER)) {
             // replace
             preparedStatement.setString(1, uuid.toString());
 
@@ -111,7 +111,7 @@ public class SqliteStorage implements Storage {
     @Override
     public User getUser(String username) {
         // create prepared statement
-        try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = Objects.requireNonNull(connection).prepareStatement(SELECT_USER_USERNAME)) {
+        try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_USERNAME)) {
             // replace
             preparedStatement.setString(1, username);
 
@@ -140,7 +140,7 @@ public class SqliteStorage implements Storage {
      */
     private void createUser(User user) {
         // create prepared statement
-        try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = Objects.requireNonNull(connection).prepareStatement(CREATE_USER)) {
+        try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER)) {
             // replace
             preparedStatement.setString(1, user.getUuid().toString());
             preparedStatement.setString(2, user.getUsername());
@@ -162,7 +162,7 @@ public class SqliteStorage implements Storage {
     @Override
     public void updateUser(User user) {
         // create prepared statement
-        try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = Objects.requireNonNull(connection).prepareStatement(UPDATE_USER)) {
+        try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER)) {
             // replace
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getUuid().toString());
@@ -189,7 +189,7 @@ public class SqliteStorage implements Storage {
     private void logChat(LogChatWrap data, boolean async) {
         Runnable task = () -> {
             // create prepared statement
-            try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = Objects.requireNonNull(connection).prepareStatement(LOG_CHAT)) {
+            try (Connection connection = sqliteConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(LOG_CHAT)) {
                 // replace
                 preparedStatement.setString(1, data.getSenderUUID().toString());
                 preparedStatement.setString(2, data.getSenderName());

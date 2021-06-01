@@ -18,6 +18,7 @@ import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.model.formatting.Format;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacket;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 

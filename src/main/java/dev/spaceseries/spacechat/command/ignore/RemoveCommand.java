@@ -24,12 +24,14 @@ public class RemoveCommand extends Command {
         }
 
         // get user
-        User user = SpaceChat.getInstance().getUserManager().getByName(args[0]).join();
-        if (user == null) {
-            Messages.getInstance().playerNotFound.msg(sender);
-            return;
-        }
+        SpaceChat.getInstance().getUserManager().getByName(args[0], (user) -> {
+            if (user == null) {
+                Messages.getInstance().playerNotFound.msg(sender);
+                return;
+            }
 
-        // TODO Implement removing the target from the decided storage method -- also check if the sender even has ignored the target
+            // TODO Implement removing the target from the decided storage method -- also check if the sender even has ignored the target
+
+        });
     }
 }
