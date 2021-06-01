@@ -32,6 +32,5 @@ public class AddCommand extends Command {
 
             // TODO Implement adding the target from the decided storage method
         }));
-
     }
 }

@@ -26,7 +26,7 @@ public class ChatListener implements Listener {
         Channel current = SpaceChat.getInstance().getServerSyncServiceManager().getDataService().getCurrentChannel(event.getPlayer().getUniqueId());
 
         // if not null, send through channel manager
-        if (current != null) {
+        if (current != null && event.getPlayer().hasPermission(current.getPermission())) {
             SpaceChat.getInstance().getChannelManager().send(event, event.getMessage(), current);
             return;
         }

@@ -95,7 +95,7 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
 
         // if channel exists, send through that instead
         if (chatPacket.getChannel() != null && SpaceChat.getInstance().getChannelManager().get(chatPacket.getChannel().getHandle()) != null) {
-            ChatUtil.sendComponentChannelMessage(chatPacket.getComponent(), chatPacket.getChannel());
+            ChatUtil.sendComponentChannelMessage(null, chatPacket.getComponent(), chatPacket.getChannel());
             return;
         }
 

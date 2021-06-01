@@ -128,7 +128,7 @@ public final class SpaceChat extends JavaPlugin {
         // initialize commands
         new SpaceChatCommand();
         new ChannelCommand();
-        new IgnoreCommand();
+        // new IgnoreCommand();
         new BroadcastCommand();
         new BroadcastMinimessageCommand();
 

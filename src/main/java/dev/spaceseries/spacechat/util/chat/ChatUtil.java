@@ -83,21 +83,31 @@ public class ChatUtil {
      * @param component component
      * @param channel   channel
      */
-    public static void sendComponentChannelMessage(Component component, Channel channel) {
+    public static void sendComponentChannelMessage(Player from, Component component, Channel channel) {
         // get all subscribed players to that channel
-        List<Player> playerList = SpaceChat.getInstance().getServerSyncServiceManager().getDataService().getSubscribedUUIDs(channel)
+        List<Player> subscribedPlayers = SpaceChat.getInstance().getServerSyncServiceManager().getDataService().getSubscribedUUIDs(channel)
                 .stream().map(Bukkit::getPlayer)
                 .collect(Collectors.toList());
 
+        // even if not listening, add the sender to the list of players listening so that they can view the message
+        // that they sent themselves
+        if (from != null && !subscribedPlayers.contains(from)) {
+            subscribedPlayers.add(from);
+        }
+
+        List<Player> subscribedPlayersWithPermission = subscribedPlayers.stream()
+                .filter(p -> p.hasPermission(channel.getPermission()))
+                .collect(Collectors.toList());
+
         // if a player in the list doesn't have permission to view it, then unsubscribe them
-        Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> playerList.forEach(p -> {
+        Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> subscribedPlayers.forEach(p -> {
             if (!p.hasPermission(channel.getPermission())) {
                 SpaceChat.getInstance().getServerSyncServiceManager().getDataService().unsubscribeFromChannel(p.getUniqueId(), channel);
             }
         }));
 
 
-        playerList.forEach(p -> sendComponentMessage(component, p));
+        subscribedPlayersWithPermission.forEach(p -> sendComponentMessage(component, p));
     }
 
     /**
@@ -130,7 +140,7 @@ public class ChatUtil {
 
         // if channel exists, then send through it
         if (applicableChannel != null) {
-            sendComponentChannelMessage(components, applicableChannel);
+            sendComponentChannelMessage(from, components, applicableChannel);
         } else {
             // send component message to entire server
             sendComponentChatMessage(components);
