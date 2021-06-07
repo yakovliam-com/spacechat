@@ -121,7 +121,8 @@ public class MemoryServerDataSyncService extends ServerDataSyncService {
                 .entrySet()
                 .stream()
                 .filter((e -> e.getValue()
-                        .stream().anyMatch(c -> c.getHandle().equals(channel.getHandle()))))
+                        .stream()
+                        .anyMatch(c -> c.getHandle().equals(channel.getHandle()))))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toList());
     }

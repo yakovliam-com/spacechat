@@ -111,8 +111,8 @@ public class ItemChatParser implements Parser<Pair<Player, Component>, Component
                 }
 
                 // credits to PlanetTeamSpeak#4157 for informing me about translatable locale components
-                List<TextComponent> enchantments = enchantmentMap.entrySet().stream().
-                        filter(entry -> "minecraft".equalsIgnoreCase(entry.getKey().getKey().getNamespace()))
+                List<TextComponent> enchantments = enchantmentMap.entrySet().stream()
+                        .filter(entry -> "minecraft".equalsIgnoreCase(entry.getKey().getKey().getNamespace()))
                         .map(entry -> Component.empty().style(Style.style(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false))
                                 .append(Component.translatable("enchantment.minecraft." + entry.getKey().getKey().getKey()))
                                 .append(entry.getKey().getMaxLevel() > 1 ? Component.space()

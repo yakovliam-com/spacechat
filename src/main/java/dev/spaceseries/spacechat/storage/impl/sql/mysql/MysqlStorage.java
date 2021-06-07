@@ -221,13 +221,15 @@ public class MysqlStorage implements Storage {
             List<Channel> serverSideSubscribedList = getSubscribedChannels(user.getUuid());
 
             serverSideSubscribedList.forEach(serverSideSubscribedChannel -> {
-                if (user.getSubscribedChannels().stream().noneMatch(c -> c.getHandle().equals(serverSideSubscribedChannel.getHandle()))) {
+                if (user.getSubscribedChannels().stream()
+                        .noneMatch(c -> c.getHandle().equals(serverSideSubscribedChannel.getHandle()))) {
                     deleteChannelRow(user.getUuid(), serverSideSubscribedChannel);
                 }
             });
 
             user.getSubscribedChannels().forEach(channel -> {
-                if (serverSideSubscribedList.stream().anyMatch(c -> c.getHandle().equals(channel.getHandle()))) {
+                if (serverSideSubscribedList.stream()
+                        .anyMatch(c -> c.getHandle().equals(channel.getHandle()))) {
                     return;
                 }
                 insertChannelRow(user.getUuid(), channel);

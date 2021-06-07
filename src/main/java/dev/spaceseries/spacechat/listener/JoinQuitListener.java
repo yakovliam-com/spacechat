@@ -29,7 +29,6 @@ public class JoinQuitListener implements Listener {
 
         // update
         SpaceChat.getInstance().getUserManager().update(user);
-        System.out.println("LEAVING -> " + user.getSubscribedChannels());
 
         // invalidate
         SpaceChat.getInstance().getUserManager().invalidate(user.getUuid());
@@ -61,7 +60,9 @@ public class JoinQuitListener implements Listener {
                 Message.builder("owner-join")
                         .setRichLine("<rainbow>||||||||||</rainbow> <yellow>SpaceChat's creator, <aqua>" + event.getPlayer().getName() + "<yellow>, has joined! <rainbow>||||||||||</rainbow>")
                         .build()
-                        .msg(admins.stream().map(BukkitSpaceCommandSender::new).collect(Collectors.toList()));
+                        .msg(admins.stream()
+                                .map(BukkitSpaceCommandSender::new)
+                                .collect(Collectors.toList()));
             }
         }
     }
