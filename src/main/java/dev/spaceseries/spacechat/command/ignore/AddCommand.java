@@ -11,22 +11,25 @@ import org.bukkit.OfflinePlayer;
 @Permissible("space.chat.command.ignore.add")
 public class AddCommand extends Command {
 
-    public AddCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "add");
+    private final SpaceChat plugin;
+
+    public AddCommand(SpaceChat plugin) {
+        super(plugin.getPlugin(), "add");
+        this.plugin = plugin;
     }
 
     @Override
     public void onCommand(SpaceCommandSender sender, String label, String... args) {
         // args
         if (args.length != 1) {
-            Messages.getInstance().generalHelp.msg(sender);
+            Messages.getInstance(plugin).generalHelp.msg(sender);
             return;
         }
 
         // get user
-        SpaceChat.getInstance().getUserManager().getByName(args[0], (user -> {
+        plugin.getUserManager().getByName(args[0], (user -> {
             if (user == null) {
-                Messages.getInstance().playerNotFound.msg(sender);
+                Messages.getInstance(plugin).playerNotFound.msg(sender);
                 return;
             }
 

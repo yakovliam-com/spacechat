@@ -13,21 +13,24 @@ import dev.spaceseries.spacechat.command.channel.MuteCommand;
 @Permissible("space.chat.command.channel")
 public class ChannelCommand extends Command {
 
-    public ChannelCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "channel");
+    private final SpaceChat plugin;
+
+    public ChannelCommand(SpaceChat plugin) {
+        super(plugin.getPlugin(), "channel");
+        this.plugin = plugin;
 
         // add sub commands
         addSubCommands(
-                new JoinCommand(),
-                new LeaveCommand(),
-                new ListenCommand(),
-                new MuteCommand()
+                new JoinCommand(plugin),
+                new LeaveCommand(plugin),
+                new ListenCommand(plugin),
+                new MuteCommand(plugin)
         );
     }
 
     @Override
     public void onCommand(SpaceCommandSender sender, String label, String... args) {
         // send help message
-        Messages.getInstance().generalHelp.msg(sender);
+        Messages.getInstance(plugin).generalHelp.msg(sender);
     }
 }

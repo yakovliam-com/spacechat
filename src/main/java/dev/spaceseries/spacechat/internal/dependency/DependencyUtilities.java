@@ -17,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.function.LongConsumer;
+import java.util.logging.Logger;
 
 /**
  * Special dependency utilities used throughout the library and also open to users. Used for easier
@@ -26,9 +27,10 @@ public final class DependencyUtilities {
 
     private static Method ADD_URL_METHOD;
     private static URLClassLoader CLASSLOADER;
+    private static final Logger logger = Logger.getAnonymousLogger();
 
     static {
-        SpaceChat.getInstance().getLogger().info("Attempting to Open Reflection Module...");
+        logger.info("Attempting to Open Reflection Module...");
         try {
             final Class<?> moduleClass = Class.forName("java.lang.Module");
             final Method getModuleMethod = Class.class.getMethod("getModule");
@@ -37,13 +39,13 @@ public final class DependencyUtilities {
             final Object thisModule = getModuleMethod.invoke(DependencyUtilities.class);
             addOpensMethod.invoke(
                     urlClassLoaderModule, URLClassLoader.class.getPackage().getName(), thisModule);
-            SpaceChat.getInstance().getLogger().info(
+            logger.info(
                     "User is using Java 9+, meaning Reflection Module does have to be opened. You may safely ignore this.");
         } catch (final ClassNotFoundException
                 | NoSuchMethodException
                 | IllegalAccessException
                 | InvocationTargetException ignored) {
-            SpaceChat.getInstance().getLogger().info(
+            logger.info(
                     "User is using Java 8, meaning Reflection Module does NOT have to be opened. You may safely ignore this.");
         }
         try {
@@ -336,7 +338,7 @@ public final class DependencyUtilities {
     public static File downloadFile(@NotNull final Path p, @NotNull final String url)
             throws IOException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(url), "URL cannot be empty or null!");
-        SpaceChat.getInstance().getLogger().info(String.format("Downloading Dependency at %s into folder %s", url, p));
+        logger.info(String.format("Downloading Dependency at %s into folder %s", url, p));
         final File file = p.toFile();
 
         URLConnection connection = new URL(url).openConnection();
@@ -365,7 +367,7 @@ public final class DependencyUtilities {
             @NotNull final Path p, @NotNull final String url, @NotNull final LongConsumer progress)
             throws IOException {
         Preconditions.checkArgument(!Strings.isNullOrEmpty(url), "URL cannot be empty or null!");
-        SpaceChat.getInstance().getLogger().info(String.format("Downloading Dependency at %s into folder %s", url, p));
+        logger.info(String.format("Downloading Dependency at %s into folder %s", url, p));
         try (final BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
              final FileOutputStream fileOutputStream = new FileOutputStream(String.valueOf(p))) {
             final byte[] dataBuffer = new byte[8192];
@@ -407,13 +409,13 @@ public final class DependencyUtilities {
     public static void loadDependency(@NotNull final File file) throws IOException {
         Preconditions.checkArgument(
                 file.exists(), String.format("Dependency File %s doesn't exist!", file.getAbsolutePath()));
-        SpaceChat.getInstance().getLogger().info(String.format("Loading JAR Dependency at: %s", file.getAbsolutePath()));
+        logger.info(String.format("Loading JAR Dependency at: %s", file.getAbsolutePath()));
         try {
             ADD_URL_METHOD.invoke(CLASSLOADER, file.toURI().toURL());
         } catch (final IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        SpaceChat.getInstance().getLogger().info(String.format("Finished Loading Dependency %s", file.getName()));
+        logger.info(String.format("Finished Loading Dependency %s", file.getName()));
     }
 
     /**

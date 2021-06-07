@@ -1,6 +1,5 @@
 package dev.spaceseries.spacechat.config;
 
-import dev.spaceseries.spaceapi.config.impl.Configuration;
 import dev.spaceseries.spaceapi.config.keys.ConfigKey;
 import dev.spaceseries.spaceapi.config.keys.ConfigKeyTypes;
 import dev.spaceseries.spacechat.SpaceChat;
@@ -10,8 +9,8 @@ import java.util.List;
 
 public final class Config extends dev.spaceseries.spaceapi.config.obj.Config {
 
-    public Config() {
-        super(SpaceChat.getInstance().getPlugin(), "config.yml");
+    public Config(SpaceChat plugin) {
+        super(plugin.getPlugin(), "config.yml");
     }
 
     public static ConfigKey<String> STORAGE_USE = ConfigKeyTypes.stringKey("storage.use", "yaml");
@@ -59,8 +58,4 @@ public final class Config extends dev.spaceseries.spaceapi.config.obj.Config {
     public static ConfigKey<Boolean> USE_RELATIONAL_PLACEHOLDERS = ConfigKeyTypes.booleanKey("use-relational-placeholders", false);
 
     public static ConfigKey<Boolean> OWNER_JOIN = ConfigKeyTypes.booleanKey("owner-join", true);
-
-    public static Configuration get() {
-        return SpaceChat.getInstance().getSpaceChatConfig().getConfig();
-    }
 }

@@ -27,9 +27,15 @@ public class RedisMessenger extends JedisPubSub {
     private final JedisPool pool;
 
     /**
+     * Plugin
+     */
+    private final SpaceChat plugin;
+
+    /**
      * Construct redis connector
      */
-    public RedisMessenger(RedisServerStreamSyncService syncService) {
+    public RedisMessenger(SpaceChat plugin, RedisServerStreamSyncService syncService) {
+        this.plugin = plugin;
         this.syncService = syncService;
 
         // initialize pool
@@ -40,7 +46,7 @@ public class RedisMessenger extends JedisPubSub {
         new Thread(() -> {
             try (Jedis jedis = pool.getResource()) {
                 // subscribe this class to chat channel
-                jedis.subscribe(this, REDIS_CHAT_CHANNEL.get(Config.get()));
+                jedis.subscribe(this, REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getConfig()));
             }
         }).start();
 
@@ -48,7 +54,7 @@ public class RedisMessenger extends JedisPubSub {
         new Thread(() -> {
             try (Jedis jedis = pool.getResource()) {
                 // subscribe this class to chat channel
-                jedis.subscribe(this, REDIS_BROADCAST_CHANNEL.get(Config.get()));
+                jedis.subscribe(this, REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getConfig()));
             }
         }).start();
     }
@@ -59,8 +65,8 @@ public class RedisMessenger extends JedisPubSub {
     public void shutdown() {
         if (this.pool != null && this.pool.getResource().getClient() != null) {
             // unsubscribe from chat channel
-            unsubscribe(REDIS_CHAT_CHANNEL.get(Config.get()));
-            unsubscribe(REDIS_BROADCAST_CHANNEL.get(Config.get()));
+            unsubscribe(REDIS_CHAT_CHANNEL.get(plugin.getSpaceChatConfig().getConfig()));
+            unsubscribe(REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getConfig()));
 
             pool.close();
         }
@@ -72,24 +78,22 @@ public class RedisMessenger extends JedisPubSub {
         // [channel] sent [message]
 
         // if it's the correct channel
-        if (channel.equalsIgnoreCase(REDIS_CHAT_CHANNEL.get(Config.get())))
+        if (channel.equalsIgnoreCase(REDIS_CHAT_CHANNEL.get(plugin.getSpaceChatConfig().getConfig())))
             this.syncService.receiveChat(new RedisStringReceiveDataPacket(message));
-        else if (channel.equalsIgnoreCase(REDIS_BROADCAST_CHANNEL.get(Config.get())))
+        else if (channel.equalsIgnoreCase(REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getConfig())))
             this.syncService.receiveBroadcast(new RedisStringReceiveDataPacket(message));
     }
 
     @Override
     public void onSubscribe(String channel, int subscribedChannels) {
         // we have subscribed to [channel]. We are currently subscribed to [subscribedChannels] channels.
-        //TODO logging in console
-        SpaceChat.getInstance().getLogger().log(Level.INFO, "SpaceChat subscribed to the redis channel '" + channel + "'");
+        plugin.getLogger().log(Level.INFO, "SpaceChat subscribed to the redis channel '" + channel + "'");
     }
 
     @Override
     public void onUnsubscribe(String channel, int subscribedChannels) {
         // we have unsubscribed from [channel]. We are currently subscribed to another [subscribedChannels] channels.
-        //TODO logging in console
-        SpaceChat.getInstance().getLogger().log(Level.INFO, "SpaceChat unsubscribed from the redis channel '" + channel + "'");
+        plugin.getLogger().log(Level.INFO, "SpaceChat unsubscribed from the redis channel '" + channel + "'");
     }
 
     /**
@@ -103,7 +107,7 @@ public class RedisMessenger extends JedisPubSub {
         String channel = redisPublishDataPacket.getChannel();
         String message = redisPublishDataPacket.getMessage();
         // run async
-        Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try (Jedis jedis = pool.getResource()) {
                 jedis.publish(channel, message);
             }

@@ -13,33 +13,36 @@ import dev.spaceseries.spacechat.model.Channel;
 @PlayersOnly
 public class LeaveCommand extends Command {
 
-    public LeaveCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "leave");
+    private final SpaceChat plugin;
+
+    public LeaveCommand(SpaceChat plugin) {
+        super(plugin.getPlugin(), "leave");
+        this.plugin = plugin;
     }
 
     @Override
     public void onCommand(SpaceCommandSender sender, String label, String... args) {
         // args
         if (args.length != 0) {
-            Messages.getInstance().generalHelp.msg(sender);
+            Messages.getInstance(plugin).generalHelp.msg(sender);
             return;
         }
 
         // get current
-        Channel current = SpaceChat.getInstance().getServerSyncServiceManager().getDataService().getCurrentChannel(sender.getUuid());
+        Channel current = plugin.getServerSyncServiceManager().getDataService().getCurrentChannel(sender.getUuid());
 
         // if current null
         if (current == null) {
-            Messages.getInstance().generalHelp.msg(sender);
+            Messages.getInstance(plugin).generalHelp.msg(sender);
             return;
         }
 
         // update current channel (aka remove)
-        SpaceChat.getInstance().getUserManager().use(sender.getUuid(), (user) -> {
+        plugin.getUserManager().use(sender.getUuid(), (user) -> {
             user.leaveChannel(current);
 
             // send message
-            Messages.getInstance().channelLeave.msg(sender, "%channel%", current.getHandle());
+            Messages.getInstance(plugin).channelLeave.msg(sender, "%channel%", current.getHandle());
         });
     }
 }

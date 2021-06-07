@@ -5,7 +5,7 @@ import dev.spaceseries.spacechat.SpaceChat;
 
 public final class LangConfig extends Config {
 
-    public LangConfig() {
-        super(SpaceChat.getInstance().getPlugin(), "lang.yml");
+    public LangConfig(SpaceChat plugin) {
+        super(plugin.getPlugin(), "lang.yml");
     }
 }

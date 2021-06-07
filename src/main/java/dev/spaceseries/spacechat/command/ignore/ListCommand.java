@@ -10,15 +10,18 @@ import dev.spaceseries.spacechat.model.User;
 @Permissible("space.chat.command.ignore.list")
 public class ListCommand extends Command {
 
-    public ListCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "list");
+    private final SpaceChat plugin;
+
+    public ListCommand(SpaceChat plugin) {
+        super(plugin.getPlugin(), "list");
+        this.plugin = plugin;
     }
 
     @Override
     public void onCommand(SpaceCommandSender sender, String label, String... args) {
         // args
         if (args.length != 0) {
-            Messages.getInstance().generalHelp.msg(sender);
+            Messages.getInstance(plugin).generalHelp.msg(sender);
             return;
         }
 

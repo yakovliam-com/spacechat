@@ -1,6 +1,7 @@
 package dev.spaceseries.spacechat.sync.provider.redis;
 
 import dev.spaceseries.spaceapi.lib.redis.jedis.JedisPool;
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.sync.provider.Provider;
 
@@ -19,10 +20,10 @@ public class RedisProvider implements Provider<JedisPool> {
     /**
      * Construct redis provider
      */
-    public RedisProvider() {
+    public RedisProvider(SpaceChat plugin) {
         try {
             // initialize pool
-            pool = new JedisPool(new URI(REDIS_URL.get(Config.get())));
+            pool = new JedisPool(new URI(REDIS_URL.get(plugin.getSpaceChatConfig().getConfig())));
         } catch (URISyntaxException e) {
             e.printStackTrace();
             pool = null;

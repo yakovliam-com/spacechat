@@ -7,9 +7,7 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.broadcast.RedisBroadcastPacket;
-import dev.spaceseries.spacechat.util.chat.ChatUtil;
 
 import java.util.Collections;
 
@@ -19,15 +17,18 @@ import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_IDENTIFIER;
 @Permissible("space.chat.command.broadcast")
 public class BroadcastCommand extends Command {
 
-    public BroadcastCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "broadcast", "Broadcast command", Collections.singletonList("bcast"));
+    private final SpaceChat plugin;
+
+    public BroadcastCommand(SpaceChat plugin) {
+        super(plugin.getPlugin(), "broadcast", "Broadcast command", Collections.singletonList("bcast"));
+        this.plugin = plugin;
     }
 
     @Override
     public void onCommand(SpaceCommandSender sender, String label, String... args) {
         // if message length is not long enough
         if (args.length <= 0) {
-            Messages.getInstance().broadcastArgs.msg(sender);
+            Messages.getInstance(plugin).broadcastArgs.msg(sender);
             return;
         }
 
@@ -38,17 +39,17 @@ public class BroadcastCommand extends Command {
         Component component = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
 
         // use lang wrapper?
-        if (BROADCAST_USE_LANG_WRAPPER.get(Config.get())) {
+        if (BROADCAST_USE_LANG_WRAPPER.get(plugin.getSpaceChatConfig().getConfig())) {
             Component previousComponent = component;
-            component = Messages.getInstance().broadcastWrapper.toComponent()
+            component = Messages.getInstance(plugin).broadcastWrapper.toComponent()
                     .replaceText((b) -> b.match("%message%")
                             .replacement(previousComponent));
         }
 
         // send broadcast packet (redis)
-        SpaceChat.getInstance().getServerSyncServiceManager().getStreamService().publishBroadcast(new RedisBroadcastPacket(REDIS_SERVER_IDENTIFIER.get(Config.get()), component));
+        plugin.getServerSyncServiceManager().getStreamService().publishBroadcast(new RedisBroadcastPacket(REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getConfig()), component));
 
         // output to game
-        ChatUtil.sendComponentMessage(component);
+        plugin.getChatManager().sendComponentMessage(component);
     }
 }

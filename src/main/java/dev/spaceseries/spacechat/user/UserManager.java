@@ -5,6 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.model.manager.Manager;
+import dev.spaceseries.spacechat.storage.StorageManager;
 import org.bukkit.Bukkit;
 
 import java.util.Map;
@@ -15,15 +16,20 @@ import java.util.function.Consumer;
 
 public class UserManager implements Manager {
 
+    private final SpaceChat plugin;
     private final AsyncLoadingCache<UUID, User> userAsyncCache;
+    private final StorageManager storageManager;
 
     /**
      * Construct user manager
      */
     public UserManager(SpaceChat plugin) {
+        this.plugin = plugin;
+        this.storageManager = plugin.getStorageManager();
+
         userAsyncCache = Caffeine.newBuilder()
                 .expireAfterAccess(1, TimeUnit.HOURS)
-                .buildAsync((u) -> plugin.getStorageManager().getCurrent().getUser(u));
+                .buildAsync((u) -> storageManager.getCurrent().getUser(u));
     }
 
     /**
@@ -61,8 +67,8 @@ public class UserManager implements Manager {
      * @param user user
      */
     public void update(User user) {
-        Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> {
-            SpaceChat.getInstance().getStorageManager().getCurrent().updateUser(user);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            storageManager.getCurrent().updateUser(user);
         });
     }
 
@@ -73,7 +79,7 @@ public class UserManager implements Manager {
      * @param consumer consumer
      */
     public void getByName(String username, Consumer<User> consumer) {
-        CompletableFuture.supplyAsync(() -> SpaceChat.getInstance().getStorageManager().getCurrent().getUser(username)).thenAccept(consumer);
+        CompletableFuture.supplyAsync(() -> storageManager.getCurrent().getUser(username)).thenAccept(consumer);
     }
 
     /**

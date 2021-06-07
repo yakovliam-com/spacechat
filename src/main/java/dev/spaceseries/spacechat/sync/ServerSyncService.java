@@ -1,7 +1,13 @@
 package dev.spaceseries.spacechat.sync;
 
+import dev.spaceseries.spacechat.SpaceChat;
+
 public abstract class ServerSyncService {
 
+    /**
+     * SpaceChat plugin
+     */
+    protected final SpaceChat plugin;
 
     /**
      * Service manager
@@ -11,10 +17,12 @@ public abstract class ServerSyncService {
     /**
      * Construct server sync service
      *
+     * @param plugin         plugin
      * @param serviceManager service manager
      */
-    public ServerSyncService(ServerSyncServiceManager serviceManager) {
+    public ServerSyncService(SpaceChat plugin, ServerSyncServiceManager serviceManager) {
         this.serviceManager = serviceManager;
+        this.plugin = plugin;
     }
 
     /**

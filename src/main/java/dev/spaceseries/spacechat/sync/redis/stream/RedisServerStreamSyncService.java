@@ -3,6 +3,7 @@ package dev.spaceseries.spacechat.sync.redis.stream;
 import dev.spaceseries.spaceapi.lib.google.gson.Gson;
 import dev.spaceseries.spaceapi.lib.google.gson.GsonBuilder;
 import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.chat.ChatManager;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
@@ -16,7 +17,6 @@ import dev.spaceseries.spacechat.sync.redis.stream.packet.broadcast.RedisBroadca
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacketDeserializer;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacketSerializer;
-import dev.spaceseries.spacechat.util.chat.ChatUtil;
 
 import static dev.spaceseries.spacechat.config.Config.*;
 
@@ -37,12 +37,19 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
     private Gson gson;
 
     /**
+     * Chat manager
+     */
+    private ChatManager chatManager;
+
+    /**
      * Construct server sync service
      *
+     * @param plugin         plugin
      * @param serviceManager service manager
      */
-    public RedisServerStreamSyncService(ServerSyncServiceManager serviceManager) {
-        super(serviceManager);
+    public RedisServerStreamSyncService(SpaceChat plugin, ServerSyncServiceManager serviceManager) {
+        super(plugin, serviceManager);
+        this.chatManager = plugin.getChatManager();
     }
 
     /**
@@ -58,7 +65,7 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
         String json = gson.toJson(redisChatPacket, RedisChatPacket.class);
 
         // publish to redis
-        redisMessenger.publish(new RedisPublishDataPacket(REDIS_CHAT_CHANNEL.get(Config.get()), json));
+        redisMessenger.publish(new RedisPublishDataPacket(REDIS_CHAT_CHANNEL.get(plugin.getSpaceChatConfig().getConfig()), json));
     }
 
     /**
@@ -74,7 +81,7 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
         String json = gson.toJson(redisBroadcastPacket, RedisBroadcastPacket.class);
 
         // publish to redis
-        redisMessenger.publish(new RedisPublishDataPacket(REDIS_BROADCAST_CHANNEL.get(Config.get()), json));
+        redisMessenger.publish(new RedisPublishDataPacket(REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getConfig()), json));
     }
 
     /**
@@ -89,18 +96,18 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
         RedisChatPacket chatPacket = gson.fromJson(redisStringReceiveDataPacket.getData(), RedisChatPacket.class);
 
         // if the message is from ourselves, then return
-        if (chatPacket.getServerIdentifier().equalsIgnoreCase(REDIS_SERVER_IDENTIFIER.get(Config.get()))) {
+        if (chatPacket.getServerIdentifier().equalsIgnoreCase(REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getConfig()))) {
             return;
         }
 
         // if channel exists, send through that instead
-        if (chatPacket.getChannel() != null && SpaceChat.getInstance().getChannelManager().get(chatPacket.getChannel().getHandle()) != null) {
-            ChatUtil.sendComponentChannelMessage(null, chatPacket.getComponent(), chatPacket.getChannel());
+        if (chatPacket.getChannel() != null && plugin.getChannelManager().get(chatPacket.getChannel().getHandle()) != null) {
+            chatManager.sendComponentChannelMessage(null, chatPacket.getComponent(), chatPacket.getChannel());
             return;
         }
 
         // send to all players
-        ChatUtil.sendComponentChatMessage(chatPacket.getComponent());
+        chatManager.sendComponentChatMessage(chatPacket.getComponent());
     }
 
     /**
@@ -116,12 +123,12 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
         RedisBroadcastPacket broadcastPacket = gson.fromJson(stringReceiveDataPacket.getData(), RedisBroadcastPacket.class);
 
         // if the message is from ourselves, then return
-        if (broadcastPacket.getServerIdentifier().equalsIgnoreCase(REDIS_SERVER_IDENTIFIER.get(Config.get()))) {
+        if (broadcastPacket.getServerIdentifier().equalsIgnoreCase(REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getConfig()))) {
             return;
         }
 
         // send to all players
-        ChatUtil.sendComponentMessage(broadcastPacket.getComponent());
+        chatManager.sendComponentMessage(broadcastPacket.getComponent());
     }
 
     /**
@@ -130,11 +137,11 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
     @Override
     public void start() {
         // initialize messenger
-        this.redisMessenger = new RedisMessenger(this);
+        this.redisMessenger = new RedisMessenger(plugin, this);
         // initialize my super-duper gson adapter
         gson = new GsonBuilder()
                 .registerTypeAdapter(RedisChatPacket.class, new RedisChatPacketSerializer())
-                .registerTypeAdapter(RedisChatPacket.class, new RedisChatPacketDeserializer())
+                .registerTypeAdapter(RedisChatPacket.class, new RedisChatPacketDeserializer(plugin))
                 .registerTypeAdapter(RedisBroadcastPacket.class, new RedisBroadcastPacketSerializer())
                 .registerTypeAdapter(RedisBroadcastPacket.class, new RedisBroadcastPacketDeserializer())
                 .create();

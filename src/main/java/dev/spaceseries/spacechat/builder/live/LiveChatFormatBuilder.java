@@ -1,4 +1,12 @@
 package dev.spaceseries.spacechat.builder.live;
 
-public interface LiveChatFormatBuilder {
+import dev.spaceseries.spacechat.SpaceChat;
+
+public abstract class LiveChatFormatBuilder {
+
+    protected final SpaceChat plugin;
+
+    public LiveChatFormatBuilder(SpaceChat plugin) {
+        this.plugin = plugin;
+    }
 }

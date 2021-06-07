@@ -5,7 +5,6 @@ import dev.spaceseries.spacechat.loader.ChannelLoader;
 import dev.spaceseries.spacechat.model.ChannelType;
 import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.model.manager.MapManager;
-import dev.spaceseries.spacechat.util.chat.ChatUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -18,12 +17,16 @@ public class ChannelManager extends MapManager<String, Channel> {
      */
     private final ChannelLoader channelLoader;
 
+    private final SpaceChat plugin;
+
     /**
      * Initializes
      */
-    public ChannelManager() {
+    public ChannelManager(SpaceChat plugin) {
+        this.plugin = plugin;
+
         // create format manager
-        this.channelLoader = new ChannelLoader(SpaceChat.getInstance()
+        this.channelLoader = new ChannelLoader(plugin
                 .getChannelsConfig()
                 .getConfig()
                 .getSection(
@@ -54,11 +57,11 @@ public class ChannelManager extends MapManager<String, Channel> {
 
         // if no permission, unsubscribe them
         if (!player.hasPermission(channel.getPermission())) {
-            SpaceChat.getInstance().getServerSyncServiceManager().getDataService().unsubscribeFromChannel(player.getUniqueId(), channel);
+            plugin.getServerSyncServiceManager().getDataService().unsubscribeFromChannel(player.getUniqueId(), channel);
             return;
         }
 
         // send chat message
-        ChatUtil.sendChatMessage(player, message, channel.getFormat(), event);
+        plugin.getChatManager().sendChatMessage(player, message, channel.getFormat(), event);
     }
 }

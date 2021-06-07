@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.sql.file;
 
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.storage.impl.ConnectionFactory;
 
 import java.nio.file.Path;
@@ -10,7 +11,7 @@ import java.text.DecimalFormat;
 /**
  * Abstract {@link ConnectionFactory} using a file based database driver.
  */
-abstract class FlatfileConnectionFactory implements ConnectionFactory {
+abstract class FlatfileConnectionFactory extends ConnectionFactory {
     /** Format used for formatting database file size. */
     protected static final DecimalFormat FILE_SIZE_FORMAT = new DecimalFormat("#.##");
 
@@ -19,7 +20,8 @@ abstract class FlatfileConnectionFactory implements ConnectionFactory {
     /** The path to the database file */
     private final Path file;
 
-    FlatfileConnectionFactory(Path file) {
+    FlatfileConnectionFactory(SpaceChat plugin, Path file) {
+        super(plugin);
         this.file = file;
     }
 

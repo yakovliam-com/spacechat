@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.sync;
 
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.sync.packet.ReceiveStreamDataPacket;
 import dev.spaceseries.spacechat.sync.packet.SendStreamDataPacket;
 
@@ -8,10 +9,11 @@ public abstract class ServerStreamSyncService extends ServerSyncService {
     /**
      * Construct server sync service
      *
+     * @param plugin         plugin
      * @param serviceManager service manager
      */
-    public ServerStreamSyncService(ServerSyncServiceManager serviceManager) {
-        super(serviceManager);
+    public ServerStreamSyncService(SpaceChat plugin, ServerSyncServiceManager serviceManager) {
+        super(plugin, serviceManager);
     }
 
     /**

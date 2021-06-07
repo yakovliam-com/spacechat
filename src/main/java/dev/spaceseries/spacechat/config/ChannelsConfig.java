@@ -5,7 +5,7 @@ import dev.spaceseries.spacechat.SpaceChat;
 
 public class ChannelsConfig extends Config {
 
-    public ChannelsConfig() {
-        super(SpaceChat.getInstance().getPlugin(), "channels.yml");
+    public ChannelsConfig(SpaceChat plugin) {
+        super(plugin.getPlugin(), "channels.yml");
     }
 }

@@ -1,12 +1,17 @@
 package dev.spaceseries.spacechat.storage.impl.empty;
 
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.storage.Storage;
 
 import java.util.UUID;
 
-public class EmptyStorage implements Storage {
+public class EmptyStorage extends Storage {
+
+    public EmptyStorage(SpaceChat plugin) {
+        super(plugin);
+    }
 
     @Override
     public void log(LogWrapper data, boolean async) {

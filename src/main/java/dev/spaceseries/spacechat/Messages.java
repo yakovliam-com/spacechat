@@ -10,15 +10,19 @@ public class Messages {
      */
     private static Messages instance;
 
+    public Messages(SpaceChat plugin) {
+        this.plugin = plugin;
+    }
+
     /**
      * Gets instance of messages class
      * <p>(Singleton)</p>
      *
      * @return messages
      */
-    public static Messages getInstance() {
+    public static Messages getInstance(SpaceChat context) {
         if (instance == null)
-            instance = new Messages();
+            instance = new Messages(context);
         return instance;
     }
 
@@ -29,6 +33,8 @@ public class Messages {
     public static void renew() {
         instance = null;
     }
+
+    private final SpaceChat plugin;
 
     /* General */
 
@@ -96,7 +102,7 @@ public class Messages {
      * @return The lang configuration
      */
     private Configuration getLangConfiguration() {
-        return SpaceChat.getInstance().getLangConfig().getConfig();
+        return plugin.getLangConfig().getConfig();
     }
 }
 

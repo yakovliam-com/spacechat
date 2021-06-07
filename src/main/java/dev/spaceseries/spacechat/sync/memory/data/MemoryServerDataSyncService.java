@@ -30,15 +30,16 @@ public class MemoryServerDataSyncService extends ServerDataSyncService {
     /**
      * Construct server sync service
      *
+     * @param plugin         plugin
      * @param serviceManager service manager
      */
-    public MemoryServerDataSyncService(ServerSyncServiceManager serviceManager) {
-        super(serviceManager);
+    public MemoryServerDataSyncService(SpaceChat plugin, ServerSyncServiceManager serviceManager) {
+        super(plugin, serviceManager);
         this.playerSubscribedChannelManager = new PlayerSubscribedChannelManager();
         this.playerCurrentChannelManager = new PlayerCurrentChannelManager();
 
-        SpaceChat.getInstance().getServer().getPluginManager().registerEvents(playerSubscribedChannelManager, SpaceChat.getInstance());
-        SpaceChat.getInstance().getServer().getPluginManager().registerEvents(playerCurrentChannelManager, SpaceChat.getInstance());
+        plugin.getServer().getPluginManager().registerEvents(playerSubscribedChannelManager, plugin);
+        plugin.getServer().getPluginManager().registerEvents(playerCurrentChannelManager, plugin);
     }
 
     /**
@@ -104,7 +105,7 @@ public class MemoryServerDataSyncService extends ServerDataSyncService {
         // account for every situation.
         Channel channel = this.playerCurrentChannelManager.get(uuid, null);
 
-        return channel == null ? null : SpaceChat.getInstance().getChannelManager().get(channel.getHandle(), null);
+        return channel == null ? null : plugin.getChannelManager().get(channel.getHandle(), null);
     }
 
     /**

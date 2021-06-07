@@ -33,8 +33,11 @@ public class DirectoryWatcher implements Runnable, IoService {
     private final boolean mPreExistingAsCreated;
     private final Listener mListener;
     private final Filter<Path> mFilter;
+    private final SpaceChat plugin;
 
-    public DirectoryWatcher(Builder builder) {
+    public DirectoryWatcher(SpaceChat plugin, Builder builder) {
+        this.plugin = plugin;
+
         mWatched = builder.mWatched;
         mPreExistingAsCreated = builder.mPreExistingAsCreated;
         mListener = builder.mListener;
@@ -85,13 +88,13 @@ public class DirectoryWatcher implements Runnable, IoService {
                 WatchKey key = dir.register(watchService, ENTRY_CREATE, ENTRY_MODIFY, ENTRY_DELETE);
                 watchKeyToDirectory.put(key, dir);
             } catch (IOException ioe) {
-                SpaceChat.getInstance().getLogger().warning("Not watching " + dir + ". E: " + ioe.getMessage());
+                plugin.getLogger().warning("Not watching " + dir + ". E: " + ioe.getMessage());
             }
         }
 
         while (true) {
             if (Thread.interrupted()) {
-                SpaceChat.getInstance().getLogger().info("Directory watcher thread interrupted.");
+                plugin.getLogger().info("Directory watcher thread interrupted.");
                 break;
             }
 
@@ -105,7 +108,7 @@ public class DirectoryWatcher implements Runnable, IoService {
 
             Path dir = watchKeyToDirectory.get(key);
             if (dir == null) {
-                SpaceChat.getInstance().getLogger().warning("Watch key not recognized.");
+                plugin.getLogger().warning("Watch key not recognized.");
                 continue;
             }
 
@@ -126,7 +129,7 @@ public class DirectoryWatcher implements Runnable, IoService {
             boolean valid = key.reset();
             if (!valid) {
                 watchKeyToDirectory.remove(key);
-                SpaceChat.getInstance().getLogger().warning("'" + dir + "' is inaccessible. Stopping watch.");
+                plugin.getLogger().warning("'" + dir + "' is inaccessible. Stopping watch.");
                 if (watchKeyToDirectory.isEmpty()) {
                     break;
                 }
@@ -178,9 +181,9 @@ public class DirectoryWatcher implements Runnable, IoService {
             return this;
         }
 
-        public DirectoryWatcher build(Listener listener) {
+        public DirectoryWatcher build(SpaceChat plugin, Listener listener) {
             mListener = listener;
-            return new DirectoryWatcher(this);
+            return new DirectoryWatcher(plugin, this);
         }
     }
 }

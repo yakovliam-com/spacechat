@@ -13,25 +13,28 @@ import dev.spaceseries.spacechat.model.Channel;
 @PlayersOnly
 public class JoinCommand extends Command {
 
-    public JoinCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "join");
+    private final SpaceChat plugin;
+
+    public JoinCommand(SpaceChat plugin) {
+        super(plugin.getPlugin(), "join");
+        this.plugin = plugin;
     }
 
     @Override
     public void onCommand(SpaceCommandSender sender, String label, String... args) {
         // args
         if (args.length != 1) {
-            Messages.getInstance().generalHelp.msg(sender);
+            Messages.getInstance(plugin).generalHelp.msg(sender);
             return;
         }
 
         String channel = args[0];
 
         // get channel
-        Channel applicable = SpaceChat.getInstance().getChannelManager().get(channel, null);
+        Channel applicable = plugin.getChannelManager().get(channel, null);
         if (applicable == null) {
             // send message
-            Messages.getInstance().channelInvalid.msg(sender, "%channel%", channel);
+            Messages.getInstance(plugin).channelInvalid.msg(sender, "%channel%", channel);
             return;
         }
 
@@ -42,11 +45,11 @@ public class JoinCommand extends Command {
         }
 
         // set current channel
-        SpaceChat.getInstance().getUserManager().use(sender.getUuid(), (user) -> {
+        plugin.getUserManager().use(sender.getUuid(), (user) -> {
             user.joinChannel(applicable);
 
             // send message
-            Messages.getInstance().channelJoin.msg(sender, "%channel%", channel);
+            Messages.getInstance(plugin).channelJoin.msg(sender, "%channel%", channel);
         });
     }
 }

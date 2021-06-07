@@ -10,18 +10,22 @@ import dev.spaceseries.spacechat.command.spacechat.ReloadCommand;
 @Permissible("space.chat.command")
 public class SpaceChatCommand extends Command {
 
-    public SpaceChatCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "spacechat");
+    private final SpaceChat plugin;
+
+    public SpaceChatCommand(SpaceChat plugin) {
+        super(plugin.getPlugin(), "spacechat");
+
+        this.plugin = plugin;
 
         // add sub commands
         addSubCommands(
-                new ReloadCommand()
+                new ReloadCommand(plugin)
         );
     }
 
     @Override
     public void onCommand(SpaceCommandSender sender, String s, String... args) {
         // send help message
-        Messages.getInstance().generalHelp.msg(sender);
+        Messages.getInstance(plugin).generalHelp.msg(sender);
     }
 }

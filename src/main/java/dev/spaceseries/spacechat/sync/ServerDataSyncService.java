@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.sync;
 
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.model.Channel;
 
 import java.util.List;
@@ -12,8 +13,8 @@ public abstract class ServerDataSyncService extends ServerSyncService {
      *
      * @param serviceManager service manager
      */
-    public ServerDataSyncService(ServerSyncServiceManager serviceManager) {
-        super(serviceManager);
+    public ServerDataSyncService(SpaceChat plugin, ServerSyncServiceManager serviceManager) {
+        super(plugin, serviceManager);
     }
 
     /**

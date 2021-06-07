@@ -45,10 +45,10 @@ public class DependencyManagement<Dependency> {
      *
      * @param file file directory
      */
-    public DependencyManagement(@NotNull final File file) {
+    public DependencyManagement(SpaceChat plugin, @NotNull final File file) {
         files = new HashSet<>();
         dir = file;
-        this.logger = SpaceChat.getInstance().getLogger();
+        this.logger = plugin.getLogger();
         if (!dir.exists()) {
             if (dir.mkdir() || dir.mkdirs()) {
                 logger.info(

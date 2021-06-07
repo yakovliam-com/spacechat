@@ -9,10 +9,17 @@ import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static dev.spaceseries.spacechat.config.Config.*;
 
 public class LogManagerImpl implements LogManager {
+
+    private final SpaceChat plugin;
+
+    public LogManagerImpl(SpaceChat plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public <T> void log(T t, LogType logType, LogToType logToType) {
@@ -55,7 +62,7 @@ public class LogManagerImpl implements LogManager {
      * @param s The chat message
      */
     private void global(String s) {
-        SpaceChat.getInstance().getLogger().log(Level.INFO, s);
+        plugin.getLogger().log(Level.INFO, s);
     }
 
     /**
@@ -65,7 +72,7 @@ public class LogManagerImpl implements LogManager {
      */
     private void storage(LogWrapper data) {
         // get storage manager and log
-        SpaceChat.getInstance().getStorageManager().getCurrent().log(data, true);
+        plugin.getStorageManager().getCurrent().log(data, true);
     }
 
     /**
@@ -74,6 +81,6 @@ public class LogManagerImpl implements LogManager {
      * @return The main configuration
      */
     private Configuration getConfig() {
-        return SpaceChat.getInstance().getSpaceChatConfig().getConfig();
+        return plugin.getSpaceChatConfig().getConfig();
     }
 }

@@ -20,7 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public class SqliteStorage implements Storage {
+public class SqliteStorage extends Storage {
 
     public static final String LOG_CHAT_CREATION_STATEMENT = "CREATE TABLE IF NOT EXISTS `%s` (\n" +
             "`uuid` TEXT NOT NULL,\n" +
@@ -29,25 +29,25 @@ public class SqliteStorage implements Storage {
             "`date` TEXT NOT NULL,\n" +
             "`id` INTEGER PRIMARY KEY AUTOINCREMENT\n" +
             ");";
-    private static final String LOG_CHAT = "INSERT INTO " + Config.STORAGE_SQLITE_TABLES_CHAT_LOGS.get(Config.get()) + " (uuid, name, message, date) VALUES(?, ?, ?, ?)";
+    private final String LOG_CHAT = "INSERT INTO " + Config.STORAGE_SQLITE_TABLES_CHAT_LOGS.get(plugin.getSpaceChatConfig().getConfig()) + " (uuid, name, message, date) VALUES(?, ?, ?, ?)";
     public static final String USERS_CREATION_STATEMENT = "CREATE TABLE IF NOT EXISTS `%s` (\n" +
             "`uuid` TEXT NOT NULL,\n" +
             "`username` TEXT NOT NULL,\n" +
             "`date` TEXT NOT NULL,\n" +
             "`id` INTEGER PRIMARY KEY AUTOINCREMENT\n" +
             ");";
-    private static final String CREATE_USER = "INSERT INTO " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + " (uuid, username, date) VALUES(?, ?, ?)";
-    private static final String SELECT_USER = "SELECT * FROM " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + " WHERE uuid=?";
-    private static final String SELECT_USER_USERNAME = "SELECT * FROM " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + " WHERE username=?";
-    private static final String UPDATE_USER = "UPDATE " + Config.STORAGE_SQLITE_TABLES_USERS.get(Config.get()) + " SET username=? WHERE uuid=?";
+    private final String CREATE_USER = "INSERT INTO " + Config.STORAGE_SQLITE_TABLES_USERS.get(plugin.getSpaceChatConfig().getConfig()) + " (uuid, username, date) VALUES(?, ?, ?)";
+    private final String SELECT_USER = "SELECT * FROM " + Config.STORAGE_SQLITE_TABLES_USERS.get(plugin.getSpaceChatConfig().getConfig()) + " WHERE uuid=?";
+    private final String SELECT_USER_USERNAME = "SELECT * FROM " + Config.STORAGE_SQLITE_TABLES_USERS.get(plugin.getSpaceChatConfig().getConfig()) + " WHERE username=?";
+    private final String UPDATE_USER = "UPDATE " + Config.STORAGE_SQLITE_TABLES_USERS.get(plugin.getSpaceChatConfig().getConfig()) + " SET username=? WHERE uuid=?";
     public static final String USERS_SUBSCRIBED_CHANNELS_CREATION_STATEMENT = "CREATE TABLE IF NOT EXISTS `%s` (\n" +
             "`uuid` TEXT NOT NULL,\n" +
             "`channel` TEXT NOT NULL,\n" +
             "`id` INTEGER PRIMARY KEY AUTOINCREMENT\n" +
             ");";
-    private static final String SELECT_SUBSCRIBED_CHANNELS = "SELECT channel FROM " + Config.STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(Config.get()) + " WHERE uuid=?;";
-    private static final String DELETE_SUBSCRIBED_CHANNEL = "DELETE FROM " + Config.STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(Config.get()) + " WHERE uuid=? AND channel=?;";
-    private static final String INSERT_SUBSCRIBED_CHANNEL = "INSERT INTO " + Config.STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(Config.get()) + " (uuid, channel) VALUES(?, ?);";
+    private  final String SELECT_SUBSCRIBED_CHANNELS = "SELECT channel FROM " + Config.STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getConfig()) + " WHERE uuid=?;";
+    private final String DELETE_SUBSCRIBED_CHANNEL = "DELETE FROM " + Config.STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getConfig()) + " WHERE uuid=? AND channel=?;";
+    private final String INSERT_SUBSCRIBED_CHANNEL = "INSERT INTO " + Config.STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getConfig()) + " (uuid, channel) VALUES(?, ?);";
 
     /**
      * The connection manager
@@ -57,11 +57,12 @@ public class SqliteStorage implements Storage {
     /**
      * Initializes new mysql storage
      */
-    public SqliteStorage() {
+    public SqliteStorage(SpaceChat plugin) {
+        super(plugin);
         // storage file
-        SqliteStorageFile sqliteStorageFile = new SqliteStorageFile();
+        SqliteStorageFile sqliteStorageFile = new SqliteStorageFile(plugin);
         // initialize new connection manager
-        this.sqliteConnectionManager = new SqliteConnectionManager(sqliteStorageFile);
+        this.sqliteConnectionManager = new SqliteConnectionManager(plugin, sqliteStorageFile);
         sqliteConnectionManager.init();
     }
 
@@ -91,7 +92,7 @@ public class SqliteStorage implements Storage {
 
             if (!resultSet.next()) {
                 // create new user
-                User user = new User(uuid, Bukkit.getOfflinePlayer(uuid).getName(), new Date(), new ArrayList<>());
+                User user = new User(plugin,uuid, Bukkit.getOfflinePlayer(uuid).getName(), new Date(), new ArrayList<>());
                 createUser(user);
                 return user;
             }
@@ -103,7 +104,7 @@ public class SqliteStorage implements Storage {
             // get channels that are subscribed
             List<Channel> subscribedChannels = getSubscribedChannels(uuid);
 
-            return new User(uuid, username, date, subscribedChannels);
+            return new User(plugin,uuid, username, date, subscribedChannels);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
 
@@ -129,7 +130,7 @@ public class SqliteStorage implements Storage {
             while (resultSet.next()) {
                 String channelHandle = resultSet.getString("channel");
 
-                Channel channel = SpaceChat.getInstance().getChannelManager().get(channelHandle, null);
+                Channel channel = plugin.getChannelManager().get(channelHandle, null);
                 if (channel != null) {
                     channels.add(channel);
                 }
@@ -170,7 +171,7 @@ public class SqliteStorage implements Storage {
             // get channels that are subscribed
             List<Channel> subscribedChannels = getSubscribedChannels(uuid);
 
-            return new User(uuid, username, date, subscribedChannels);
+            return new User(plugin,uuid, username, date, subscribedChannels);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return null;
@@ -224,7 +225,7 @@ public class SqliteStorage implements Storage {
                 }
             });
 
-            user.getSubscribedChannels().forEach(channel  -> {
+            user.getSubscribedChannels().forEach(channel -> {
                 if (serverSideSubscribedList.stream()
                         .anyMatch(c -> c.getHandle().equals(channel.getHandle()))) {
                     return;
@@ -306,9 +307,9 @@ public class SqliteStorage implements Storage {
             }
         };
         if (async)
-            Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), task);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, task);
         else
-            Bukkit.getScheduler().runTask(SpaceChat.getInstance(), task);
+            Bukkit.getScheduler().runTask(plugin, task);
     }
 
     public static final class SqliteStorageFile {
@@ -318,8 +319,8 @@ public class SqliteStorage implements Storage {
          */
         private final File file;
 
-        public SqliteStorageFile() {
-            this.file = new File(SpaceChat.getInstance().getDataFolder() + File.separator + "storage", Config.STORAGE_SQLITE_DATABASE.get(Config.get()) + ".db");
+        public SqliteStorageFile(SpaceChat plugin) {
+            this.file = new File(plugin.getDataFolder() + File.separator + "storage", Config.STORAGE_SQLITE_DATABASE.get(plugin.getSpaceChatConfig().getConfig()) + ".db");
             if (!this.file.exists()) {
                 this.file.getParentFile().mkdirs();
                 try {

@@ -14,20 +14,22 @@ import dev.spaceseries.spacechat.command.ignore.RemoveCommand;
 @Permissible("space.chat.command.ignore")
 public class IgnoreCommand extends Command {
 
-    public IgnoreCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "ignore");
+    private SpaceChat plugin;
+
+    public IgnoreCommand(SpaceChat plugin) {
+        super(plugin.getPlugin(), "ignore");
 
         // add sub commands
         addSubCommands(
-                new AddCommand(),
-                new RemoveCommand(),
-                new ListCommand()
+                new AddCommand(plugin),
+                new RemoveCommand(plugin),
+                new ListCommand(plugin)
         );
     }
 
     @Override
     public void onCommand(SpaceCommandSender sender, String label, String... args) {
         // send help message
-        Messages.getInstance().generalHelp.msg(sender);
+        Messages.getInstance(plugin).generalHelp.msg(sender);
     }
 }

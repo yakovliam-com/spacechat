@@ -4,8 +4,6 @@ import dev.spaceseries.spacechat.SpaceChat;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -19,14 +17,23 @@ public final class DependencyInstantiation {
     /**
      * Dependency management
      */
-    private DependencyManagement dependencyManagement;
+    private DependencyManagement<?> dependencyManagement;
+
+    /**
+     * Plugin
+     */
+    private final SpaceChat plugin;
+
+    public DependencyInstantiation(SpaceChat plugin) {
+        this.plugin = plugin;
+    }
 
     /**
      * Starts dependency tasks.
      */
     public void startTasks() {
         // load dependencies
-        SpaceChat.getInstance().getLogger().info(
+        plugin.getLogger().info(
                 "Starting Dependency Tasks... This may take a while depending on your environment!");
         assignClassLoader();
         try {
@@ -43,14 +50,14 @@ public final class DependencyInstantiation {
      */
     private void assignClassLoader() {
         DependencyUtilities.setClassloader(
-                (URLClassLoader) SpaceChat.getInstance().getClass().getClassLoader());
+                (URLClassLoader) plugin.getClass().getClassLoader());
     }
 
     /**
      * Downloads/Loads Jitpack/Maven dependencies.
      */
     private void loadDependencies() {
-        dependencyManagement = new DependencyManagement(new File(SpaceChat.getInstance().getDataFolder(), "libs"));
+        dependencyManagement = new DependencyManagement(plugin, new File(plugin.getDataFolder(), "libs"));
         dependencyManagement.install();
         dependencyManagement.relocate();
         dependencyManagement.load();
@@ -66,7 +73,7 @@ public final class DependencyInstantiation {
         final Set<File> files = management.getFiles();
         for (final File file : files) {
             if (file.delete()) {
-                SpaceChat.getInstance().getLogger().info(String.format("Finished Initializing Dependency (%s)", file.getAbsolutePath()));
+                plugin.getLogger().info(String.format("Finished Initializing Dependency (%s)", file.getAbsolutePath()));
             }
         }
         files.clear();

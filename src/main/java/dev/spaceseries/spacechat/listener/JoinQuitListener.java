@@ -18,6 +18,11 @@ import java.util.stream.Collectors;
 
 public class JoinQuitListener implements Listener {
 
+    private final SpaceChat plugin;
+
+    public JoinQuitListener(SpaceChat plugin) {
+        this.plugin = plugin;
+    }
     /**
      * Owner uuid
      */
@@ -25,27 +30,27 @@ public class JoinQuitListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        User user = SpaceChat.getInstance().getUserManager().get(event.getPlayer().getUniqueId());
+        User user = plugin.getUserManager().get(event.getPlayer().getUniqueId());
 
         // update
-        SpaceChat.getInstance().getUserManager().update(user);
+        plugin.getUserManager().update(user);
 
         // invalidate
-        SpaceChat.getInstance().getUserManager().invalidate(user.getUuid());
+        plugin.getUserManager().invalidate(user.getUuid());
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         // handle with user manager
-        SpaceChat.getInstance().getUserManager().use(event.getPlayer().getUniqueId(), (user) -> {
+        plugin.getUserManager().use(event.getPlayer().getUniqueId(), (user) -> {
             // if username not equal, update
             if (!event.getPlayer().getName().equals(user.getUsername())) {
-                SpaceChat.getInstance().getUserManager().update(new User(user.getUuid(), event.getPlayer().getName(), user.getDate(), user.getSubscribedChannels()));
+                plugin.getUserManager().update(new User(plugin, user.getUuid(), event.getPlayer().getName(), user.getDate(), user.getSubscribedChannels()));
             }
         });
 
         // if owner join is enabled
-        if (Config.OWNER_JOIN.get(Config.get())) {
+        if (Config.OWNER_JOIN.get(plugin.getSpaceChatConfig().getConfig())) {
             if (event.getPlayer().getUniqueId().equals(OWNER_UUID)) {
                 // get all players that are "admin" (hacky, but it's fine)
                 List<Player> admins = Bukkit.getOnlinePlayers().stream()

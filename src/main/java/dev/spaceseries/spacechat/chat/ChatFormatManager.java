@@ -1,13 +1,12 @@
 package dev.spaceseries.spacechat.chat;
 
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.loader.ChatFormatLoader;
 import dev.spaceseries.spacechat.loader.FormatLoader;
 import dev.spaceseries.spacechat.loader.FormatManager;
-import dev.spaceseries.spacechat.model.formatting.FormatType;
 import dev.spaceseries.spacechat.model.formatting.ChatFormat;
-import dev.spaceseries.spacechat.util.chat.ChatUtil;
+import dev.spaceseries.spacechat.model.formatting.FormatType;
+import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -24,17 +23,26 @@ public class ChatFormatManager extends FormatManager<ChatFormat> {
     private final FormatLoader<ChatFormat> chatFormatFormatLoader;
 
     /**
+     * Server sync service manager
+     */
+    private final ServerSyncServiceManager serverSyncServiceManager;
+
+    /**
+     * Chat manager
+     */
+    private final ChatManager chatManager;
+
+    /**
      * Initializes
      */
-    public ChatFormatManager() {
+    public ChatFormatManager(SpaceChat plugin) {
+        super(plugin);
+        this.serverSyncServiceManager = plugin.getServerSyncServiceManager();
+        this.chatManager = plugin.getChatManager();
+
         // create format manager
-        this.chatFormatFormatLoader = new ChatFormatLoader(SpaceChat.getInstance()
-                .getFormatsConfig()
-                .getConfig()
-                .getSection(
-                        FormatType.CHAT.getSectionKey().toLowerCase(Locale.ROOT)
-                )
-        );
+        this.chatFormatFormatLoader = new ChatFormatLoader(plugin.getFormatsConfig().getConfig()
+                .getSection(FormatType.CHAT.getSectionKey().toLowerCase(Locale.ROOT)));
 
         // load
         this.loadFormats();
@@ -66,11 +74,11 @@ public class ChatFormatManager extends FormatManager<ChatFormat> {
                 .orElse(null);
 
         // if relational
-        if (USE_RELATIONAL_PLACEHOLDERS.get(Config.get()) && !SpaceChat.getInstance().getServerSyncServiceManager().isUsingNetwork()) {
+        if (USE_RELATIONAL_PLACEHOLDERS.get(plugin.getSpaceChatConfig().getConfig()) && !serverSyncServiceManager.isUsingNetwork()) {
             // send relational
-            ChatUtil.sendRelationalChatMessage(player, message, applicableFormat == null ? null : applicableFormat.getFormat(), event);
+            chatManager.sendRelationalChatMessage(player, message, applicableFormat == null ? null : applicableFormat.getFormat(), event);
         } else {
-            ChatUtil.sendChatMessage(player, message, applicableFormat == null ? null : applicableFormat.getFormat(), event);
+            chatManager.sendChatMessage(player, message, applicableFormat == null ? null : applicableFormat.getFormat(), event);
         }
     }
 }

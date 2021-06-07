@@ -13,8 +13,11 @@ import java.util.concurrent.CompletableFuture;
 @Permissible("space.chat.command.reload")
 public class ReloadCommand extends Command {
 
-    public ReloadCommand() {
-        super(SpaceChat.getInstance().getPlugin(), "reload");
+    private final SpaceChat plugin;
+
+    public ReloadCommand(SpaceChat plugin) {
+        super(plugin.getPlugin(), "reload");
+        this.plugin = plugin;
     }
 
     @Override
@@ -23,28 +26,28 @@ public class ReloadCommand extends Command {
         CompletableFuture.runAsync(() -> {
             try {
                 // reload configurations
-                SpaceChat.getInstance().loadConfigs();
+                plugin.loadConfigs();
 
                 // reload formats
-                SpaceChat.getInstance().loadFormats();
+                plugin.loadFormats();
 
                 // reload channels
-                SpaceChat.getInstance().loadChannels();
+                plugin.loadChannels();
 
                 // reload storage
-                SpaceChat.getInstance().loadStorage();
+                plugin.loadStorage();
 
                 // load messages
-                SpaceChat.getInstance().loadMessages();
+                plugin.loadMessages();
 
                 // load dynamic connections
-                SpaceChat.getInstance().loadSyncServices();
+                plugin.loadSyncServices();
             } catch (Exception e) {
-                Messages.getInstance().reloadFailure.msg(sender);
+                Messages.getInstance(plugin).reloadFailure.msg(sender);
                 e.printStackTrace();
                 return;
             }
-            Messages.getInstance().reloadSuccess.msg(sender);
+            Messages.getInstance(plugin).reloadSuccess.msg(sender);
         });
     }
 }

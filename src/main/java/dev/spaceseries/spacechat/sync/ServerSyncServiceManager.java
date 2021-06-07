@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.sync;
 
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.sync.memory.data.MemoryServerDataSyncService;
 import dev.spaceseries.spacechat.sync.memory.stream.MemoryServerStreamSyncService;
@@ -39,23 +40,23 @@ public class ServerSyncServiceManager {
     /**
      * Construct server sync service manager
      */
-    public ServerSyncServiceManager() {
+    public ServerSyncServiceManager(SpaceChat plugin) {
         // if redis is enabled, use that
-        if (REDIS_ENABLED.get(Config.get())) {
+        if (REDIS_ENABLED.get(plugin.getSpaceChatConfig().getConfig())) {
             // initialize redis services
-            this.redisProvider = new RedisProvider();
+            this.redisProvider = new RedisProvider(plugin);
 
             // initialize services
-            this.streamService = new RedisServerStreamSyncService(this);
-            this.dataService = new RedisServerDataSyncService(this);
+            this.streamService = new RedisServerStreamSyncService(plugin, this);
+            this.dataService = new RedisServerDataSyncService(plugin, this);
 
             this.usingNetwork = true;
         } else {
             // since we're not using redis, just implement the memory version of the service
 
             // initialize services
-            this.streamService = new MemoryServerStreamSyncService(this);
-            this.dataService = new MemoryServerDataSyncService(this);
+            this.streamService = new MemoryServerStreamSyncService(plugin, this);
+            this.dataService = new MemoryServerDataSyncService(plugin, this);
 
             this.usingNetwork = false;
         }

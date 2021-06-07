@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.parser.itemchat;
 
+import dev.spaceseries.spaceapi.config.impl.Configuration;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.TextComponent;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.TextReplacementConfig;
@@ -13,6 +14,7 @@ import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.L
 import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.plain.PlainComponentSerializer;
 import dev.spaceseries.spaceapi.lib.adventure.adventure.translation.TranslationRegistry;
 import dev.spaceseries.spaceapi.util.Pair;
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.parser.Parser;
 import dev.spaceseries.spacechat.util.number.RomanNumber;
@@ -29,7 +31,14 @@ import java.util.stream.Collectors;
 
 import static dev.spaceseries.spacechat.config.Config.*;
 
-public class ItemChatParser implements Parser<Pair<Player, Component>, Component> {
+public class ItemChatParser extends Parser<Pair<Player, Component>, Component> {
+
+    private Configuration configuration;
+
+    public ItemChatParser(SpaceChat plugin) {
+        super(plugin);
+        this.configuration = plugin.getSpaceChatConfig().getConfig();
+    }
 
     /**
      * Parse message to component
@@ -43,7 +52,7 @@ public class ItemChatParser implements Parser<Pair<Player, Component>, Component
         Component message = playerStringPair.getRight();
 
         // if not enabled, return
-        if (!ITEM_CHAT_ENABLED.get(Config.get()) || !player.hasPermission(PERMISSIONS_USE_ITEM_CHAT.get(Config.get())))
+        if (!ITEM_CHAT_ENABLED.get(configuration) || !player.hasPermission(PERMISSIONS_USE_ITEM_CHAT.get(configuration)))
             return message;
 
         // get item in hand
@@ -72,8 +81,8 @@ public class ItemChatParser implements Parser<Pair<Player, Component>, Component
         TextComponent.Builder loreBuilder = Component.text();
 
         // if using custom lore, use that instead
-        if (ITEM_CHAT_WITH_LORE_USE_CUSTOM.get(Config.get())) {
-            List<String> lore = ITEM_CHAT_WITH_LORE_CUSTOM.get(Config.get());
+        if (ITEM_CHAT_WITH_LORE_USE_CUSTOM.get(configuration)) {
+            List<String> lore = ITEM_CHAT_WITH_LORE_CUSTOM.get(configuration);
 
             for (Iterator<String> it = lore.iterator(); it.hasNext(); ) {
                 loreBuilder.append(LegacyComponentSerializer.legacyAmpersand().deserialize(it.next())
@@ -144,7 +153,7 @@ public class ItemChatParser implements Parser<Pair<Player, Component>, Component
         }
 
         // create a new component for the ACTUAL item message replacement (e.g. [Enchanted Sword x1]
-        Component itemMessage = LegacyComponentSerializer.legacyAmpersand().deserialize(ITEM_CHAT_WITH_CHAT.get(get()))
+        Component itemMessage = LegacyComponentSerializer.legacyAmpersand().deserialize(ITEM_CHAT_WITH_CHAT.get(configuration))
                 .replaceText(nameReplacementConfig)
                 .replaceText(amountReplacementConfig)
                 // remove all decoration from parent components above
@@ -162,10 +171,10 @@ public class ItemChatParser implements Parser<Pair<Player, Component>, Component
         // replace [item] (and other aliases) with the item message
 
         // keep track of the count
-        for (String s : ITEM_CHAT_REPLACE_ALIASES.get(Config.get())) {
+        for (String s : ITEM_CHAT_REPLACE_ALIASES.get(configuration)) {
             message = message.replaceText(b -> {
-                if (ITEM_CHAT_MAX_PER_MESSAGE.get(Config.get()) != -1)
-                    b.times(ITEM_CHAT_MAX_PER_MESSAGE.get(Config.get())).matchLiteral(s).replacement(finalItemMessage);
+                if (ITEM_CHAT_MAX_PER_MESSAGE.get(configuration) != -1)
+                    b.times(ITEM_CHAT_MAX_PER_MESSAGE.get(configuration)).matchLiteral(s).replacement(finalItemMessage);
                 else
                     b.matchLiteral(s).replacement(finalItemMessage);
             });

@@ -12,13 +12,13 @@ import java.util.Properties;
 public class SqliteConnectionFactory extends FlatfileConnectionFactory {
     private Constructor<?> connectionConstructor;
 
-    public SqliteConnectionFactory(Path file) {
-        super(file);
+    public SqliteConnectionFactory(SpaceChat plugin, Path file) {
+        super(plugin, file);
     }
 
     @Override
     public void init() {
-        IsolatedClassLoader classLoader = SpaceChat.getInstance().getDependencyInstantiation().getDependencyManagement().getIsolatedClassLoader();
+        IsolatedClassLoader classLoader = plugin.getDependencyInstantiation().getDependencyManagement().getIsolatedClassLoader();
         try {
             Class<?> connectionClass = classLoader.loadClass("org.sqlite.jdbc4.JDBC4Connection");
             this.connectionConstructor = connectionClass.getConstructor(String.class, String.class, Properties.class);

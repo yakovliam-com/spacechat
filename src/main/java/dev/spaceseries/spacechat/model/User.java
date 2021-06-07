@@ -35,11 +35,16 @@ public final class User {
     private final List<Channel> subscribedChannels;
 
     /**
+     * Plugin context
+     */
+    private SpaceChat plugin;
+
+    /**
      * @param uuid     uuid
      * @param username username
      * @param date     date
      */
-    public User(UUID uuid, String username, Date date, List<Channel> subscribedChannels) {
+    public User(SpaceChat plugin, UUID uuid, String username, Date date, List<Channel> subscribedChannels) {
         this.username = username;
         this.uuid = uuid;
         this.date = date;
@@ -49,14 +54,14 @@ public final class User {
         // on initialization, subscribe to stored subscribed list (parameter in constructor)
         // aka get from storage and also save to storage when a player calls one of the below methods about channel
         // management.
-        List<Channel> serverSideSubscribedList = SpaceChat.getInstance().getServerSyncServiceManager().getDataService().getSubscribedChannels(uuid);
+        List<Channel> serverSideSubscribedList = plugin.getServerSyncServiceManager().getDataService().getSubscribedChannels(uuid);
 
         List<Channel> toUnsubscribe = serverSideSubscribedList.stream()
                 .filter(element -> !subscribedChannels.contains(element))
                 .collect(Collectors.toList());
 
         toUnsubscribe.forEach(u -> {
-            SpaceChat.getInstance().getServerSyncServiceManager().getDataService().unsubscribeFromChannel(uuid, u);
+            plugin.getServerSyncServiceManager().getDataService().unsubscribeFromChannel(uuid, u);
         });
 
         List<Channel> toSubscribe = subscribedChannels.stream()
@@ -64,7 +69,7 @@ public final class User {
                 .collect(Collectors.toList());
 
         toSubscribe.forEach(u -> {
-            SpaceChat.getInstance().getServerSyncServiceManager().getDataService().subscribeToChannel(uuid, u);
+            plugin.getServerSyncServiceManager().getDataService().subscribeToChannel(uuid, u);
         });
     }
 
@@ -119,7 +124,7 @@ public final class User {
      * @param channel channel
      */
     public void joinChannel(Channel channel) {
-        SpaceChat.getInstance().getServerSyncServiceManager().getDataService().updateCurrentChannel(uuid, channel);
+        plugin.getServerSyncServiceManager().getDataService().updateCurrentChannel(uuid, channel);
 
         this.currentChannel = channel;
     }
@@ -133,7 +138,7 @@ public final class User {
      * @param channel channel, optional
      */
     public void leaveChannel(Channel channel) {
-        SpaceChat.getInstance().getServerSyncServiceManager().getDataService().updateCurrentChannel(uuid, null);
+        plugin.getServerSyncServiceManager().getDataService().updateCurrentChannel(uuid, null);
 
         this.currentChannel = null;
     }
@@ -145,7 +150,7 @@ public final class User {
      */
     public void subscribeToChannel(Channel channel) {
         // subscribe to channel
-        SpaceChat.getInstance().getServerSyncServiceManager().getDataService().subscribeToChannel(uuid, channel);
+        plugin.getServerSyncServiceManager().getDataService().subscribeToChannel(uuid, channel);
 
         // add to subscribed channels list (if not exists)
         if (this.subscribedChannels.stream()
@@ -162,7 +167,7 @@ public final class User {
      */
     public void unsubscribeFromChannel(Channel channel) {
         // unsubscribe from channel
-        SpaceChat.getInstance().getServerSyncServiceManager().getDataService().unsubscribeFromChannel(uuid, channel);
+        plugin.getServerSyncServiceManager().getDataService().unsubscribeFromChannel(uuid, channel);
 
         // remove from subscribed channels list (in this obj)
         this.subscribedChannels.removeIf(c -> channel.getHandle().equals(c.getHandle()));

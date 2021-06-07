@@ -9,6 +9,12 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class ChatListener implements Listener {
 
+    private final SpaceChat plugin;
+
+    public ChatListener(SpaceChat plugin) {
+        this.plugin = plugin;
+    }
+
     /**
      * Listens for chat messages
      * At the MONITOR priority (runs near LAST) to accommodate for plugins that block chat (mutes, anti-bots, etc)
@@ -23,15 +29,15 @@ public class ChatListener implements Listener {
         event.getRecipients().clear();
 
         // get player's current channel
-        Channel current = SpaceChat.getInstance().getServerSyncServiceManager().getDataService().getCurrentChannel(event.getPlayer().getUniqueId());
+        Channel current = plugin.getServerSyncServiceManager().getDataService().getCurrentChannel(event.getPlayer().getUniqueId());
 
         // if not null, send through channel manager
         if (current != null && event.getPlayer().hasPermission(current.getPermission())) {
-            SpaceChat.getInstance().getChannelManager().send(event, event.getMessage(), current);
+            plugin.getChannelManager().send(event, event.getMessage(), current);
             return;
         }
 
         // get chat format manager, send chat packet (this method also sets the format in console)
-        SpaceChat.getInstance().getChatFormatManager().send(event, event.getMessage());
+        plugin.getChatFormatManager().send(event, event.getMessage());
     }
 }

@@ -14,6 +14,12 @@ import java.util.UUID;
 
 public class RedisChatPacketDeserializer implements JsonDeserializer<RedisChatPacket> {
 
+    private final SpaceChat plugin;
+
+    public RedisChatPacketDeserializer(SpaceChat plugin) {
+        this.plugin = plugin;
+    }
+
     @Override
     public RedisChatPacket deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) {
         JsonObject object = json.getAsJsonObject();
@@ -29,7 +35,7 @@ public class RedisChatPacketDeserializer implements JsonDeserializer<RedisChatPa
         // get channel string
         String channelStringHandle = object.get("channel") == null ? null : object.get("channel").getAsString();
         // deserialize / get (null = global)
-        Channel channel = channelStringHandle == null ? null : SpaceChat.getInstance().getChannelManager().get(channelStringHandle, null);
+        Channel channel = channelStringHandle == null ? null : plugin.getChannelManager().get(channelStringHandle, null);
 
         // get server identifier
         String serverIdentifier = object.get("serverIdentifier").getAsString();

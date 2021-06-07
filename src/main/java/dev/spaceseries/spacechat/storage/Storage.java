@@ -1,18 +1,25 @@
 package dev.spaceseries.spacechat.storage;
 
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.User;
 
 import java.util.UUID;
 
-public interface Storage {
+public abstract class Storage {
+
+    protected final SpaceChat plugin;
+
+    public Storage(SpaceChat plugin) {
+        this.plugin = plugin;
+    }
 
     /**
      * Logs to the storage medium
      *
      * @param data The data to log
      */
-    void log(LogWrapper data, boolean async);
+    public abstract void log(LogWrapper data, boolean async);
 
     /**
      * Gets a user
@@ -20,7 +27,7 @@ public interface Storage {
      * @param uuid uuid
      * @return user
      */
-    User getUser(UUID uuid);
+    public abstract User getUser(UUID uuid);
 
     /**
      * Gets a user by their username
@@ -28,17 +35,17 @@ public interface Storage {
      * @param username username
      * @return user
      */
-    User getUser(String username);
+    public abstract User getUser(String username);
 
     /**
      * Updates a user
      *
      * @param user user
      */
-    void updateUser(User user);
+    public abstract void updateUser(User user);
 
     /**
      * Closes the storage medium
      */
-    void close();
+    public abstract void close();
 }

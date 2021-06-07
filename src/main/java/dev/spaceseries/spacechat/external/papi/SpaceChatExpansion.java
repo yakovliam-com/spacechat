@@ -19,6 +19,12 @@ import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_IDENTIFIER;
  */
 public class SpaceChatExpansion extends PlaceholderExpansion {
 
+    private final SpaceChat plugin;
+
+    public SpaceChatExpansion(SpaceChat plugin) {
+        this.plugin = plugin;
+    }
+
     /**
      * This method should always return true unless we
      * have a dependency we need to make sure is on the server
@@ -63,7 +69,7 @@ public class SpaceChatExpansion extends PlaceholderExpansion {
      */
     @Override
     public String getVersion() {
-        return SpaceChat.getInstance().getDescription().getVersion();
+        return plugin.getDescription().getVersion();
     }
 
     /**
@@ -81,12 +87,12 @@ public class SpaceChatExpansion extends PlaceholderExpansion {
 
         // server-identifier
         if (identifier.equalsIgnoreCase("server-identifier")) {
-            return REDIS_SERVER_IDENTIFIER.get(Config.get());
+            return REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getConfig());
         }
 
         // server-displayname
         if (identifier.equalsIgnoreCase("server-displayname")) {
-            return REDIS_SERVER_DISPLAYNAME.get(Config.get());
+            return REDIS_SERVER_DISPLAYNAME.get(plugin.getSpaceChatConfig().getConfig());
         }
 
         // We return null if an invalid placeholder
