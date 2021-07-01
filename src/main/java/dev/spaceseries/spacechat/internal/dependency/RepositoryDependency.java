@@ -31,6 +31,21 @@ public enum RepositoryDependency {
     SPACE_API("dev{}spaceseries", "spaceapi", "1{}0{}12", DependencyResolution.YAKO_DEPENDENCY, false),
 
     /**
+     * Adventure api
+     */
+    KYORI_ADVENTURE_API("net{}kyori", "adventure-api", "4{}8{}1", DependencyResolution.MAVEN_DEPENDENCY, false),
+
+    /**
+     * Adventure bukkit
+     */
+    KYORI_ADVENTURE_PLATFORM_BUKKIT("net{}kyori", "adventure-platform-bukkit", "4{}0{}0-SNAPSHOT", DependencyResolution.MAVEN_DEPENDENCY, false),
+
+    /**
+     * Adventure minimessage
+     */
+    KYORI_ADVENTURE_TEXT_MINIMESSAGE("net{}kyori", "adventure-text-minimessage", "4{}1{}0-SNAPSHOT", DependencyResolution.MAVEN_DEPENDENCY, false),
+
+    /**
      * CAFFEINE Maven Dependency
      */
     CAFFEINE("com{}github{}ben-manes{}caffeine", "caffeine", "2{}9{}1", DependencyResolution.MAVEN_DEPENDENCY, false);
