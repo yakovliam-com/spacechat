@@ -1,22 +1,33 @@
 package dev.spaceseries.spacechat.loader;
 
-import dev.spaceseries.spaceapi.config.impl.Configuration;
+import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
+import dev.spaceseries.spaceapi.util.Trio;
+import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.builder.channel.ChannelBuilder;
 import dev.spaceseries.spacechat.model.manager.MapManager;
 import dev.spaceseries.spacechat.model.Channel;
+
+import java.util.ArrayList;
 
 public class ChannelLoader implements Loader<MapManager<String, Channel>> {
 
     /**
      * Section for channels
      */
-    private final Configuration channelsSections;
+    private final String channelsSection;
+
+    /**
+     * Plugin
+     */
+    private final SpaceChat plugin;
+
 
     /**
      * Initializes
      */
-    public ChannelLoader(Configuration channelsSections) {
-        this.channelsSections = channelsSections;
+    public ChannelLoader(SpaceChat plugin, String channelsSection) {
+        this.plugin = plugin;
+        this.channelsSection = channelsSection;
     }
 
 
@@ -27,10 +38,12 @@ public class ChannelLoader implements Loader<MapManager<String, Channel>> {
      */
     @Override
     public void load(MapManager<String, Channel> stringChannelMapManager) {
+        ConfigurationAdapter adapter = plugin.getChannelsConfig().getAdapter();
+
         // loop through section keys
-        for (String handle : channelsSections.getKeys()) {
+        for (String handle : adapter.getKeys(channelsSection, new ArrayList<>())) {
             // add to manager
-            stringChannelMapManager.add(handle, new ChannelBuilder().build(channelsSections.getSection(handle)));
+            stringChannelMapManager.add(handle, new ChannelBuilder().build(new Trio<>(channelsSection + "." + handle, handle, adapter)));
         }
     }
 }

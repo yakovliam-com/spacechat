@@ -1,14 +1,13 @@
 package dev.spaceseries.spacechat.builder.live;
 
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.ComponentBuilder;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.TextComponent;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.minimessage.MiniMessage;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentBuilder;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import dev.spaceseries.spaceapi.util.Quad;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.builder.Builder;
-import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.model.formatting.Extra;
 import dev.spaceseries.spacechat.model.formatting.Format;
 import dev.spaceseries.spacechat.parser.MessageParser;
@@ -17,7 +16,7 @@ import dev.spaceseries.spacechat.replacer.SectionReplacer;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 
-import static dev.spaceseries.spacechat.config.Config.PERMISSIONS_USE_CHAT_COLORS;
+import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.PERMISSIONS_USE_CHAT_COLORS;
 
 public class RelationalLiveChatFormatBuilder extends LiveChatFormatBuilder implements Builder<Quad<Player, Player, String, Format>, TextComponent> {
 
@@ -66,7 +65,7 @@ public class RelationalLiveChatFormatBuilder extends LiveChatFormatBuilder imple
                 // get chat message (formatted)
                 String chatMessage = LegacyComponentSerializer
                         .legacySection()
-                        .serialize(player.hasPermission(PERMISSIONS_USE_CHAT_COLORS.get(plugin.getSpaceChatConfig().getConfig())) ? // if player has permission to use chat colors
+                        .serialize(player.hasPermission(PERMISSIONS_USE_CHAT_COLORS.get(plugin.getSpaceChatConfig().getAdapter())) ? // if player has permission to use chat colors
                                 LegacyComponentSerializer // yes, the player has permission to use chat colors, so color message
                                         .legacyAmpersand()
                                         .deserialize(messageString) :
@@ -99,7 +98,7 @@ public class RelationalLiveChatFormatBuilder extends LiveChatFormatBuilder imple
 
             // build text from legacy (and replace <chat_message> with the actual message)
             // and check permissions for chat colors
-            Component parsedText = player.hasPermission(PERMISSIONS_USE_CHAT_COLORS.get(plugin.getSpaceChatConfig().getConfig())) ? LegacyComponentSerializer.legacyAmpersand().deserialize(
+            Component parsedText = player.hasPermission(PERMISSIONS_USE_CHAT_COLORS.get(plugin.getSpaceChatConfig().getAdapter())) ? LegacyComponentSerializer.legacyAmpersand().deserialize(
                     text.replace("<chat_message>", messageString)) :
                     LegacyComponentSerializer.legacyAmpersand().deserialize(text).replaceText((b) -> b.match("<chat_message>")
                             .replacement(messageString));

@@ -4,7 +4,7 @@ import dev.spaceseries.spaceapi.command.Command;
 import dev.spaceseries.spaceapi.command.Permissible;
 import dev.spaceseries.spaceapi.command.PlayersOnly;
 import dev.spaceseries.spaceapi.command.SpaceCommandSender;
-import dev.spaceseries.spaceapi.text.Message;
+ import dev.spaceseries.spacechat.api.message.Message;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.model.Channel;

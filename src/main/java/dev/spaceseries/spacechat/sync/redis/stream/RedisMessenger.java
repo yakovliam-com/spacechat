@@ -4,7 +4,6 @@ import dev.spaceseries.spaceapi.lib.redis.jedis.Jedis;
 import dev.spaceseries.spaceapi.lib.redis.jedis.JedisPool;
 import dev.spaceseries.spaceapi.lib.redis.jedis.JedisPubSub;
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.sync.packet.StreamDataPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.RedisPublishDataPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.RedisStringReceiveDataPacket;
@@ -12,7 +11,7 @@ import org.bukkit.Bukkit;
 
 import java.util.logging.Level;
 
-import static dev.spaceseries.spacechat.config.Config.*;
+import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.*;
 
 public class RedisMessenger extends JedisPubSub {
 
@@ -46,7 +45,7 @@ public class RedisMessenger extends JedisPubSub {
         new Thread(() -> {
             try (Jedis jedis = pool.getResource()) {
                 // subscribe this class to chat channel
-                jedis.subscribe(this, REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getConfig()));
+                jedis.subscribe(this, REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()));
             }
         }).start();
 
@@ -54,7 +53,7 @@ public class RedisMessenger extends JedisPubSub {
         new Thread(() -> {
             try (Jedis jedis = pool.getResource()) {
                 // subscribe this class to chat channel
-                jedis.subscribe(this, REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getConfig()));
+                jedis.subscribe(this, REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()));
             }
         }).start();
     }
@@ -65,8 +64,8 @@ public class RedisMessenger extends JedisPubSub {
     public void shutdown() {
         if (this.pool != null && this.pool.getResource().getClient() != null) {
             // unsubscribe from chat channel
-            unsubscribe(REDIS_CHAT_CHANNEL.get(plugin.getSpaceChatConfig().getConfig()));
-            unsubscribe(REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getConfig()));
+            unsubscribe(REDIS_CHAT_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()));
+            unsubscribe(REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()));
 
             pool.close();
         }
@@ -78,9 +77,9 @@ public class RedisMessenger extends JedisPubSub {
         // [channel] sent [message]
 
         // if it's the correct channel
-        if (channel.equalsIgnoreCase(REDIS_CHAT_CHANNEL.get(plugin.getSpaceChatConfig().getConfig())))
+        if (channel.equalsIgnoreCase(REDIS_CHAT_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter())))
             this.syncService.receiveChat(new RedisStringReceiveDataPacket(message));
-        else if (channel.equalsIgnoreCase(REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getConfig())))
+        else if (channel.equalsIgnoreCase(REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter())))
             this.syncService.receiveBroadcast(new RedisStringReceiveDataPacket(message));
     }
 

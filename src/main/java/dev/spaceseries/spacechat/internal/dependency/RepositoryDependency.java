@@ -28,12 +28,12 @@ public enum RepositoryDependency {
     /**
      * SPACEAPI Yako Dependency
      */
-    SPACE_API("dev{}spaceseries", "spaceapi", "1{}0{}11", DependencyResolution.YAKO_DEPENDENCY, false),
+    SPACE_API("dev{}spaceseries", "spaceapi", "1{}0{}12", DependencyResolution.YAKO_DEPENDENCY, false),
 
     /**
      * CAFFEINE Maven Dependency
      */
-    CAFFEINE("com{}github{}ben-manes{}caffeine", "caffeine", "3{}0{}2", DependencyResolution.MAVEN_DEPENDENCY, false);
+    CAFFEINE("com{}github{}ben-manes{}caffeine", "caffeine", "2{}9{}1", DependencyResolution.MAVEN_DEPENDENCY, false);
 
 
     private final String group;

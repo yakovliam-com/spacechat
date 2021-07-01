@@ -2,13 +2,12 @@ package dev.spaceseries.spacechat.sync.provider.redis;
 
 import dev.spaceseries.spaceapi.lib.redis.jedis.JedisPool;
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.Config;
+import dev.spaceseries.spacechat.config.SpaceChatConfig;
+import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.sync.provider.Provider;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import static dev.spaceseries.spacechat.config.Config.REDIS_URL;
 
 public class RedisProvider implements Provider<JedisPool> {
 
@@ -23,7 +22,7 @@ public class RedisProvider implements Provider<JedisPool> {
     public RedisProvider(SpaceChat plugin) {
         try {
             // initialize pool
-            pool = new JedisPool(new URI(REDIS_URL.get(plugin.getSpaceChatConfig().getConfig())));
+            pool = new JedisPool(new URI(SpaceChatConfigKeys.REDIS_URL.get(plugin.getSpaceChatConfig().getAdapter())));
         } catch (URISyntaxException e) {
             e.printStackTrace();
             pool = null;

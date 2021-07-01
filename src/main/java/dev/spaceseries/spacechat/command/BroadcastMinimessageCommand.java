@@ -3,16 +3,16 @@ package dev.spaceseries.spacechat.command;
 import dev.spaceseries.spaceapi.command.Command;
 import dev.spaceseries.spaceapi.command.Permissible;
 import dev.spaceseries.spaceapi.command.SpaceCommandSender;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.broadcast.RedisBroadcastPacket;
 
 import java.util.Collections;
 
-import static dev.spaceseries.spacechat.config.Config.BROADCAST_USE_LANG_WRAPPER;
-import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_IDENTIFIER;
+import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.BROADCAST_USE_LANG_WRAPPER;
+import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.REDIS_SERVER_IDENTIFIER;
 
 @Permissible("space.chat.command.broadcastminimessage")
 public class BroadcastMinimessageCommand extends Command {
@@ -39,7 +39,7 @@ public class BroadcastMinimessageCommand extends Command {
         Component component = MiniMessage.get().deserialize(message);
 
         // use lang wrapper?
-        if (BROADCAST_USE_LANG_WRAPPER.get(plugin.getSpaceChatConfig().getConfig())) {
+        if (BROADCAST_USE_LANG_WRAPPER.get(plugin.getSpaceChatConfig().getAdapter())) {
             Component previousComponent = component;
             component = Messages.getInstance(plugin).broadcastWrapper.toComponent()
                     .replaceText((b) -> b.match("%message%")
@@ -47,7 +47,7 @@ public class BroadcastMinimessageCommand extends Command {
         }
 
         // send broadcast packet (redis)
-        plugin.getServerSyncServiceManager().getStreamService().publishBroadcast(new RedisBroadcastPacket(REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getConfig()), component));
+        plugin.getServerSyncServiceManager().getStreamService().publishBroadcast(new RedisBroadcastPacket(REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getAdapter()), component));
 
         // output to game
         plugin.getChatManager().sendComponentMessage(component);

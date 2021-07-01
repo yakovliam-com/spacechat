@@ -1,12 +1,12 @@
 package dev.spaceseries.spacechat;
 
 import dev.spaceseries.spaceapi.abstraction.plugin.BukkitPlugin;
+import dev.spaceseries.spaceapi.config.adapter.BukkitConfigAdapter;
+import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
+import dev.spaceseries.spacechat.api.message.Message;
 import dev.spaceseries.spacechat.chat.ChatManager;
 import dev.spaceseries.spacechat.command.*;
-import dev.spaceseries.spacechat.config.ChannelsConfig;
-import dev.spaceseries.spacechat.config.Config;
-import dev.spaceseries.spacechat.config.FormatsConfig;
-import dev.spaceseries.spacechat.config.LangConfig;
+import dev.spaceseries.spacechat.config.*;
 import dev.spaceseries.spacechat.external.papi.SpaceChatExpansion;
 import dev.spaceseries.spacechat.internal.dependency.DependencyInstantiation;
 import dev.spaceseries.spacechat.io.watcher.FileWatcher;
@@ -20,8 +20,14 @@ import dev.spaceseries.spacechat.storage.StorageManager;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 import dev.spaceseries.spacechat.user.UserManager;
 import dev.spaceseries.spacechat.util.version.VersionUtil;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public final class SpaceChat extends JavaPlugin {
 
@@ -33,17 +39,17 @@ public final class SpaceChat extends JavaPlugin {
     /**
      * The formats config
      */
-    private FormatsConfig formatsConfig;
+    private SpaceChatConfig formatsConfig;
 
     /**
      * The main plugin config
      */
-    private Config spaceChatConfig;
+    private SpaceChatConfig spaceChatConfig;
 
     /**
      * The plugin's language configuration
      */
-    private LangConfig langConfig;
+    private SpaceChatConfig langConfig;
 
     /**
      * The chat format manager
@@ -78,7 +84,7 @@ public final class SpaceChat extends JavaPlugin {
     /**
      * Channels config
      */
-    private ChannelsConfig channelsConfig;
+    private SpaceChatConfig channelsConfig;
 
     /**
      * Dependency instantiation
@@ -101,6 +107,9 @@ public final class SpaceChat extends JavaPlugin {
 
         // initialize space api
         plugin = new SpacePlugin(this);
+
+        // initialize messages
+        Message.initAudience(BukkitAudiences.create(this));
 
         // load configs
         loadConfigs();
@@ -164,10 +173,29 @@ public final class SpaceChat extends JavaPlugin {
      */
     public void loadConfigs() {
         // initialize configs
-        spaceChatConfig = new Config(this);
-        formatsConfig = new FormatsConfig(this);
-        channelsConfig = new ChannelsConfig(this);
-        langConfig = new LangConfig(this);
+        if (spaceChatConfig != null) {
+            spaceChatConfig.reload();
+        } else {
+            spaceChatConfig = new SpaceChatConfig(provideConfigAdapter("config.yml"));
+        }
+
+        if (formatsConfig != null) {
+            formatsConfig.reload();
+        } else {
+            formatsConfig = new SpaceChatConfig(provideConfigAdapter("formats.yml"));
+        }
+
+        if (channelsConfig != null) {
+            channelsConfig.reload();
+        } else {
+            channelsConfig = new SpaceChatConfig(provideConfigAdapter("channels.yml"));
+        }
+
+        if (langConfig != null) {
+            langConfig.reload();
+        } else {
+            langConfig = new SpaceChatConfig(provideConfigAdapter("lang.yml"));
+        }
     }
 
     /**
@@ -216,6 +244,43 @@ public final class SpaceChat extends JavaPlugin {
     }
 
     /**
+     * Resolves a configuration
+     *
+     * @param fileName file name
+     * @return configuration path
+     */
+    public Path resolveConfig(String fileName) {
+        Path configFile = getDataFolder().toPath().resolve(fileName);
+
+        // if the config doesn't exist, create it based on the template in the resources dir
+        if (!Files.exists(configFile)) {
+            try {
+                Files.createDirectories(configFile.getParent());
+            } catch (IOException e) {
+                // ignore
+            }
+
+            try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileName)) {
+                Files.copy(is, configFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return configFile;
+    }
+
+    /**
+     * Provides a configuration adapter
+     *
+     * @param fileName file name
+     * @return config adapter
+     */
+    private BukkitConfigAdapter provideConfigAdapter(String fileName) {
+        return new BukkitConfigAdapter(plugin.getPlugin(), resolveConfig(fileName).toFile());
+    }
+
+    /**
      * Loads messages
      */
     public void loadMessages() {
@@ -232,39 +297,39 @@ public final class SpaceChat extends JavaPlugin {
     }
 
     /**
-     * Returns formats config
+     * Returns the formats config
      *
      * @return formats config
      */
-    public FormatsConfig getFormatsConfig() {
+    public SpaceChatConfig getFormatsConfig() {
         return formatsConfig;
     }
 
     /**
-     * Returns channels config
+     * Returns the language config
+     *
+     * @return language config
+     */
+    public SpaceChatConfig getLangConfig() {
+        return langConfig;
+    }
+
+    /**
+     * Returns the channels config
      *
      * @return channels config
      */
-    public ChannelsConfig getChannelsConfig() {
+    public SpaceChatConfig getChannelsConfig() {
         return channelsConfig;
     }
 
     /**
-     * Returns main configuration
+     * Returns the main space chat config
      *
      * @return config
      */
-    public Config getSpaceChatConfig() {
+    public SpaceChatConfig getSpaceChatConfig() {
         return spaceChatConfig;
-    }
-
-    /**
-     * Get lang configuration
-     *
-     * @return lang config
-     */
-    public LangConfig getLangConfig() {
-        return langConfig;
     }
 
     /**

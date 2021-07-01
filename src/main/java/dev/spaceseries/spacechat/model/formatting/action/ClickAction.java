@@ -3,7 +3,7 @@ package dev.spaceseries.spacechat.model.formatting.action;
 import dev.spaceseries.spacechat.replacer.AmpersandReplacer;
 import dev.spaceseries.spacechat.replacer.SectionReplacer;
 import me.clip.placeholderapi.PlaceholderAPI;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.entity.Player;
 
 public class ClickAction {

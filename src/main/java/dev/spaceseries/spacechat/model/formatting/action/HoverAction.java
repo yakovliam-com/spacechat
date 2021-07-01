@@ -4,9 +4,9 @@ import dev.spaceseries.spaceapi.lib.google.common.base.Joiner;
 import dev.spaceseries.spacechat.replacer.AmpersandReplacer;
 import dev.spaceseries.spacechat.replacer.SectionReplacer;
 import me.clip.placeholderapi.PlaceholderAPI;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.event.HoverEvent;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
 import java.util.List;

@@ -1,12 +1,9 @@
 package dev.spaceseries.spacechat.external.papi;
 
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.Config;
+import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import org.bukkit.OfflinePlayer;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-
-import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_DISPLAYNAME;
-import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_IDENTIFIER;
 
 /**
  * This class will automatically register as a placeholder expansion
@@ -87,12 +84,12 @@ public class SpaceChatExpansion extends PlaceholderExpansion {
 
         // server-identifier
         if (identifier.equalsIgnoreCase("server-identifier")) {
-            return REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getConfig());
+            return SpaceChatConfigKeys.REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getAdapter());
         }
 
         // server-displayname
         if (identifier.equalsIgnoreCase("server-displayname")) {
-            return REDIS_SERVER_DISPLAYNAME.get(plugin.getSpaceChatConfig().getConfig());
+            return SpaceChatConfigKeys.REDIS_SERVER_DISPLAYNAME.get(plugin.getSpaceChatConfig().getAdapter());
         }
 
         // We return null if an invalid placeholder

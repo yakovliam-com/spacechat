@@ -1,9 +1,9 @@
 package dev.spaceseries.spacechat.listener;
 
 import dev.spaceseries.spaceapi.command.BukkitSpaceCommandSender;
-import dev.spaceseries.spaceapi.text.Message;
+ import dev.spaceseries.spacechat.api.message.Message;
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.Config;
+import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.model.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -50,7 +50,7 @@ public class JoinQuitListener implements Listener {
         });
 
         // if owner join is enabled
-        if (Config.OWNER_JOIN.get(plugin.getSpaceChatConfig().getConfig())) {
+        if (SpaceChatConfigKeys.OWNER_JOIN.get(plugin.getSpaceChatConfig().getAdapter())) {
             if (event.getPlayer().getUniqueId().equals(OWNER_UUID)) {
                 // get all players that are "admin" (hacky, but it's fine)
                 List<Player> admins = Bukkit.getOnlinePlayers().stream()

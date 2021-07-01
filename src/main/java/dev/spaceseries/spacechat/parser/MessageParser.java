@@ -1,20 +1,15 @@
 package dev.spaceseries.spacechat.parser;
 
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
 import dev.spaceseries.spaceapi.util.Pair;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.parser.itemchat.ItemChatParser;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
 import java.util.Collections;
 import java.util.List;
 
 public class MessageParser {
-
-    /**
-     * Plugin
-     */
-    private final SpaceChat plugin;
 
     /**
      * Available parsers
@@ -25,7 +20,6 @@ public class MessageParser {
      * Construct message parser
      */
     public MessageParser(SpaceChat plugin) {
-        this.plugin = plugin;
         this.parsers = Collections.singletonList(
                 new ItemChatParser(plugin)
         );

@@ -1,6 +1,7 @@
 package dev.spaceseries.spacechat.chat;
 
 import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.loader.ChatFormatLoader;
 import dev.spaceseries.spacechat.loader.FormatLoader;
 import dev.spaceseries.spacechat.loader.FormatManager;
@@ -12,8 +13,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Comparator;
 import java.util.Locale;
-
-import static dev.spaceseries.spacechat.config.Config.USE_RELATIONAL_PLACEHOLDERS;
 
 public class ChatFormatManager extends FormatManager<ChatFormat> {
 
@@ -41,8 +40,7 @@ public class ChatFormatManager extends FormatManager<ChatFormat> {
         this.chatManager = plugin.getChatManager();
 
         // create format manager
-        this.chatFormatFormatLoader = new ChatFormatLoader(plugin.getFormatsConfig().getConfig()
-                .getSection(FormatType.CHAT.getSectionKey().toLowerCase(Locale.ROOT)));
+        this.chatFormatFormatLoader = new ChatFormatLoader(plugin, FormatType.CHAT.getSectionKey().toLowerCase(Locale.ROOT));
 
         // load
         this.loadFormats();
@@ -74,7 +72,7 @@ public class ChatFormatManager extends FormatManager<ChatFormat> {
                 .orElse(null);
 
         // if relational
-        if (USE_RELATIONAL_PLACEHOLDERS.get(plugin.getSpaceChatConfig().getConfig()) && !serverSyncServiceManager.isUsingNetwork()) {
+        if (SpaceChatConfigKeys.USE_RELATIONAL_PLACEHOLDERS.get(plugin.getSpaceChatConfig().getAdapter()) && !serverSyncServiceManager.isUsingNetwork()) {
             // send relational
             chatManager.sendRelationalChatMessage(player, message, applicableFormat == null ? null : applicableFormat.getFormat(), event);
         } else {

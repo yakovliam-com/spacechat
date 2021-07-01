@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.storage;
 
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.Config;
+import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.storage.impl.empty.EmptyStorage;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.MysqlStorage;
 import dev.spaceseries.spacechat.storage.impl.sql.file.sqlite.SqliteStorage;
@@ -25,7 +25,7 @@ public class StorageManager {
         this.plugin = plugin;
 
         // get active storage type
-        String using = Config.STORAGE_USE.get(plugin.getSpaceChatConfig().getConfig());
+        String using = SpaceChatConfigKeys.STORAGE_USE.get(plugin.getSpaceChatConfig().getAdapter());
 
         // if type, etc....
         if (using.equalsIgnoreCase("sqlite")) {

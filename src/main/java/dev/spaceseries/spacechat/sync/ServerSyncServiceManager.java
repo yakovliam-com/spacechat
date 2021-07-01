@@ -1,15 +1,14 @@
 package dev.spaceseries.spacechat.sync;
 
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.Config;
+import dev.spaceseries.spacechat.config.SpaceChatConfig;
+import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.sync.memory.data.MemoryServerDataSyncService;
 import dev.spaceseries.spacechat.sync.memory.stream.MemoryServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.provider.redis.RedisProvider;
 import dev.spaceseries.spacechat.sync.redis.data.RedisServerDataSyncService;
 import dev.spaceseries.spacechat.sync.redis.stream.RedisServerStreamSyncService;
 import org.jetbrains.annotations.Nullable;
-
-import static dev.spaceseries.spacechat.config.Config.REDIS_ENABLED;
 
 public class ServerSyncServiceManager {
 
@@ -42,7 +41,7 @@ public class ServerSyncServiceManager {
      */
     public ServerSyncServiceManager(SpaceChat plugin) {
         // if redis is enabled, use that
-        if (REDIS_ENABLED.get(plugin.getSpaceChatConfig().getConfig())) {
+        if (SpaceChatConfigKeys.REDIS_ENABLED.get(plugin.getSpaceChatConfig().getAdapter())) {
             // initialize redis services
             this.redisProvider = new RedisProvider(plugin);
 

@@ -26,12 +26,8 @@ public class ChannelManager extends MapManager<String, Channel> {
         this.plugin = plugin;
 
         // create format manager
-        this.channelLoader = new ChannelLoader(plugin
-                .getChannelsConfig()
-                .getConfig()
-                .getSection(
-                        ChannelType.NORMAL.getSectionKey().toLowerCase(Locale.ROOT)
-                )
+        this.channelLoader = new ChannelLoader(plugin,
+                ChannelType.NORMAL.getSectionKey().toLowerCase(Locale.ROOT)
         );
 
         // load

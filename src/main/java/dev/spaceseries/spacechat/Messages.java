@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat;
 
-import dev.spaceseries.spaceapi.config.impl.Configuration;
-import dev.spaceseries.spaceapi.text.Message;
+import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
+import dev.spaceseries.spacechat.api.message.Message;
 
 public class Messages {
 
@@ -39,17 +39,17 @@ public class Messages {
     /* General */
 
     // help
-    public Message generalHelp = Message.fromConfigurationSection(getLangConfiguration().getSection("general.help"), "general.help")
+    public Message generalHelp = Message.fromConfigurationSection(getLangConfiguration(), "general.help")
             .build();
 
     /* Reload */
 
     // success
-    public Message reloadSuccess = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.success"), "reload.success")
+    public Message reloadSuccess = Message.fromConfigurationSection(getLangConfiguration(), "reload.success")
             .build();
 
     // failure
-    public Message reloadFailure = Message.fromConfigurationSection(getLangConfiguration().getSection("reload.failure"), "reload.failure")
+    public Message reloadFailure = Message.fromConfigurationSection(getLangConfiguration(), "reload.failure")
             .build();
 
     /**
@@ -57,11 +57,11 @@ public class Messages {
      */
 
     // args
-    public Message broadcastArgs = Message.fromConfigurationSection(getLangConfiguration().getSection("broadcast.args"), "broadcast.args")
+    public Message broadcastArgs = Message.fromConfigurationSection(getLangConfiguration(), "broadcast.args")
             .build();
 
     // wrapper
-    public Message broadcastWrapper = Message.fromConfigurationSection(getLangConfiguration().getSection("broadcast.wrapper"), "broadcast.wrapper")
+    public Message broadcastWrapper = Message.fromConfigurationSection(getLangConfiguration(), "broadcast.wrapper")
             .build();
 
     /**
@@ -69,23 +69,23 @@ public class Messages {
      */
 
     // join
-    public Message channelJoin = Message.fromConfigurationSection(getLangConfiguration().getSection("channel.join"), "channel.join")
+    public Message channelJoin = Message.fromConfigurationSection(getLangConfiguration(), "channel.join")
             .build();
 
     // leave
-    public Message channelLeave = Message.fromConfigurationSection(getLangConfiguration().getSection("channel.leave"), "channel.leave")
+    public Message channelLeave = Message.fromConfigurationSection(getLangConfiguration(), "channel.leave")
             .build();
 
     // listen
-    public Message channelListen = Message.fromConfigurationSection(getLangConfiguration().getSection("channel.listen"), "channel.listen")
+    public Message channelListen = Message.fromConfigurationSection(getLangConfiguration(), "channel.listen")
             .build();
 
     // mute
-    public Message channelMute = Message.fromConfigurationSection(getLangConfiguration().getSection("channel.mute"), "channel.mute")
+    public Message channelMute = Message.fromConfigurationSection(getLangConfiguration(), "channel.mute")
             .build();
 
     // invalid
-    public Message channelInvalid = Message.fromConfigurationSection(getLangConfiguration().getSection("channel.invalid"), "channel.invalid")
+    public Message channelInvalid = Message.fromConfigurationSection(getLangConfiguration(), "channel.invalid")
             .build();
 
     /**
@@ -93,7 +93,7 @@ public class Messages {
      */
 
     // player not found
-    public Message playerNotFound = Message.fromConfigurationSection(getLangConfiguration().getSection("ignore.player-not-found"), "ignore.player-not-found")
+    public Message playerNotFound = Message.fromConfigurationSection(getLangConfiguration(), "ignore.player-not-found")
             .build();
 
     /**
@@ -101,8 +101,8 @@ public class Messages {
      *
      * @return The lang configuration
      */
-    private Configuration getLangConfiguration() {
-        return plugin.getLangConfig().getConfig();
+    private ConfigurationAdapter getLangConfiguration() {
+        return plugin.getLangConfig().getAdapter();
     }
 }
 

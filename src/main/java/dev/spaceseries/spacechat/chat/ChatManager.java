@@ -1,16 +1,15 @@
 package dev.spaceseries.spacechat.chat;
 
-import dev.spaceseries.spaceapi.config.impl.Configuration;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.format.NamedTextColor;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import dev.spaceseries.spaceapi.text.Message;
+import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
 import dev.spaceseries.spaceapi.util.ColorUtil;
 import dev.spaceseries.spaceapi.util.Quad;
 import dev.spaceseries.spaceapi.util.Trio;
 import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.api.message.Message;
 import dev.spaceseries.spacechat.builder.live.NormalLiveChatFormatBuilder;
 import dev.spaceseries.spacechat.builder.live.RelationalLiveChatFormatBuilder;
+import dev.spaceseries.spacechat.config.SpaceChatConfig;
+import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
@@ -20,6 +19,9 @@ import dev.spaceseries.spacechat.model.manager.Manager;
 import dev.spaceseries.spacechat.sync.ServerDataSyncService;
 import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacket;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -28,15 +30,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_DISPLAYNAME;
-import static dev.spaceseries.spacechat.config.Config.REDIS_SERVER_IDENTIFIER;
-
 public class ChatManager implements Manager {
 
     private final SpaceChat plugin;
     private final ServerStreamSyncService serverStreamSyncService;
     private final ServerDataSyncService serverDataSyncService;
-    private final Configuration config;
+    private final ConfigurationAdapter config;
 
     /**
      * Construct chat event manager
@@ -48,7 +47,7 @@ public class ChatManager implements Manager {
 
         this.serverStreamSyncService = plugin.getServerSyncServiceManager().getStreamService();
         this.serverDataSyncService = plugin.getServerSyncServiceManager().getDataService();
-        this.config = plugin.getSpaceChatConfig().getConfig();
+        this.config = plugin.getSpaceChatConfig().getAdapter();
     }
 
     /**
@@ -142,7 +141,7 @@ public class ChatManager implements Manager {
         // get player's current channel, and send through that (if null, that means 'global')
         Channel applicableChannel = serverDataSyncService.getCurrentChannel(from.getUniqueId());
 
-        dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component components;
+        Component components;
 
         // if null, return
         if (format == null) {
@@ -174,7 +173,7 @@ public class ChatManager implements Manager {
                 );
 
         // send via redis (it won't do anything if redis isn't enabled, so we can be sure that we aren't using dead methods that will throw an exception)
-        serverStreamSyncService.publishChat(new RedisChatPacket(from.getUniqueId(), from.getName(), applicableChannel, REDIS_SERVER_IDENTIFIER.get(config), REDIS_SERVER_DISPLAYNAME.get(config), components));
+        serverStreamSyncService.publishChat(new RedisChatPacket(from.getUniqueId(), from.getName(), applicableChannel, SpaceChatConfigKeys.REDIS_SERVER_IDENTIFIER.get(config), SpaceChatConfigKeys.REDIS_SERVER_DISPLAYNAME.get(config), components));
 
         // log to console
         if (event != null) { // if there's an event, log w/ the event
@@ -211,7 +210,7 @@ public class ChatManager implements Manager {
      */
     public void sendRelationalChatMessage(Player from, String message, Format format, AsyncPlayerChatEvent event) {
         // component to use with storage and logging
-        dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component sampledComponent;
+        Component sampledComponent;
 
         if (format == null) {
             // build components default message
@@ -228,7 +227,7 @@ public class ChatManager implements Manager {
 
         // do relational parsing
         Bukkit.getOnlinePlayers().forEach(to -> {
-            dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component component;
+            Component component;
 
             if (format == null) {
                 // build components default message

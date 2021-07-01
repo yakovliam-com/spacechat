@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.sync.redis.stream.packet.broadcast;
 
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
+import net.kyori.adventure.text.Component;
 import dev.spaceseries.spacechat.sync.packet.SendStreamDataPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.PacketType;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.RedisPacket;

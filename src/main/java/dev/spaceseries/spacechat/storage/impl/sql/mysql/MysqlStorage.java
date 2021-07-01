@@ -1,7 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.sql.mysql;
 
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
@@ -18,7 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-import static dev.spaceseries.spacechat.config.Config.STORAGE_MYSQL_TABLES_CHAT_LOGS;
+import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.*;
 
 public class MysqlStorage extends Storage {
 
@@ -30,7 +29,7 @@ public class MysqlStorage extends Storage {
             "`id` INT NOT NULL AUTO_INCREMENT,\n" +
             "PRIMARY KEY (`id`)\n" +
             ");";
-    private final String LOG_CHAT = "INSERT INTO " + STORAGE_MYSQL_TABLES_CHAT_LOGS.get(plugin.getSpaceChatConfig().getConfig()) + " (uuid, name, message, date) VALUES(?, ?, ?, ?);";
+    private final String LOG_CHAT = "INSERT INTO " + STORAGE_MYSQL_TABLES_CHAT_LOGS.get(plugin.getSpaceChatConfig().getAdapter()) + " (uuid, name, message, date) VALUES(?, ?, ?, ?);";
     public static final String USERS_CREATION_STATEMENT = "CREATE TABLE IF NOT EXISTS `%s` (\n" +
             "`uuid` TEXT NOT NULL,\n" +
             "`username` TEXT NOT NULL,\n" +
@@ -38,19 +37,19 @@ public class MysqlStorage extends Storage {
             "`id` INT NOT NULL AUTO_INCREMENT,\n" +
             "PRIMARY KEY (`id`)\n" +
             ");";
-    private final String CREATE_USER = "INSERT INTO " + Config.STORAGE_MYSQL_TABLES_USERS.get(plugin.getSpaceChatConfig().getConfig()) + " (uuid, username, date) VALUES(?, ?, ?);";
-    private final String SELECT_USER = "SELECT * FROM " + Config.STORAGE_MYSQL_TABLES_USERS.get(plugin.getSpaceChatConfig().getConfig()) + " WHERE uuid=?;";
-    private final String SELECT_USER_USERNAME = "SELECT * FROM " + Config.STORAGE_MYSQL_TABLES_USERS.get(plugin.getSpaceChatConfig().getConfig()) + " WHERE username=?;";
-    private final String UPDATE_USER = "UPDATE " + Config.STORAGE_MYSQL_TABLES_USERS.get(plugin.getSpaceChatConfig().getConfig()) + " SET username=? WHERE uuid=?;";
+    private final String CREATE_USER = "INSERT INTO " + STORAGE_MYSQL_TABLES_USERS.get(plugin.getSpaceChatConfig().getAdapter()) + " (uuid, username, date) VALUES(?, ?, ?);";
+    private final String SELECT_USER = "SELECT * FROM " + STORAGE_MYSQL_TABLES_USERS.get(plugin.getSpaceChatConfig().getAdapter()) + " WHERE uuid=?;";
+    private final String SELECT_USER_USERNAME = "SELECT * FROM " + STORAGE_MYSQL_TABLES_USERS.get(plugin.getSpaceChatConfig().getAdapter()) + " WHERE username=?;";
+    private final String UPDATE_USER = "UPDATE " + STORAGE_MYSQL_TABLES_USERS.get(plugin.getSpaceChatConfig().getAdapter()) + " SET username=? WHERE uuid=?;";
     public static final String USERS_SUBSCRIBED_CHANNELS_CREATION_STATEMENT = "CREATE TABLE IF NOT EXISTS `%s` (\n" +
             "`uuid` TEXT NOT NULL,\n" +
             "`channel` TEXT NOT NULL,\n" +
             "`id` INT NOT NULL AUTO_INCREMENT,\n" +
             "PRIMARY KEY (`id`)\n" +
             ");";
-    private final String SELECT_SUBSCRIBED_CHANNELS = "SELECT channel FROM " + Config.STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getConfig()) + " WHERE uuid=?;";
-    private final String DELETE_SUBSCRIBED_CHANNEL = "DELETE FROM " + Config.STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getConfig()) + " WHERE uuid=? AND channel=?;";
-    private final String INSERT_SUBSCRIBED_CHANNEL = "INSERT INTO " + Config.STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getConfig()) + " (uuid, channel) VALUES(?, ?);";
+    private final String SELECT_SUBSCRIBED_CHANNELS = "SELECT channel FROM " + STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getAdapter()) + " WHERE uuid=?;";
+    private final String DELETE_SUBSCRIBED_CHANNEL = "DELETE FROM " + STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getAdapter()) + " WHERE uuid=? AND channel=?;";
+    private final String INSERT_SUBSCRIBED_CHANNEL = "INSERT INTO " + STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getAdapter()) + " (uuid, channel) VALUES(?, ?);";
 
     /**
      * The connection manager

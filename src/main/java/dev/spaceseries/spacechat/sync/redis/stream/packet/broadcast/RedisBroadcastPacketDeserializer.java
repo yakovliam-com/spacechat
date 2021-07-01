@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.sync.redis.stream.packet.broadcast;
 
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.Component;
-import dev.spaceseries.spaceapi.lib.adventure.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import dev.spaceseries.spaceapi.lib.google.gson.JsonDeserializationContext;
 import dev.spaceseries.spaceapi.lib.google.gson.JsonDeserializer;
 import dev.spaceseries.spaceapi.lib.google.gson.JsonElement;

@@ -1,9 +1,7 @@
 package dev.spaceseries.spacechat.storage.impl.sql.mysql.factory;
 
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.Config;
 import dev.spaceseries.spacechat.storage.impl.ConnectionFactory;
-import dev.spaceseries.spacechat.storage.impl.sql.file.sqlite.SqliteStorage;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.MysqlStorage;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.SqlHelper;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.factory.o.MysqlConnectionInfo;
@@ -12,7 +10,7 @@ import dev.spaceseries.spacechat.storage.impl.sql.mysql.factory.o.MysqlCredentia
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static dev.spaceseries.spacechat.config.Config.*;
+import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.*;
 
 public final class MysqlConnectionManager extends ConnectionFactory {
 
@@ -29,24 +27,24 @@ public final class MysqlConnectionManager extends ConnectionFactory {
 
         // create connection info
         connectionInfo = new MysqlConnectionInfo(
-                STORAGE_MYSQL_ADDRESS.get(plugin.getSpaceChatConfig().getConfig()),
-                STORAGE_MYSQL_PORT.get(plugin.getSpaceChatConfig().getConfig()),
-                STORAGE_MYSQL_DATABASE.get(plugin.getSpaceChatConfig().getConfig()),
+                STORAGE_MYSQL_ADDRESS.get(plugin.getSpaceChatConfig().getAdapter()),
+                STORAGE_MYSQL_PORT.get(plugin.getSpaceChatConfig().getAdapter()),
+                STORAGE_MYSQL_DATABASE.get(plugin.getSpaceChatConfig().getAdapter()),
                 new MysqlCredentials(
-                        STORAGE_MYSQL_USERNAME.get(plugin.getSpaceChatConfig().getConfig()),
-                        STORAGE_MYSQL_PASSWORD.get(plugin.getSpaceChatConfig().getConfig())
+                        STORAGE_MYSQL_USERNAME.get(plugin.getSpaceChatConfig().getAdapter()),
+                        STORAGE_MYSQL_PASSWORD.get(plugin.getSpaceChatConfig().getAdapter())
                 ),
-                STORAGE_MYSQL_USE_SSL.get(plugin.getSpaceChatConfig().getConfig()),
-                STORAGE_MYSQL_VERIFY_SERVER_CERTIFICATE.get(plugin.getSpaceChatConfig().getConfig())
+                STORAGE_MYSQL_USE_SSL.get(plugin.getSpaceChatConfig().getAdapter()),
+                STORAGE_MYSQL_VERIFY_SERVER_CERTIFICATE.get(plugin.getSpaceChatConfig().getAdapter())
         );
     }
 
     @Override
     public void init() {
         // If not exists, create chat logging table
-        SqlHelper.execute(getConnection(), String.format(MysqlStorage.LOG_CHAT_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_CHAT_LOGS.get(plugin.getSpaceChatConfig().getConfig())));
-        SqlHelper.execute(getConnection(), String.format(MysqlStorage.USERS_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_USERS.get(plugin.getSpaceChatConfig().getConfig())));
-        SqlHelper.execute(getConnection(), String.format(MysqlStorage.USERS_SUBSCRIBED_CHANNELS_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getConfig())));
+        SqlHelper.execute(getConnection(), String.format(MysqlStorage.LOG_CHAT_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_CHAT_LOGS.get(plugin.getSpaceChatConfig().getAdapter())));
+        SqlHelper.execute(getConnection(), String.format(MysqlStorage.USERS_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_USERS.get(plugin.getSpaceChatConfig().getAdapter())));
+        SqlHelper.execute(getConnection(), String.format(MysqlStorage.USERS_SUBSCRIBED_CHANNELS_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getAdapter())));
     }
 
     @Override
