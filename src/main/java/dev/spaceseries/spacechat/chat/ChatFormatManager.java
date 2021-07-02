@@ -27,17 +27,11 @@ public class ChatFormatManager extends FormatManager<ChatFormat> {
     private final ServerSyncServiceManager serverSyncServiceManager;
 
     /**
-     * Chat manager
-     */
-    private final ChatManager chatManager;
-
-    /**
      * Initializes
      */
     public ChatFormatManager(SpaceChat plugin) {
         super(plugin);
         this.serverSyncServiceManager = plugin.getServerSyncServiceManager();
-        this.chatManager = plugin.getChatManager();
 
         // create format manager
         this.chatFormatFormatLoader = new ChatFormatLoader(plugin, FormatType.CHAT.getSectionKey().toLowerCase(Locale.ROOT));
@@ -60,6 +54,8 @@ public class ChatFormatManager extends FormatManager<ChatFormat> {
      * @param message The message
      */
     public void send(AsyncPlayerChatEvent event, String message) {
+        ChatManager chatManager = plugin.getChatManager();
+
         // get player
         Player player = event.getPlayer();
 
@@ -69,7 +65,9 @@ public class ChatFormatManager extends FormatManager<ChatFormat> {
                 .stream()
                 .filter(format -> player.hasPermission(format.getPermission()) || format.getHandle().equals("default")) // player has permission OR the format is default
                 .max(Comparator.comparing(ChatFormat::getPriority))
-                .orElse(null);
+                .orElse(getAll().values().stream()
+                        .findFirst()
+                        .orElse(null));
 
         // if relational
         if (SpaceChatConfigKeys.USE_RELATIONAL_PLACEHOLDERS.get(plugin.getSpaceChatConfig().getAdapter()) && !serverSyncServiceManager.isUsingNetwork()) {

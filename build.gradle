@@ -3,6 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id "com.github.johnrengelman.shadow" version "5.2.0"
     id "java"
+    id 'io.github.slimjar' version '1.2.1'
 }
 
 // naming
@@ -31,30 +32,21 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
 
     // space api
-    compileOnly 'dev.spaceseries:spaceapi:1.0.12'
+    slim 'dev.spaceseries:spaceapi:1.0.12'
 
     // placeholderAPI
     compileOnly 'me.clip:placeholderapi:2.10.9'
-
-    // https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc
-    compileOnly group: 'org.xerial', name: 'sqlite-jdbc', version: '3.34.0'
-
-    // https://mvnrepository.com/artifact/org.ow2.asm/asm
-    compileOnly group: 'org.ow2.asm', name: 'asm', version: '9.1'
-
-    // https://mvnrepository.com/artifact/org.ow2.asm/asm-commons
-    compileOnly group: 'org.ow2.asm', name: 'asm-commons', version: '9.1'
 
     // bstats
     implementation "org.bstats:bstats-bukkit:2.2.1"
 
     // caffeine
-    compileOnly 'com.github.ben-manes.caffeine:caffeine:2.9.1'
+    slim 'com.github.ben-manes.caffeine:caffeine:2.9.1'
 
     // adventure
-    compileOnly "net.kyori:adventure-api:4.8.1"
-    compileOnly "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
-    compileOnly "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
+    slim "net.kyori:adventure-api:4.8.1"
+    slim "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
+    slim "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
 }
 
 artifacts {
@@ -70,6 +62,12 @@ jar {
 shadowJar {
     archiveName("SpaceChat-${project.version}.jar")
 
+    relocate 'org.bstats', "${packageGroup}.lib.bstats"
+    relocate 'dev.spaceseries.spaceapi', "${packageGroup}.lib.spaceapi"
+    relocate 'net.kyori', "${packageGroup}.lib.kyori"
+}
+
+slimJar {
     relocate 'org.bstats', "${packageGroup}.lib.bstats"
     relocate 'dev.spaceseries.spaceapi', "${packageGroup}.lib.spaceapi"
     relocate 'net.kyori', "${packageGroup}.lib.kyori"

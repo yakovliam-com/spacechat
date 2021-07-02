@@ -2,32 +2,35 @@ package dev.spaceseries.spacechat;
 
 import dev.spaceseries.spaceapi.abstraction.plugin.BukkitPlugin;
 import dev.spaceseries.spaceapi.config.adapter.BukkitConfigAdapter;
-import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
 import dev.spaceseries.spacechat.api.message.Message;
+import dev.spaceseries.spacechat.channel.ChannelManager;
+import dev.spaceseries.spacechat.chat.ChatFormatManager;
 import dev.spaceseries.spacechat.chat.ChatManager;
-import dev.spaceseries.spacechat.command.*;
-import dev.spaceseries.spacechat.config.*;
+import dev.spaceseries.spacechat.command.BroadcastCommand;
+import dev.spaceseries.spacechat.command.BroadcastMinimessageCommand;
+import dev.spaceseries.spacechat.command.ChannelCommand;
+import dev.spaceseries.spacechat.command.SpaceChatCommand;
+import dev.spaceseries.spacechat.config.SpaceChatConfig;
 import dev.spaceseries.spacechat.external.papi.SpaceChatExpansion;
-import dev.spaceseries.spacechat.internal.dependency.DependencyInstantiation;
+import dev.spaceseries.spacechat.internal.space.SpacePlugin;
 import dev.spaceseries.spacechat.io.watcher.FileWatcher;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.listener.JoinQuitListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
-import dev.spaceseries.spacechat.channel.ChannelManager;
-import dev.spaceseries.spacechat.chat.ChatFormatManager;
-import dev.spaceseries.spacechat.internal.space.SpacePlugin;
 import dev.spaceseries.spacechat.storage.StorageManager;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 import dev.spaceseries.spacechat.user.UserManager;
 import dev.spaceseries.spacechat.util.version.VersionUtil;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import io.github.slimjar.app.builder.ApplicationBuilder;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 
 public final class SpaceChat extends JavaPlugin {
 
@@ -87,11 +90,6 @@ public final class SpaceChat extends JavaPlugin {
     private SpaceChatConfig channelsConfig;
 
     /**
-     * Dependency instantiation
-     */
-    private DependencyInstantiation dependencyInstantiation;
-
-    /**
      * Chat manager
      */
     private ChatManager chatManager;
@@ -101,15 +99,16 @@ public final class SpaceChat extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        // load dependencies
-        this.dependencyInstantiation = new DependencyInstantiation(this);
-        dependencyInstantiation.startTasks();
+        try {
+            ApplicationBuilder.appending("SpaceChat").build();
+        } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
 
         // initialize space api
         plugin = new SpacePlugin(this);
 
-        // initialize messages
-        Message.initAudience(BukkitAudiences.create(this));
+        Message.initAudience(this);
 
         // load configs
         loadConfigs();
@@ -123,6 +122,10 @@ public final class SpaceChat extends JavaPlugin {
         loadStorage();
         // load users
         loadUsers();
+
+        // initialize messages
+        Messages.renew();
+        Messages.getInstance(this);
 
         this.chatManager = new ChatManager(this);
 
@@ -375,15 +378,6 @@ public final class SpaceChat extends JavaPlugin {
      */
     public ServerSyncServiceManager getServerSyncServiceManager() {
         return serverSyncServiceManager;
-    }
-
-    /**
-     * Returns dependency instantiation
-     *
-     * @return dependency instantiation
-     */
-    public DependencyInstantiation getDependencyInstantiation() {
-        return dependencyInstantiation;
     }
 
     /**

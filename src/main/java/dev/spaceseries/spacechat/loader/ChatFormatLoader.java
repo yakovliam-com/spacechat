@@ -27,6 +27,7 @@ public class ChatFormatLoader extends FormatLoader<ChatFormat> {
 
         // loop through section keys
         for (String handle : adapter.getKeys(formatsSection, new ArrayList<>())) {
+
             // add to manager
             formatManager.add(handle, new ChatFormatBuilder().build(new Trio<>(formatsSection + "." + handle, handle, adapter)));
         }

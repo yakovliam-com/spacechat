@@ -37,7 +37,7 @@ public final class User {
     /**
      * Plugin context
      */
-    private SpaceChat plugin;
+    private final SpaceChat plugin;
 
     /**
      * @param uuid     uuid
@@ -45,6 +45,7 @@ public final class User {
      * @param date     date
      */
     public User(SpaceChat plugin, UUID uuid, String username, Date date, List<Channel> subscribedChannels) {
+        this.plugin = plugin;
         this.username = username;
         this.uuid = uuid;
         this.date = date;

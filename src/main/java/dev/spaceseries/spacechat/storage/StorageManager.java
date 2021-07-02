@@ -4,7 +4,6 @@ import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.storage.impl.empty.EmptyStorage;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.MysqlStorage;
-import dev.spaceseries.spacechat.storage.impl.sql.file.sqlite.SqliteStorage;
 
 public class StorageManager {
 
@@ -28,9 +27,7 @@ public class StorageManager {
         String using = SpaceChatConfigKeys.STORAGE_USE.get(plugin.getSpaceChatConfig().getAdapter());
 
         // if type, etc....
-        if (using.equalsIgnoreCase("sqlite")) {
-            current = new SqliteStorage(plugin);
-        } else if (using.equalsIgnoreCase("mysql")) {
+        if (using.equalsIgnoreCase("mysql")) {
             current = new MysqlStorage(plugin);
         } else {
             plugin.getLogger().severe("Unknown storage medium '" + using + "'. The plugin is unable to function correctly.");

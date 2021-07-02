@@ -10,8 +10,11 @@ public class Messages {
      */
     private static Messages instance;
 
-    public Messages(SpaceChat plugin) {
-        this.plugin = plugin;
+    /**
+     * Renews the messages
+     */
+    public static void renew() {
+        instance = null;
     }
 
     /**
@@ -21,17 +24,10 @@ public class Messages {
      * @return messages
      */
     public static Messages getInstance(SpaceChat context) {
-        if (instance == null)
+        if (instance == null) {
             instance = new Messages(context);
+        }
         return instance;
-    }
-
-
-    /**
-     * Renews the messages
-     */
-    public static void renew() {
-        instance = null;
     }
 
     private final SpaceChat plugin;
@@ -39,62 +35,78 @@ public class Messages {
     /* General */
 
     // help
-    public Message generalHelp = Message.fromConfigurationSection(getLangConfiguration(), "general.help")
-            .build();
+    public Message generalHelp;
 
     /* Reload */
 
     // success
-    public Message reloadSuccess = Message.fromConfigurationSection(getLangConfiguration(), "reload.success")
-            .build();
+    public Message reloadSuccess;
 
     // failure
-    public Message reloadFailure = Message.fromConfigurationSection(getLangConfiguration(), "reload.failure")
-            .build();
-
+    public Message reloadFailure;
     /**
      * Broadcast
      */
 
     // args
-    public Message broadcastArgs = Message.fromConfigurationSection(getLangConfiguration(), "broadcast.args")
-            .build();
+    public Message broadcastArgs;
 
     // wrapper
-    public Message broadcastWrapper = Message.fromConfigurationSection(getLangConfiguration(), "broadcast.wrapper")
-            .build();
+    public Message broadcastWrapper;
 
     /**
      * Channel
      */
 
     // join
-    public Message channelJoin = Message.fromConfigurationSection(getLangConfiguration(), "channel.join")
-            .build();
+    public Message channelJoin;
 
     // leave
-    public Message channelLeave = Message.fromConfigurationSection(getLangConfiguration(), "channel.leave")
-            .build();
+    public Message channelLeave;
 
     // listen
-    public Message channelListen = Message.fromConfigurationSection(getLangConfiguration(), "channel.listen")
-            .build();
+    public Message channelListen;
 
     // mute
-    public Message channelMute = Message.fromConfigurationSection(getLangConfiguration(), "channel.mute")
-            .build();
-
+    public Message channelMute;
     // invalid
-    public Message channelInvalid = Message.fromConfigurationSection(getLangConfiguration(), "channel.invalid")
-            .build();
+    public Message channelInvalid;
 
     /**
      * Ignore
      */
 
     // player not found
-    public Message playerNotFound = Message.fromConfigurationSection(getLangConfiguration(), "ignore.player-not-found")
-            .build();
+    public Message playerNotFound;
+
+
+    public Messages(SpaceChat plugin) {
+        this.plugin = plugin;
+
+
+        generalHelp = Message.fromConfigurationSection(this.getLangConfiguration(), "general.help")
+                .build();
+        reloadSuccess = Message.fromConfigurationSection(this.getLangConfiguration(), "reload.success")
+                .build();
+        reloadFailure = Message.fromConfigurationSection(this.getLangConfiguration(), "reload.failure")
+                .build();
+        broadcastArgs = Message.fromConfigurationSection(this.getLangConfiguration(), "broadcast.args")
+                .build();
+        broadcastWrapper = Message.fromConfigurationSection(this.getLangConfiguration(), "broadcast.wrapper")
+                .build();
+        channelJoin = Message.fromConfigurationSection(this.getLangConfiguration(), "channel.join")
+                .build();
+        channelLeave = Message.fromConfigurationSection(this.getLangConfiguration(), "channel.leave")
+                .build();
+        channelListen = Message.fromConfigurationSection(this.getLangConfiguration(), "channel.listen")
+                .build();
+        channelMute = Message.fromConfigurationSection(this.getLangConfiguration(), "channel.mute")
+                .build();
+        channelInvalid = Message.fromConfigurationSection(this.getLangConfiguration(), "channel.invalid")
+                .build();
+        playerNotFound = Message.fromConfigurationSection(this.getLangConfiguration(), "ignore.player-not-found")
+                .build();
+    }
 
     /**
      * Gets the lang configuration from the main class

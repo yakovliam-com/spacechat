@@ -9,11 +9,10 @@
 # Storage Configuration #
 #                       #
 # Storage types:        #
-# -> sqlite             #
 # -> mysql              #
 #=#=#=#=#=#=#=#=#=#=#=#=#
 storage:
-  use: "sqlite" # which storage type should we use?
+  use: "mysql" # which storage type should we use?
   mysql: # mysql configuration settings
     address: ""
     port: 3306

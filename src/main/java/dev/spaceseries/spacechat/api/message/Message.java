@@ -7,7 +7,9 @@ import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
 import dev.spaceseries.spaceapi.config.generic.key.ConfigKey;
 import dev.spaceseries.spaceapi.config.generic.key.ConfigKeyFactory;
 import dev.spaceseries.spaceapi.util.ColorUtil;
+import dev.spaceseries.spacechat.SpaceChat;
 import net.kyori.adventure.platform.AudienceProvider;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextComponent;
@@ -32,8 +34,8 @@ public class Message {
     private final String richLine;
     private static AudienceProvider audienceProvider;
 
-    public static void initAudience(AudienceProvider ap) {
-        audienceProvider = ap;
+    public static void initAudience(SpaceChat plugin) {
+        audienceProvider = BukkitAudiences.create(plugin);
     }
 
     public static AudienceProvider getAudienceProvider() {
@@ -100,13 +102,13 @@ public class Message {
         // loop through keys and create extras
         extraKeys.forEach(key -> {
             // get action
-            String action = configuration.getString(computeConfigurationPath(ident, "extras." + "action"), null);
+            String action = configuration.getString(computeConfigurationPath(ident, "extras." + key + ".action"), null);
 
             // get content
-            String content = configuration.getString(computeConfigurationPath(ident, "extras." + "content"), null);
+            String content = configuration.getString(computeConfigurationPath(ident, "extras." + key + ".content"), null);
 
             // (if applicable) get tooltip
-            List<String> tooltip = configuration.getStringList(computeConfigurationPath(ident, "extras." + "tooltip"), null);
+            List<String> tooltip = configuration.getStringList(computeConfigurationPath(ident, "extras." + key + ".tooltip"), new ArrayList<>());
 
             // create new extra
             Extra extra = new Extra();
