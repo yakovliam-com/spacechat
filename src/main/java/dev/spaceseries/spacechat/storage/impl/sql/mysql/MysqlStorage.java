@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.sql.mysql;
 
+import dev.spaceseries.spaceapi.lib.hikari.pool.HikariPool;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
@@ -7,6 +8,7 @@ import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.storage.Storage;
+import dev.spaceseries.spacechat.storage.StorageInitializationException;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.factory.MysqlConnectionManager;
 import dev.spaceseries.spacechat.util.date.DateUtil;
 import org.bukkit.Bukkit;
@@ -59,10 +61,15 @@ public class MysqlStorage extends Storage {
     /**
      * Initializes new mysql storage
      */
-    public MysqlStorage(SpaceChat plugin) {
+    public MysqlStorage(SpaceChat plugin) throws StorageInitializationException {
         super(plugin);
         // initialize new connection manager
-        mysqlConnectionManager = new MysqlConnectionManager(plugin);
+        try {
+            mysqlConnectionManager = new MysqlConnectionManager(plugin);
+        } catch (HikariPool.PoolInitializationException e) {
+            throw new StorageInitializationException();
+        }
+
         this.mysqlConnectionManager.init();
     }
 

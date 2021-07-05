@@ -10,7 +10,7 @@ public abstract class Storage {
 
     protected final SpaceChat plugin;
 
-    public Storage(SpaceChat plugin) {
+    public Storage(SpaceChat plugin) throws StorageInitializationException {
         this.plugin = plugin;
     }
 

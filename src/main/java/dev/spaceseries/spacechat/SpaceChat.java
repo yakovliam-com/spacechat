@@ -94,17 +94,21 @@ public final class SpaceChat extends JavaPlugin {
      */
     private ChatManager chatManager;
 
-    /**
-     * Runs on enable
-     */
     @Override
-    public void onEnable() {
+    public void onLoad() {
+        getLogger().info("We're currently downloading a lot of data to make this plugin work correctly, so please wait. This may take a while.");
         try {
             ApplicationBuilder.appending("SpaceChat").build();
         } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
+    }
 
+    /**
+     * Runs on enable
+     */
+    @Override
+    public void onEnable() {
         // initialize space api
         plugin = new SpacePlugin(this);
 

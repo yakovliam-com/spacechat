@@ -4,12 +4,13 @@ import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.storage.Storage;
+import dev.spaceseries.spacechat.storage.StorageInitializationException;
 
 import java.util.UUID;
 
 public class EmptyStorage extends Storage {
 
-    public EmptyStorage(SpaceChat plugin) {
+    public EmptyStorage(SpaceChat plugin) throws StorageInitializationException {
         super(plugin);
     }
 
