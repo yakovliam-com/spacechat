@@ -1,12 +1,19 @@
 package dev.spaceseries.spacechat.listener;
 
 import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.model.Channel;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class ChatListener implements Listener {
+
+    private final SpaceChat plugin;
+
+    public ChatListener(SpaceChat plugin) {
+        this.plugin = plugin;
+    }
 
     /**
      * Listens for chat messages
@@ -16,12 +23,21 @@ public class ChatListener implements Listener {
      */
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerAsyncChat(AsyncPlayerChatEvent event) {
-        if(event.isCancelled()) return;
+        if (event.isCancelled()) return;
 
         // clear recipients to "cancel"
         event.getRecipients().clear();
 
+        // get player's current channel
+        Channel current = plugin.getServerSyncServiceManager().getDataService().getCurrentChannel(event.getPlayer().getUniqueId());
+
+        // if not null, send through channel manager
+        if (current != null && event.getPlayer().hasPermission(current.getPermission())) {
+            plugin.getChannelManager().send(event, event.getMessage(), current);
+            return;
+        }
+
         // get chat format manager, send chat packet (this method also sets the format in console)
-        SpaceChat.getInstance().getChatFormatManager().send(event, event.getMessage());
+        plugin.getChatFormatManager().send(event, event.getMessage());
     }
 }

@@ -13,48 +13,51 @@ public class FileWatcher {
     /**
      * Construct file watcher
      */
-    public FileWatcher() {
+    public FileWatcher(SpaceChat plugin) {
         DirectoryWatcher fileWatcher = new DirectoryWatcher.Builder()
-                .addDirectories(SpaceChat.getInstance().getDataFolder().getPath())
+                .addDirectories(plugin.getDataFolder().getPath())
                 .setFilter((p) -> {
                     String ext = Files.getFileExtension(p.toFile().getName());
                     return ext.equalsIgnoreCase("yaml") || ext.equalsIgnoreCase("yml");
                 })
                 .setPreExistingAsCreated(true)
-                .build((event, path) -> {
+                .build(plugin, (event, path) -> {
                     if (event != DirectoryWatcher.Event.ENTRY_MODIFY) return;
 
                     // send message in console
-                    SpaceChat.getInstance().getLogger().info("Detected a change in SpaceChat's configurations, so we're reloading to automatically apply the changes.");
+                    plugin.getLogger().info("Detected a change in SpaceChat's configurations, so we're reloading to automatically apply the changes.");
 
                     // run async task
                     CompletableFuture.runAsync(() -> {
                         try {
                             // reload configurations
-                            SpaceChat.getInstance().loadConfigs();
+                            plugin.loadConfigs();
 
                             // reload formats
-                            SpaceChat.getInstance().loadFormats();
+                            plugin.loadFormats();
+
+                            // reload channels
+                            plugin.loadChannels();
 
                             // reload storage
-                            SpaceChat.getInstance().loadStorage();
+                            plugin.loadStorage();
 
                             // load messages
-                            SpaceChat.getInstance().loadMessages();
+                            plugin.loadMessages();
 
                             // load dynamic connections
-                            SpaceChat.getInstance().loadConnectionManagers();
+                            plugin.loadSyncServices();
                         } catch (Exception e) {
-                            Messages.getInstance().reloadFailure.msg(new BukkitSpaceCommandSender(Bukkit.getConsoleSender()));
+                            Messages.getInstance(plugin).reloadFailure.msg(new BukkitSpaceCommandSender(Bukkit.getConsoleSender()));
                             e.printStackTrace();
                             return;
                         }
-                        Messages.getInstance().reloadSuccess.msg(new BukkitSpaceCommandSender(Bukkit.getConsoleSender()));
+                        Messages.getInstance(plugin).reloadSuccess.msg(new BukkitSpaceCommandSender(Bukkit.getConsoleSender()));
                     });
                 });
 
         // do watch task
-        Bukkit.getScheduler().runTaskAsynchronously(SpaceChat.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
                 fileWatcher.start();
             } catch (Exception e) {

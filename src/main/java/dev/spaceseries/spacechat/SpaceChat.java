@@ -1,30 +1,38 @@
 package dev.spaceseries.spacechat;
 
 import dev.spaceseries.spaceapi.abstraction.plugin.BukkitPlugin;
+import dev.spaceseries.spaceapi.config.adapter.BukkitConfigAdapter;
+import dev.spaceseries.spacechat.api.message.Message;
+import dev.spaceseries.spacechat.channel.ChannelManager;
+import dev.spaceseries.spacechat.chat.ChatFormatManager;
+import dev.spaceseries.spacechat.chat.ChatManager;
+import dev.spaceseries.spacechat.command.BroadcastCommand;
+import dev.spaceseries.spacechat.command.BroadcastMinimessageCommand;
+import dev.spaceseries.spacechat.command.ChannelCommand;
 import dev.spaceseries.spacechat.command.SpaceChatCommand;
-import dev.spaceseries.spacechat.config.Config;
-import dev.spaceseries.spacechat.config.FormatsConfig;
-import dev.spaceseries.spacechat.config.LangConfig;
+import dev.spaceseries.spacechat.config.SpaceChatConfig;
 import dev.spaceseries.spacechat.external.papi.SpaceChatExpansion;
-import dev.spaceseries.spacechat.internal.dependency.DependencyInstantiation;
+import dev.spaceseries.spacechat.internal.space.SpacePlugin;
 import dev.spaceseries.spacechat.io.watcher.FileWatcher;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.listener.JoinQuitListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
-import dev.spaceseries.spacechat.manager.ChatFormatManager;
-import dev.spaceseries.spacechat.internal.space.SpacePlugin;
-import dev.spaceseries.spacechat.messaging.MessagingService;
 import dev.spaceseries.spacechat.storage.StorageManager;
+import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
+import dev.spaceseries.spacechat.user.UserManager;
 import dev.spaceseries.spacechat.util.version.VersionUtil;
+import io.github.slimjar.app.builder.ApplicationBuilder;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class SpaceChat extends JavaPlugin {
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 
-    /**
-     * The instance of the main class (this class)
-     */
-    private static SpaceChat instance;
+public final class SpaceChat extends JavaPlugin {
 
     /**
      * The instance of the space api
@@ -34,17 +42,17 @@ public final class SpaceChat extends JavaPlugin {
     /**
      * The formats config
      */
-    private FormatsConfig formatsConfig;
+    private SpaceChatConfig formatsConfig;
 
     /**
      * The main plugin config
      */
-    private Config spaceChatConfig;
+    private SpaceChatConfig spaceChatConfig;
 
     /**
      * The plugin's language configuration
      */
-    private LangConfig langConfig;
+    private SpaceChatConfig langConfig;
 
     /**
      * The chat format manager
@@ -57,21 +65,43 @@ public final class SpaceChat extends JavaPlugin {
     private LogManagerImpl logManagerImpl;
 
     /**
+     * User manager
+     */
+    private UserManager userManager;
+
+    /**
      * The storage manager
      */
     private StorageManager storageManager;
 
     /**
-     * Messaging service
+     * Server sync service manager
      */
-    private MessagingService messagingService;
+    private ServerSyncServiceManager serverSyncServiceManager;
 
     /**
-     * Runs on load
+     * Channel manager
      */
+    private ChannelManager channelManager;
+
+    /**
+     * Channels config
+     */
+    private SpaceChatConfig channelsConfig;
+
+    /**
+     * Chat manager
+     */
+    private ChatManager chatManager;
+
     @Override
     public void onLoad() {
-        instance = this;
+        getLogger().info("We're currently downloading a lot of data to make this plugin work correctly, so please wait. This may take a while.");
+        try {
+            ApplicationBuilder.appending("SpaceChat").build();
+        } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -79,37 +109,47 @@ public final class SpaceChat extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        // load dependencies
-        new DependencyInstantiation().startTasks();
-
         // initialize space api
         plugin = new SpacePlugin(this);
 
+        Message.initAudience(this);
+
         // load configs
         loadConfigs();
-
         // load formats
         loadFormats();
-
+        // load connection managers
+        loadSyncServices();
+        // load channels
+        loadChannels();
         // load storage
         loadStorage();
+        // load users
+        loadUsers();
 
-        // load connection managers
-        loadConnectionManagers();
+        // initialize messages
+        Messages.renew();
+        Messages.getInstance(this);
+
+        this.chatManager = new ChatManager(this);
 
         // initialize log manager
-        logManagerImpl = new LogManagerImpl();
+        logManagerImpl = new LogManagerImpl(this);
 
         // initialize commands
-        new SpaceChatCommand();
+        new SpaceChatCommand(this);
+        new ChannelCommand(this);
+        // new IgnoreCommand();
+        new BroadcastCommand(this);
+        new BroadcastMinimessageCommand(this);
 
         // register chat listener
-        this.getServer().getPluginManager().registerEvents(new ChatListener(), this);
+        this.getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         // register join listener
-        this.getServer().getPluginManager().registerEvents(new JoinQuitListener(), this);
+        this.getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
 
         // register placeholder expansion
-        new SpaceChatExpansion().register();
+        new SpaceChatExpansion(this).register();
 
         // initialize metrics
         new Metrics(this, 7508);
@@ -118,20 +158,21 @@ public final class SpaceChat extends JavaPlugin {
         this.getLogger().info("Detected that SpaceChat is running under " + VersionUtil.getServerBukkitVersion().toString());
 
         // initialize file watcher
-        new FileWatcher();
+        new FileWatcher(this);
     }
 
     @Override
     public void onDisable() {
         // stop redis supervisor
-        if (messagingService != null)
-            messagingService.getSupervisor().stop();
-        // close the connection pool (if applicable)
-        if (storageManager != null)
+        if (serverSyncServiceManager != null)
+            serverSyncServiceManager.end();
+
+        // close the storage connection pool (if applicable)
+        if (storageManager != null) {
+            // save all users
+            userManager.getAll().forEach((key, value) -> storageManager.getCurrent().updateUser(value));
             storageManager.getCurrent().close();
-        // close messaging services
-        if (messagingService != null)
-            messagingService.getSupervisor().stop();
+        }
     }
 
     /**
@@ -139,9 +180,29 @@ public final class SpaceChat extends JavaPlugin {
      */
     public void loadConfigs() {
         // initialize configs
-        spaceChatConfig = new Config();
-        formatsConfig = new FormatsConfig();
-        langConfig = new LangConfig();
+        if (spaceChatConfig != null) {
+            spaceChatConfig.reload();
+        } else {
+            spaceChatConfig = new SpaceChatConfig(provideConfigAdapter("config.yml"));
+        }
+
+        if (formatsConfig != null) {
+            formatsConfig.reload();
+        } else {
+            formatsConfig = new SpaceChatConfig(provideConfigAdapter("formats.yml"));
+        }
+
+        if (channelsConfig != null) {
+            channelsConfig.reload();
+        } else {
+            channelsConfig = new SpaceChatConfig(provideConfigAdapter("channels.yml"));
+        }
+
+        if (langConfig != null) {
+            langConfig.reload();
+        } else {
+            langConfig = new SpaceChatConfig(provideConfigAdapter("lang.yml"));
+        }
     }
 
     /**
@@ -149,7 +210,14 @@ public final class SpaceChat extends JavaPlugin {
      */
     public void loadFormats() {
         // initialize chat format manager (also loads all formats!)
-        chatFormatManager = new ChatFormatManager();
+        chatFormatManager = new ChatFormatManager(this);
+    }
+
+    /**
+     * Loads channels
+     */
+    public void loadChannels() {
+        this.channelManager = new ChannelManager(this);
     }
 
     /**
@@ -157,18 +225,66 @@ public final class SpaceChat extends JavaPlugin {
      */
     public void loadStorage() {
         // initialize storage
-        storageManager = new StorageManager();
+        storageManager = new StorageManager(this);
     }
 
     /**
-     * Load connection managers
+     * Loads users
+     * <p>
+     * More often than not, this will NOT be called on the reload command
      */
-    public void loadConnectionManagers() {
-        // if currently exists, stop first
-        if (messagingService != null)
-            messagingService.getSupervisor().stop();
+    public void loadUsers() {
+        // initialize users
+        userManager = new UserManager(this);
+    }
 
-        messagingService = new MessagingService();
+    /**
+     * Loads connection managers
+     */
+    public void loadSyncServices() {
+        // stop sync service supervisor
+        if (serverSyncServiceManager != null)
+            serverSyncServiceManager.end();
+
+        // initialize
+        this.serverSyncServiceManager = new ServerSyncServiceManager(this);
+    }
+
+    /**
+     * Resolves a configuration
+     *
+     * @param fileName file name
+     * @return configuration path
+     */
+    public Path resolveConfig(String fileName) {
+        Path configFile = getDataFolder().toPath().resolve(fileName);
+
+        // if the config doesn't exist, create it based on the template in the resources dir
+        if (!Files.exists(configFile)) {
+            try {
+                Files.createDirectories(configFile.getParent());
+            } catch (IOException e) {
+                // ignore
+            }
+
+            try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileName)) {
+                Files.copy(is, configFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return configFile;
+    }
+
+    /**
+     * Provides a configuration adapter
+     *
+     * @param fileName file name
+     * @return config adapter
+     */
+    private BukkitConfigAdapter provideConfigAdapter(String fileName) {
+        return new BukkitConfigAdapter(plugin.getPlugin(), resolveConfig(fileName).toFile());
     }
 
     /**
@@ -176,10 +292,6 @@ public final class SpaceChat extends JavaPlugin {
      */
     public void loadMessages() {
         Messages.renew();
-    }
-
-    public static SpaceChat getInstance() {
-        return instance;
     }
 
     /**
@@ -192,30 +304,39 @@ public final class SpaceChat extends JavaPlugin {
     }
 
     /**
-     * Returns formats config
+     * Returns the formats config
      *
      * @return formats config
      */
-    public FormatsConfig getFormatsConfig() {
+    public SpaceChatConfig getFormatsConfig() {
         return formatsConfig;
     }
 
     /**
-     * Returns main configuration
+     * Returns the language config
      *
-     * @return config
+     * @return language config
      */
-    public Config getSpaceChatConfig() {
-        return spaceChatConfig;
+    public SpaceChatConfig getLangConfig() {
+        return langConfig;
     }
 
     /**
-     * Get lang configuration
+     * Returns the channels config
      *
-     * @return lang config
+     * @return channels config
      */
-    public LangConfig getLangConfig() {
-        return langConfig;
+    public SpaceChatConfig getChannelsConfig() {
+        return channelsConfig;
+    }
+
+    /**
+     * Returns the main space chat config
+     *
+     * @return config
+     */
+    public SpaceChatConfig getSpaceChatConfig() {
+        return spaceChatConfig;
     }
 
     /**
@@ -225,6 +346,15 @@ public final class SpaceChat extends JavaPlugin {
      */
     public ChatFormatManager getChatFormatManager() {
         return chatFormatManager;
+    }
+
+    /**
+     * Returns channel manager
+     *
+     * @return channel manager
+     */
+    public ChannelManager getChannelManager() {
+        return channelManager;
     }
 
     /**
@@ -246,11 +376,29 @@ public final class SpaceChat extends JavaPlugin {
     }
 
     /**
-     * Returns messaging service
+     * Returns server sync service manager
      *
-     * @return messaging service
+     * @return server sync service manager
      */
-    public MessagingService getMessagingService() {
-        return messagingService;
+    public ServerSyncServiceManager getServerSyncServiceManager() {
+        return serverSyncServiceManager;
+    }
+
+    /**
+     * Returns user manager
+     *
+     * @return user manager
+     */
+    public UserManager getUserManager() {
+        return userManager;
+    }
+
+    /**
+     * Returns chat manager
+     *
+     * @return chat manager
+     */
+    public ChatManager getChatManager() {
+        return chatManager;
     }
 }

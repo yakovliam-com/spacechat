@@ -1,32 +1,41 @@
 package dev.spaceseries.spacechat.loader;
 
-import dev.spaceseries.spaceapi.config.impl.Configuration;
-import dev.spaceseries.spacechat.builder.format.FormatBuilder;
-import dev.spaceseries.spacechat.manager.FormatManager;
+import dev.spaceseries.spacechat.SpaceChat;
 
-public class FormatLoader implements Loader<FormatManager> {
+public abstract class FormatLoader<T> implements Loader<FormatManager<T>> {
 
     /**
      * The format section
      */
-    private final Configuration formatSection;
+    protected final String formatsSection;
 
     /**
-     * Initializes
+     * Plugin
      */
-    public FormatLoader(Configuration formatSection) {
-        this.formatSection = formatSection;
+    private final SpaceChat plugin;
+
+    /**
+     * Construct format loader
+     *
+     * @param plugin         plugin
+     * @param formatsSection section
+     */
+    public FormatLoader(SpaceChat plugin, String formatsSection) {
+        this.plugin = plugin;
+        this.formatsSection = formatsSection;
     }
 
     /**
-     * Loads chat formats
+     * Gets plugin
+     * @return plugin
+     */
+    protected SpaceChat getPlugin() {
+        return plugin;
+    }
+
+    /**
+     * Loads formats
      */
     @Override
-    public void load(FormatManager formatManager) {
-        // loop through section keys
-        for (String handle : formatSection.getKeys()) {
-            // add to manager
-            formatManager.add(handle, new FormatBuilder().build(formatSection.getSection(handle)));
-        }
-    }
+    public abstract void load(FormatManager<T> formatManager);
 }

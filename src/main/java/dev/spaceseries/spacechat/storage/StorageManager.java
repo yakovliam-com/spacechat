@@ -1,10 +1,9 @@
 package dev.spaceseries.spacechat.storage;
 
 import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.Config;
+import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.storage.impl.empty.EmptyStorage;
-import dev.spaceseries.spacechat.storage.impl.mysql.MysqlStorage;
-import dev.spaceseries.spacechat.storage.impl.sqlite.SqliteStorage;
+import dev.spaceseries.spacechat.storage.impl.sql.mysql.MysqlStorage;
 
 public class StorageManager {
 
@@ -14,20 +13,25 @@ public class StorageManager {
     private Storage current;
 
     /**
+     * Plugin
+     */
+    private final SpaceChat plugin;
+
+    /**
      * Initializes storage
      */
-    public StorageManager() {
+    public StorageManager(SpaceChat plugin) {
+        this.plugin = plugin;
+
         // get active storage type
-        String using = Config.STORAGE_USE.get(Config.get());
+        String using = SpaceChatConfigKeys.STORAGE_USE.get(plugin.getSpaceChatConfig().getAdapter());
 
         // if type, etc....
-        if (using.equalsIgnoreCase("sqlite")) {
-            current = new SqliteStorage();
-        } else if (using.equalsIgnoreCase("mysql")) {
-            current = new MysqlStorage();
+        if (using.equalsIgnoreCase("mysql")) {
+            current = new MysqlStorage(plugin);
         } else {
-            SpaceChat.getInstance().getLogger().severe("Unknown storage medium '" + using + "'. The plugin is unable to function correctly.");
-            current = new EmptyStorage();
+            plugin.getLogger().severe("Unknown storage medium '" + using + "'. The plugin is unable to function correctly.");
+            current = new EmptyStorage(plugin);
         }
     }
 

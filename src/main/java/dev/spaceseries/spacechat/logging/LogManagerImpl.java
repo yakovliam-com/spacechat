@@ -1,7 +1,8 @@
 package dev.spaceseries.spacechat.logging;
 
-import dev.spaceseries.spaceapi.config.impl.Configuration;
+import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
 import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
@@ -10,9 +11,13 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.logging.Level;
 
-import static dev.spaceseries.spacechat.config.Config.*;
-
 public class LogManagerImpl implements LogManager {
+
+    private final SpaceChat plugin;
+
+    public LogManagerImpl(SpaceChat plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public <T> void log(T t, LogType logType, LogToType logToType) {
@@ -30,7 +35,7 @@ public class LogManagerImpl implements LogManager {
                     }
                     break;
                 case STORAGE:
-                    if (LOGGING_CHAT_LOG_TO_STORAGE.get(getConfig()) && t instanceof LogChatWrap) {
+                    if (SpaceChatConfigKeys.LOGGING_CHAT_LOG_TO_STORAGE.get(getConfig()) && t instanceof LogChatWrap) {
                         storage((LogChatWrap) t);
                     }
                     break;
@@ -55,7 +60,7 @@ public class LogManagerImpl implements LogManager {
      * @param s The chat message
      */
     private void global(String s) {
-        SpaceChat.getInstance().getLogger().log(Level.INFO, s);
+        plugin.getLogger().log(Level.INFO, s);
     }
 
     /**
@@ -65,7 +70,7 @@ public class LogManagerImpl implements LogManager {
      */
     private void storage(LogWrapper data) {
         // get storage manager and log
-        SpaceChat.getInstance().getStorageManager().getCurrent().log(data);
+        plugin.getStorageManager().getCurrent().log(data, true);
     }
 
     /**
@@ -73,7 +78,7 @@ public class LogManagerImpl implements LogManager {
      *
      * @return The main configuration
      */
-    private Configuration getConfig() {
-        return SpaceChat.getInstance().getSpaceChatConfig().getConfig();
+    private ConfigurationAdapter getConfig() {
+        return plugin.getSpaceChatConfig().getAdapter();
     }
 }
