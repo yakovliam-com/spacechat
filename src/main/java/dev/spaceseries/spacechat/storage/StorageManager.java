@@ -28,18 +28,10 @@ public class StorageManager {
 
         // if type, etc....
         if (using.equalsIgnoreCase("mysql")) {
-            try {
-                current = new MysqlStorage(plugin);
-            } catch (StorageInitializationException e) {
-                e.printStackTrace();
-            }
+            current = new MysqlStorage(plugin);
         } else {
             plugin.getLogger().severe("Unknown storage medium '" + using + "'. The plugin is unable to function correctly.");
-            try {
-                current = new EmptyStorage(plugin);
-            } catch (StorageInitializationException e) {
-                e.printStackTrace();
-            }
+            current = new EmptyStorage(plugin);
         }
     }
 

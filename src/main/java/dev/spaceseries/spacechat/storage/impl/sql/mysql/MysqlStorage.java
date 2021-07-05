@@ -1,15 +1,14 @@
 package dev.spaceseries.spacechat.storage.impl.sql.mysql;
 
-import dev.spaceseries.spaceapi.lib.hikari.pool.HikariPool;
 import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.storage.Storage;
-import dev.spaceseries.spacechat.storage.StorageInitializationException;
-import dev.spaceseries.spacechat.storage.impl.sql.mysql.factory.MysqlConnectionManager;
+import dev.spaceseries.spacechat.storage.impl.sql.mysql.factory.MySqlConnectionFactory;
 import dev.spaceseries.spacechat.util.date.DateUtil;
 import org.bukkit.Bukkit;
 
@@ -56,21 +55,16 @@ public class MysqlStorage extends Storage {
     /**
      * The connection manager
      */
-    private final MysqlConnectionManager mysqlConnectionManager;
+    private final MySqlConnectionFactory mysqlConnectionFactory;
 
     /**
      * Initializes new mysql storage
      */
-    public MysqlStorage(SpaceChat plugin) throws StorageInitializationException {
+    public MysqlStorage(SpaceChat plugin) {
         super(plugin);
         // initialize new connection manager
-        try {
-            mysqlConnectionManager = new MysqlConnectionManager(plugin);
-        } catch (HikariPool.PoolInitializationException e) {
-            throw new StorageInitializationException();
-        }
-
-        this.mysqlConnectionManager.init();
+        mysqlConnectionFactory = new MySqlConnectionFactory(plugin.getSpaceChatConfig().get(SpaceChatConfigKeys.DATABASE_VALUES));
+        this.mysqlConnectionFactory.init();
     }
 
     @Override
@@ -90,7 +84,7 @@ public class MysqlStorage extends Storage {
     @Override
     public User getUser(UUID uuid) {
         // create prepared statement
-        try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER)) {
+        try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER)) {
             // replace
             preparedStatement.setString(1, uuid.toString());
 
@@ -125,7 +119,7 @@ public class MysqlStorage extends Storage {
      * @return channels
      */
     private List<Channel> getSubscribedChannels(UUID uuid) {
-        try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SELECT_SUBSCRIBED_CHANNELS)) {
+        try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SELECT_SUBSCRIBED_CHANNELS)) {
             // replace
             preparedStatement.setString(1, uuid.toString());
 
@@ -160,7 +154,7 @@ public class MysqlStorage extends Storage {
     @Override
     public User getUser(String username) {
         // create prepared statement
-        try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_USERNAME)) {
+        try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_USERNAME)) {
             // replace
             preparedStatement.setString(1, username);
 
@@ -192,7 +186,7 @@ public class MysqlStorage extends Storage {
      */
     private void createUser(User user) {
         // create prepared statement
-        try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER)) {
+        try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(CREATE_USER)) {
             // replace
             preparedStatement.setString(1, user.getUuid().toString());
             preparedStatement.setString(2, user.getUsername());
@@ -214,7 +208,7 @@ public class MysqlStorage extends Storage {
     @Override
     public void updateUser(User user) {
         // create prepared statement
-        try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER)) {
+        try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER)) {
             // replace
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getUuid().toString());
@@ -253,7 +247,7 @@ public class MysqlStorage extends Storage {
      */
     private void insertChannelRow(UUID uuid, Channel channel) {
         // create prepared statement
-        try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SUBSCRIBED_CHANNEL)) {
+        try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SUBSCRIBED_CHANNEL)) {
             // replace
             preparedStatement.setString(1, uuid.toString());
             preparedStatement.setString(2, channel.getHandle());
@@ -273,7 +267,7 @@ public class MysqlStorage extends Storage {
      */
     private void deleteChannelRow(UUID uuid, Channel channel) {
         // create prepared statement
-        try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SUBSCRIBED_CHANNEL)) {
+        try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SUBSCRIBED_CHANNEL)) {
             // replace
             preparedStatement.setString(1, uuid.toString());
             preparedStatement.setString(2, channel.getHandle());
@@ -287,7 +281,7 @@ public class MysqlStorage extends Storage {
 
     @Override
     public void close() {
-        this.mysqlConnectionManager.shutdown();
+        this.mysqlConnectionFactory.shutdown();
     }
 
     /**
@@ -299,7 +293,7 @@ public class MysqlStorage extends Storage {
     private void logChat(LogChatWrap data, boolean async) {
         Runnable task = () -> {
             // create prepared statement
-            try (Connection connection = mysqlConnectionManager.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(LOG_CHAT)) {
+            try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(LOG_CHAT)) {
                 // replace
                 preparedStatement.setString(1, data.getSenderUUID().toString());
                 preparedStatement.setString(2, data.getSenderName());

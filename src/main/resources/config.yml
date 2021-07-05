@@ -14,17 +14,57 @@
 storage:
   use: "mysql" # which storage type should we use?
   mysql: # mysql configuration settings
-    address: ""
-    port: 3306
-    username: ""
-    password: ""
-    database: ""
-    use-ssl: false
-    verify-server-certificate: false
+    address: "localhost:3306"
+    username: "username"
+    password: "password"
+    database: "database"
+    pool-settings:
+      # Sets the maximum size of the MySQL connection pool.
+      # - Basically this value will determine the maximum number of actual
+      #   connections to the database backend.
+      # - More information about determining the size of connection pools can be found here:
+      #   https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing
+      maximum-pool-size: 10
+
+      # Sets the minimum number of idle connections that the pool will try to maintain.
+      # - For maximum performance and responsiveness to spike demands, it is recommended to not set
+      #   this value and instead allow the pool to act as a fixed size connection pool.
+      #   (set this value to the same as 'maximum-pool-size')
+      minimum-idle: 10
+
+      # This setting controls the maximum lifetime of a connection in the pool in milliseconds.
+      # - The value should be at least 30 seconds less than any database or infrastructure imposed
+      #   connection time limit.
+      maximum-lifetime: 1800000 # 30 minutes
+
+      # This setting controls how frequently the pool will 'ping' a connection in order to prevent it
+      # from being timed out by the database or network infrastructure, measured in milliseconds.
+      # - The value should be less than maximum-lifetime and greater than 30000 (30 seconds).
+      # - Setting the value to zero will disable the keepalive functionality.
+      keepalive-time: 0
+
+      # This setting controls the maximum number of milliseconds that the plugin will wait for a
+      # connection from the pool, before timing out.
+      connection-timeout: 5000 # 5 seconds
+
+      # This setting allows you to define extra properties for connections.
+      #
+      # By default, the following options are set to enable utf8 encoding. (you may need to remove
+      # these if you are using PostgreSQL)
+      #   useUnicode: true
+      #   characterEncoding: utf8
+      #
+      # You can also use this section to disable SSL connections, by uncommenting the 'useSSL' and
+      # 'verifyServerCertificate' options below.
+      properties:
+        useUnicode: true
+        characterEncoding: utf8
+        #useSSL: false
+        #verifyServerCertificate: false
     tables:
       chat-logs: "spacechat_chatlogs"
       users: "spacechat_users"
-      subscribed-channels: "subscribed_channels"
+      subscribed-channels: "spacechat_subscribed_channels"
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#
 # Redis Configuration     #

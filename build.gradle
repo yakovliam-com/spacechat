@@ -40,6 +40,9 @@ dependencies {
     // bstats
     implementation "org.bstats:bstats-bukkit:2.2.1"
 
+    // mysql
+    slim 'mysql:mysql-connector-java:8.0.25'
+
     // caffeine
     slim 'com.github.ben-manes.caffeine:caffeine:2.9.1'
 

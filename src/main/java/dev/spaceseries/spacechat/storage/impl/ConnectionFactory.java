@@ -1,22 +1,14 @@
 package dev.spaceseries.spacechat.storage.impl;
 
-import dev.spaceseries.spacechat.SpaceChat;
-
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.function.Function;
 
-public abstract class ConnectionFactory {
+public interface ConnectionFactory {
 
-    protected final SpaceChat plugin;
+    void init();
 
-    public ConnectionFactory(SpaceChat plugin) {
-        this.plugin = plugin;
-    }
+    void shutdown() throws Exception;
 
-    public abstract void init();
-
-    public abstract void shutdown() throws Exception;
-
-    public abstract Connection getConnection() throws SQLException;
-
+    Connection getConnection() throws SQLException;
 }
