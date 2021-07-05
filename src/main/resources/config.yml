@@ -25,13 +25,6 @@ storage:
       chat-logs: "spacechat_chatlogs"
       users: "spacechat_users"
       subscribed-channels: "subscribed_channels"
-  sqlite:
-    # This generates a file under "plugins/SpaceChat/storage/<database>" where <database> = the config option below
-    database: "storage"
-    tables:
-      chat-logs: "spacechat_chatlogs"
-      users: "spacechat_users"
-      subscribed-channels: "subscribed_channels"
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#
 # Redis Configuration     #
