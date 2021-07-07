@@ -7,7 +7,7 @@ plugins {
 }
 
 // naming
-version = '2.2.0-SNAPSHOT'
+version = '2.2.1-SNAPSHOT'
 group = 'dev.spaceseries'
 def packageGroup = group + '.spacechat'
 
@@ -40,11 +40,12 @@ dependencies {
     // bstats
     implementation "org.bstats:bstats-bukkit:2.2.1"
 
-    // mysql
-    slim 'mysql:mysql-connector-java:8.0.25'
-
     // caffeine
-    slim 'com.github.ben-manes.caffeine:caffeine:2.9.1'
+    slim 'com.github.ben-manes.caffeine:caffeine:2.9.2'
+
+    // mysql
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    slim group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
 
     // adventure
     slim "net.kyori:adventure-api:4.8.1"
@@ -64,16 +65,13 @@ jar {
 
 shadowJar {
     archiveName("SpaceChat-${project.version}.jar")
-
-    relocate 'org.bstats', "${packageGroup}.lib.bstats"
-    relocate 'dev.spaceseries.spaceapi', "${packageGroup}.lib.spaceapi"
-    relocate 'net.kyori', "${packageGroup}.lib.kyori"
 }
 
 slimJar {
     relocate 'org.bstats', "${packageGroup}.lib.bstats"
     relocate 'dev.spaceseries.spaceapi', "${packageGroup}.lib.spaceapi"
     relocate 'net.kyori', "${packageGroup}.lib.kyori"
+    relocate 'com.github.benmanes.caffeine', "${packageGroup}.lib.caffeine"
 }
 
 processResources {

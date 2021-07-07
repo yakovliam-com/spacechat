@@ -13,11 +13,21 @@
 #=#=#=#=#=#=#=#=#=#=#=#=#
 storage:
   use: "mysql" # which storage type should we use?
-  mysql: # mysql configuration settings
-    address: "localhost:3306"
-    username: "username"
-    password: "password"
-    database: "database"
+  # MySQL configuration settings
+  mysql:
+    # Define the address and port for the database.
+    # - The standard DB engine port is used by default
+    #   (MySQL: 3306, PostgreSQL: 5432, MongoDB: 27017)
+    # - Specify as "host:port" if differs
+    address: localhost
+
+    # The name of the database to store SpaceChat data in.
+    # - This must be created already. Don't worry about this setting if you're using MongoDB.
+    database: minecraft
+
+    # Credentials for the database.
+    username: root
+    password: ''
     pool-settings:
       # Sets the maximum size of the MySQL connection pool.
       # - Basically this value will determine the maximum number of actual
