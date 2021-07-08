@@ -8,7 +8,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Map;
-import java.util.function.Function;
 
 public class MySqlConnectionFactory extends HikariConnectionFactory {
     public MySqlConnectionFactory(StorageCredentials configuration) {

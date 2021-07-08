@@ -8,6 +8,7 @@ import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.storage.Storage;
+import dev.spaceseries.spacechat.storage.StorageInitializationException;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.factory.MySqlConnectionFactory;
 import dev.spaceseries.spacechat.util.date.DateUtil;
 import org.bukkit.Bukkit;
@@ -60,11 +61,28 @@ public class MysqlStorage extends Storage {
     /**
      * Initializes new mysql storage
      */
-    public MysqlStorage(SpaceChat plugin) {
+    public MysqlStorage(SpaceChat plugin) throws StorageInitializationException {
         super(plugin);
         // initialize new connection manager
         mysqlConnectionFactory = new MySqlConnectionFactory(plugin.getSpaceChatConfig().get(SpaceChatConfigKeys.DATABASE_VALUES));
         this.mysqlConnectionFactory.init();
+
+        this.init();
+    }
+
+    /**
+     * Initializes the storage medium
+     */
+    @Override
+    public void init() throws StorageInitializationException {
+        try {
+            SqlHelper.execute(mysqlConnectionFactory.getConnection(), String.format(MysqlStorage.LOG_CHAT_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_CHAT_LOGS.get(plugin.getSpaceChatConfig().getAdapter())));
+            SqlHelper.execute(mysqlConnectionFactory.getConnection(), String.format(MysqlStorage.USERS_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_USERS.get(plugin.getSpaceChatConfig().getAdapter())));
+            SqlHelper.execute(mysqlConnectionFactory.getConnection(), String.format(MysqlStorage.USERS_SUBSCRIBED_CHANNELS_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getAdapter())));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new StorageInitializationException();
+        }
     }
 
     @Override
