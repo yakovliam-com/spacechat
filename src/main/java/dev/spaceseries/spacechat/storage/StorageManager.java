@@ -27,11 +27,15 @@ public class StorageManager {
         String using = SpaceChatConfigKeys.STORAGE_USE.get(plugin.getSpaceChatConfig().getAdapter());
 
         // if type, etc....
-        if (using.equalsIgnoreCase("mysql")) {
-            current = new MysqlStorage(plugin);
-        } else {
-            plugin.getLogger().severe("Unknown storage medium '" + using + "'. The plugin is unable to function correctly.");
-            current = new EmptyStorage(plugin);
+        try {
+            if (using.equalsIgnoreCase("mysql")) {
+                current = new MysqlStorage(plugin);
+            } else {
+                plugin.getLogger().severe("Unknown storage medium '" + using + "'. The plugin is unable to function correctly.");
+                current = new EmptyStorage(plugin);
+            }
+        } catch (StorageInitializationException e) {
+            e.printStackTrace();
         }
     }
 

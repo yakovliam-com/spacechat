@@ -16,13 +16,6 @@ import static dev.spaceseries.spaceapi.config.generic.key.ConfigKeyFactory.notRe
 public class SpaceChatConfigKeys {
 
     public static ConfigKey<String> STORAGE_USE = key(c -> c.getString("storage.use", "yaml"));
-    public static ConfigKey<String> STORAGE_MYSQL_ADDRESS = key(c -> c.getString("storage.mysql.address", null));
-    public static ConfigKey<Integer> STORAGE_MYSQL_PORT = key(c -> c.getInteger("storage.mysql.port", 3306));
-    public static ConfigKey<String> STORAGE_MYSQL_USERNAME = key(c -> c.getString("storage.mysql.username", null));
-    public static ConfigKey<String> STORAGE_MYSQL_PASSWORD = key(c -> c.getString("storage.mysql.password", null));
-    public static ConfigKey<String> STORAGE_MYSQL_DATABASE = key(c -> c.getString("storage.mysql.database", null));
-    public static ConfigKey<Boolean> STORAGE_MYSQL_USE_SSL = key(c -> c.getBoolean("storage.mysql.use-ssl", false));
-    public static ConfigKey<Boolean> STORAGE_MYSQL_VERIFY_SERVER_CERTIFICATE = key(c -> c.getBoolean("storage.mysql.verify-server-certificate", false));
     public static ConfigKey<String> STORAGE_MYSQL_TABLES_CHAT_LOGS = key(c -> c.getString("storage.mysql.tables.chat-logs", null));
     public static ConfigKey<String> STORAGE_MYSQL_TABLES_USERS = key(c -> c.getString("storage.mysql.tables.users", null));
     public static ConfigKey<String> STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS = key(c -> c.getString("storage.mysql.tables.subscribed-channels", null));

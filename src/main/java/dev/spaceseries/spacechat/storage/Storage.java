@@ -4,15 +4,21 @@ import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.User;
 
+import java.sql.SQLException;
 import java.util.UUID;
 
 public abstract class Storage {
 
     protected final SpaceChat plugin;
 
-    public Storage(SpaceChat plugin) {
+    public Storage(SpaceChat plugin) throws StorageInitializationException {
         this.plugin = plugin;
     }
+
+    /**
+     * Initializes the storage medium
+     */
+    public abstract void init() throws StorageInitializationException;
 
     /**
      * Logs to the storage medium
