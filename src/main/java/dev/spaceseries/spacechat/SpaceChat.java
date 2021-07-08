@@ -119,6 +119,9 @@ public final class SpaceChat extends JavaPlugin {
         loadConfigs();
         // load formats
         loadFormats();
+
+        this.chatManager = new ChatManager(this);
+
         // load connection managers
         loadSyncServices();
         // load channels
@@ -131,8 +134,6 @@ public final class SpaceChat extends JavaPlugin {
         // initialize messages
         Messages.renew();
         Messages.getInstance(this);
-
-        this.chatManager = new ChatManager(this);
 
         // initialize log manager
         logManagerImpl = new LogManagerImpl(this);

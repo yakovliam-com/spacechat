@@ -110,12 +110,13 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
     @Override
     public List<Channel> getSubscribedChannels(UUID uuid) {
         try (Jedis jedis = pool.getResource()) {
-            // get
-            return jedis.lrange(REDIS_PLAYER_SUBSCRIBED_CHANNELS_LIST_KEY.get(plugin.getSpaceChatConfig().getAdapter())
+            List<Channel> channels = jedis.lrange(REDIS_PLAYER_SUBSCRIBED_CHANNELS_LIST_KEY.get(plugin.getSpaceChatConfig().getAdapter())
                     .replace("%uuid%", uuid.toString()), 0, -1).stream()
                     .map(s -> plugin.getChannelManager().get(s, null))
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
+            jedis.close();
+            return channels;
         } catch (Exception e) {
             return new ArrayList<>();
         }
@@ -130,9 +131,10 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
     @Override
     public Channel getCurrentChannel(UUID uuid) {
         try (Jedis jedis = pool.getResource()) {
-            // get channel
-            return plugin.getChannelManager().get(jedis.get(REDIS_PLAYER_CURRENT_CHANNEL_KEY.get(plugin.getSpaceChatConfig().getAdapter())
+            Channel channel = plugin.getChannelManager().get(jedis.get(REDIS_PLAYER_CURRENT_CHANNEL_KEY.get(plugin.getSpaceChatConfig().getAdapter())
                     .replace("%uuid%", uuid.toString())), null);
+            jedis.close();
+            return channel;
         }
     }
 
@@ -150,7 +152,7 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
             // get list of uuids of players who've subscribed to a given channel
             List<String> uuids = jedis.lrange(REDIS_CHANNELS_SUBSCRIBED_UUIDS_LIST_KEY.get(plugin.getSpaceChatConfig().getAdapter())
                     .replace("%channel%", channel.getHandle()), 0, -1);
-
+            jedis.close();
             // map and return
             return uuids.stream()
                     .map(UUID::fromString)
