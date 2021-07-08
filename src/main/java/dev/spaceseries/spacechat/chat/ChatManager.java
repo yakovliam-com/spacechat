@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
 public class ChatManager implements Manager {
 
     private final SpaceChat plugin;
-    private final ServerStreamSyncService serverStreamSyncService;
-    private final ServerDataSyncService serverDataSyncService;
+    private ServerStreamSyncService serverStreamSyncService;
+    private ServerDataSyncService serverDataSyncService;
     private final ConfigurationAdapter config;
 
     /**
@@ -44,10 +44,15 @@ public class ChatManager implements Manager {
      */
     public ChatManager(SpaceChat plugin) {
         this.plugin = plugin;
+        this.config = plugin.getSpaceChatConfig().getAdapter();
+    }
 
+    /**
+     * Initializes server sync services
+     */
+    public void initSyncServices() {
         this.serverStreamSyncService = plugin.getServerSyncServiceManager().getStreamService();
         this.serverDataSyncService = plugin.getServerSyncServiceManager().getDataService();
-        this.config = plugin.getSpaceChatConfig().getAdapter();
     }
 
     /**

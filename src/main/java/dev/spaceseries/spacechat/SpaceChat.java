@@ -124,6 +124,11 @@ public final class SpaceChat extends JavaPlugin {
 
         // load connection managers
         loadSyncServices();
+
+        // initialize sync services, since they have to be instantiated and used after the chat manager
+        // is created
+        this.chatManager.initSyncServices();
+
         // load channels
         loadChannels();
         // load storage
@@ -170,7 +175,7 @@ public final class SpaceChat extends JavaPlugin {
             serverSyncServiceManager.end();
 
         // close the storage connection pool (if applicable)
-        if (storageManager != null) {
+        if (storageManager != null && storageManager.getCurrent() != null) {
             // save all users
             userManager.getAll().forEach((key, value) -> storageManager.getCurrent().updateUser(value));
             storageManager.getCurrent().close();
