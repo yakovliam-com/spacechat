@@ -26,6 +26,7 @@ import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
@@ -99,7 +100,9 @@ public final class SpaceChat extends JavaPlugin {
     public void onLoad() {
         getLogger().info("We're currently downloading a lot of data to make this plugin work correctly, so please wait. This may take a while.");
         try {
-            ApplicationBuilder.appending("SpaceChat").build();
+            ApplicationBuilder.appending("SpaceChat").downloadDirectoryPath(
+                    new File(getDataFolder(), "Libraries").toPath()
+            ).build();
         } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
