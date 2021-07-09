@@ -158,8 +158,10 @@ owner-join: true
 #                         #
 # For:                    #
 # Using chat colors (&)   #
+# Using chat links        #
 # Using item chat ([item])#
 #=#=#=#=#=#=#=#=#=#=#=#=#=#
 permissions:
   use-chat-colors: "space.chat.chatcolor"
+  use-chat-links: "space.chat.chatlinks"
   use-item-chat: "space.chat.item-chat"
