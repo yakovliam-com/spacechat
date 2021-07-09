@@ -15,7 +15,7 @@ import static dev.spaceseries.spaceapi.config.generic.key.ConfigKeyFactory.notRe
 
 public class SpaceChatConfigKeys {
 
-    public static ConfigKey<String> STORAGE_USE = key(c -> c.getString("storage.use", "yaml"));
+    public static ConfigKey<String> STORAGE_USE = key(c -> c.getString("storage.use", null));
     public static ConfigKey<String> STORAGE_MYSQL_TABLES_CHAT_LOGS = key(c -> c.getString("storage.mysql.tables.chat-logs", null));
     public static ConfigKey<String> STORAGE_MYSQL_TABLES_USERS = key(c -> c.getString("storage.mysql.tables.users", null));
     public static ConfigKey<String> STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS = key(c -> c.getString("storage.mysql.tables.subscribed-channels", null));
@@ -54,6 +54,7 @@ public class SpaceChatConfigKeys {
 
     public static ConfigKey<String> PERMISSIONS_USE_CHAT_COLORS = key(c -> c.getString("permissions.use-chat-colors", null));
     public static ConfigKey<String> PERMISSIONS_USE_ITEM_CHAT = key(c -> c.getString("permissions.use-item-chat", null));
+    public static ConfigKey<String> PERMISSIONS_USE_CHAT_LINKS = key(c -> c.getString("permissions.use-chat-links", null));
 
     public static ConfigKey<Boolean> BROADCAST_USE_LANG_WRAPPER = key(c -> c.getBoolean("broadcast.use-lang-wrapper", false));
 
