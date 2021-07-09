@@ -101,7 +101,7 @@ public final class SpaceChat extends JavaPlugin {
         getLogger().info("We're currently downloading a lot of data to make this plugin work correctly, so please wait. This may take a while.");
         try {
             ApplicationBuilder.appending("SpaceChat").downloadDirectoryPath(
-                    new File(getDataFolder(), "Libraries").toPath()
+                    new File(getDataFolder(), "libraries").toPath()
             ).build();
         } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
             e.printStackTrace();
