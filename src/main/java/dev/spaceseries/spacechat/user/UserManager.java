@@ -39,7 +39,7 @@ public class UserManager implements Manager {
      * @param consumer consumer
      */
     public void use(UUID uuid, Consumer<User> consumer) {
-        userAsyncCache.get(uuid).thenAccept(consumer).join();
+        userAsyncCache.get(uuid).thenAccept(consumer);
     }
 
     /**

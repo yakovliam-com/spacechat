@@ -122,9 +122,8 @@ public final class SpaceChat extends JavaPlugin {
         loadConfigs();
         // load formats
         loadFormats();
-
-        this.chatManager = new ChatManager(this);
-
+        // load chat manager
+        loadChatManager();
         // load connection managers
         loadSyncServices();
 
@@ -168,7 +167,7 @@ public final class SpaceChat extends JavaPlugin {
         this.getLogger().info("Detected that SpaceChat is running under " + VersionUtil.getServerBukkitVersion().toString());
 
         // initialize file watcher
-        new FileWatcher(this);
+        // new FileWatcher(this);
     }
 
     @Override
@@ -236,6 +235,13 @@ public final class SpaceChat extends JavaPlugin {
     public void loadStorage() {
         // initialize storage
         storageManager = new StorageManager(this);
+    }
+
+    /**
+     * Loads the chat manager
+     */
+    public void loadChatManager() {
+        this.chatManager = new ChatManager(this);
     }
 
     /**

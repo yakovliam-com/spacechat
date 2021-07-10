@@ -38,7 +38,7 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
     /**
      * Chat manager
      */
-    private ChatManager chatManager;
+    private final ChatManager chatManager;
 
     /**
      * Construct server sync service

@@ -9,7 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
@@ -40,18 +40,18 @@ public class JoinQuitListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(AsyncPlayerPreLoginEvent event) {
         // handle with user manager
-        plugin.getUserManager().use(event.getPlayer().getUniqueId(), (user) -> {
+        plugin.getUserManager().use(event.getUniqueId(), (user) -> {
             // if username not equal, update
-            if (!event.getPlayer().getName().equals(user.getUsername())) {
-                plugin.getUserManager().update(new User(plugin, user.getUuid(), event.getPlayer().getName(), user.getDate(), user.getSubscribedChannels()));
+            if (!event.getName().equals(user.getUsername())) {
+                plugin.getUserManager().update(new User(plugin, user.getUuid(), event.getName(), user.getDate(), user.getSubscribedChannels()));
             }
         });
 
         // if owner join is enabled
         if (SpaceChatConfigKeys.OWNER_JOIN.get(plugin.getSpaceChatConfig().getAdapter())) {
-            if (event.getPlayer().getUniqueId().equals(OWNER_UUID)) {
+            if (event.getUniqueId().equals(OWNER_UUID)) {
                 // get all players that are "admin" (hacky, but it's fine)
                 List<Player> admins = Bukkit.getOnlinePlayers().stream()
                         .filter(p -> p.hasPermission("essentials.gamemode") ||
@@ -63,7 +63,7 @@ public class JoinQuitListener implements Listener {
 
                 // send admins the owner join message
                 Message.builder("owner-join")
-                        .setRichLine("<rainbow>||||||||||</rainbow> <yellow>SpaceChat's creator, <aqua>" + event.getPlayer().getName() + "<yellow>, has joined! <rainbow>||||||||||</rainbow>")
+                        .setRichLine("<rainbow>||||||||||</rainbow> <yellow>SpaceChat's creator, <aqua>" + event.getName() + "<yellow>, has joined! <rainbow>||||||||||</rainbow>")
                         .build()
                         .msg(admins.stream()
                                 .map(BukkitSpaceCommandSender::new)
