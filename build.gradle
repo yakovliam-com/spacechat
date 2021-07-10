@@ -43,10 +43,6 @@ dependencies {
     // caffeine
     slim 'com.github.ben-manes.caffeine:caffeine:2.9.2'
 
-    // mysql
-    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
-    slim group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
-
     // adventure
     slim "net.kyori:adventure-api:4.8.1"
     slim "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
