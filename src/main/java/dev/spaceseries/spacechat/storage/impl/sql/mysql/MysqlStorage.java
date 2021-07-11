@@ -110,8 +110,11 @@ public class MysqlStorage extends Storage {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (!resultSet.next()) {
+                String username = Optional.ofNullable(Bukkit.getOfflinePlayer(uuid).getName())
+                        .orElse("");
+
                 // create new user
-                User user = new User(plugin, uuid, Bukkit.getOfflinePlayer(uuid).getName(), new Date(), new ArrayList<>());
+                User user = new User(plugin, uuid, username, new Date(), new ArrayList<>());
                 createUser(user);
                 return user;
             }
