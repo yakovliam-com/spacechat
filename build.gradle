@@ -7,7 +7,7 @@ plugins {
 }
 
 // naming
-version = '2.2.6-SNAPSHOT'
+version = '2.2.7-SNAPSHOT'
 group = 'dev.spaceseries'
 def packageGroup = group + '.spacechat'
 
@@ -41,12 +41,12 @@ dependencies {
     implementation "org.bstats:bstats-bukkit:2.2.1"
 
     // caffeine
-    slim 'com.github.ben-manes.caffeine:caffeine:2.9.2'
+    implementation 'com.github.ben-manes.caffeine:caffeine:2.9.2'
 
     // adventure
-    slim "net.kyori:adventure-api:4.8.1"
-    slim "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
-    slim "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
+    implementation "net.kyori:adventure-api:4.8.1"
+    implementation "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
+    implementation "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
 }
 
 artifacts {
@@ -61,11 +61,16 @@ jar {
 
 shadowJar {
     archiveName("SpaceChat-${project.version}.jar")
+
+    relocate 'dev.spaceseries.spaceapi', "${packageGroup}.lib.spaceapi"
+    relocate 'org.bstats', "${packageGroup}.lib.bstats"
+    relocate 'net.kyori', "${packageGroup}.lib.kyori"
+    relocate 'com.github.benmanes.caffeine', "${packageGroup}.lib.caffeine"
 }
 
 slimJar {
-    relocate 'org.bstats', "${packageGroup}.lib.bstats"
     relocate 'dev.spaceseries.spaceapi', "${packageGroup}.lib.spaceapi"
+    relocate 'org.bstats', "${packageGroup}.lib.bstats"
     relocate 'net.kyori', "${packageGroup}.lib.kyori"
     relocate 'com.github.benmanes.caffeine', "${packageGroup}.lib.caffeine"
 }
