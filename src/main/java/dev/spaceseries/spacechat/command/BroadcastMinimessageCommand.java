@@ -9,6 +9,7 @@ import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChat;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.broadcast.RedisBroadcastPacket;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.BROADCAST_USE_LANG_WRAPPER;
@@ -20,7 +21,7 @@ public class BroadcastMinimessageCommand extends Command {
     private final SpaceChat plugin;
 
     public BroadcastMinimessageCommand(SpaceChat plugin) {
-        super(plugin.getPlugin(), "broadcastminimessage", "Broadcast (minimessage) command", Collections.singletonList("bcastm"));
+        super(plugin.getPlugin(), "broadcastminimessage", "Broadcast (minimessage) command", Arrays.asList("scbcastm", "bcastm"));
         this.plugin = plugin;
     }
 
