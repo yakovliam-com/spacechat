@@ -6,7 +6,7 @@ plugins {
 }
 
 // naming
-version = '2.2.6-SNAPSHOT'
+version = '2.2.7-SNAPSHOT'
 group = 'dev.spaceseries'
 def packageGroup = group + '.spacechat'
 
