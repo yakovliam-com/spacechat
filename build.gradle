@@ -3,6 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id "com.github.johnrengelman.shadow" version "5.2.0"
     id "java"
+    id 'io.github.slimjar' version '1.2.1'
 }
 
 // naming
@@ -12,6 +13,7 @@ def packageGroup = group + '.spacechat'
 
 repositories {
     mavenCentral()
+    jcenter()
 
     maven { url 'https://repo.yakovliam.com/releases/' }
     maven { url 'https://oss.sonatype.org/content/groups/public/' }
@@ -30,7 +32,7 @@ dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
 
     // space api
-    implementation 'dev.spaceseries:spaceapi:1.0.12'
+    slim 'dev.spaceseries:spaceapi:1.0.12'
 
     // placeholderAPI
     compileOnly 'me.clip:placeholderapi:2.10.9'
@@ -60,8 +62,15 @@ jar {
 shadowJar {
     archiveName("SpaceChat-${project.version}.jar")
 
-    relocate 'org.bstats', "${packageGroup}.lib.bstats"
     relocate 'dev.spaceseries.spaceapi', "${packageGroup}.lib.spaceapi"
+    relocate 'org.bstats', "${packageGroup}.lib.bstats"
+    relocate 'net.kyori', "${packageGroup}.lib.kyori"
+    relocate 'com.github.benmanes.caffeine', "${packageGroup}.lib.caffeine"
+}
+
+slimJar {
+    relocate 'dev.spaceseries.spaceapi', "${packageGroup}.lib.spaceapi"
+    relocate 'org.bstats', "${packageGroup}.lib.bstats"
     relocate 'net.kyori', "${packageGroup}.lib.kyori"
     relocate 'com.github.benmanes.caffeine', "${packageGroup}.lib.caffeine"
 }
