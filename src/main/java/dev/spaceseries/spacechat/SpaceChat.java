@@ -13,7 +13,6 @@ import dev.spaceseries.spacechat.command.SpaceChatCommand;
 import dev.spaceseries.spacechat.config.SpaceChatConfig;
 import dev.spaceseries.spacechat.external.papi.SpaceChatExpansion;
 import dev.spaceseries.spacechat.internal.space.SpacePlugin;
-import dev.spaceseries.spacechat.io.watcher.FileWatcher;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.listener.JoinQuitListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
@@ -21,9 +20,7 @@ import dev.spaceseries.spacechat.storage.StorageManager;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 import dev.spaceseries.spacechat.user.UserManager;
 import dev.spaceseries.spacechat.util.version.VersionUtil;
-import io.github.slimjar.app.builder.ApplicationBuilder;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -95,18 +92,6 @@ public final class SpaceChat extends JavaPlugin {
      * Chat manager
      */
     private ChatManager chatManager;
-
-    @Override
-    public void onLoad() {
-        getLogger().info("We're currently downloading a lot of data to make this plugin work correctly, so please wait. This may take a while.");
-        try {
-            ApplicationBuilder.appending("SpaceChat").downloadDirectoryPath(
-                    new File(getDataFolder(), "libraries").toPath()
-            ).build();
-        } catch (IOException | ReflectiveOperationException | URISyntaxException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Runs on enable
