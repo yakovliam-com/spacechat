@@ -38,15 +38,19 @@ dependencies {
     compileOnly 'me.clip:placeholderapi:2.10.9'
 
     // bstats
-    implementation "org.bstats:bstats-bukkit:2.2.1"
+    slim "org.bstats:bstats-bukkit:2.2.1"
 
     // caffeine
-    implementation 'com.github.ben-manes.caffeine:caffeine:2.9.2'
+    slim 'com.github.ben-manes.caffeine:caffeine:2.9.2'
 
     // adventure
-    implementation "net.kyori:adventure-api:4.8.1"
-    implementation "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
-    implementation "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
+    slim "net.kyori:adventure-api:4.8.1"
+    slim "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
+    slim "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
+
+    // mysql
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    slim group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
 }
 
 artifacts {
@@ -66,6 +70,7 @@ shadowJar {
     relocate 'org.bstats', "${packageGroup}.lib.bstats"
     relocate 'net.kyori', "${packageGroup}.lib.kyori"
     relocate 'com.github.benmanes.caffeine', "${packageGroup}.lib.caffeine"
+    relocate 'com.mysql', "${packageGroup}.lib.mysql"
 }
 
 slimJar {
@@ -73,6 +78,7 @@ slimJar {
     relocate 'org.bstats', "${packageGroup}.lib.bstats"
     relocate 'net.kyori', "${packageGroup}.lib.kyori"
     relocate 'com.github.benmanes.caffeine', "${packageGroup}.lib.caffeine"
+    relocate 'com.mysql', "${packageGroup}.lib.mysql"
 }
 
 processResources {
