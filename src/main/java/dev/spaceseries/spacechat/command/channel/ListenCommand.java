@@ -1,55 +1,47 @@
 package dev.spaceseries.spacechat.command.channel;
 
-import dev.spaceseries.spaceapi.command.Command;
-import dev.spaceseries.spaceapi.command.Permissible;
-import dev.spaceseries.spaceapi.command.PlayersOnly;
-import dev.spaceseries.spaceapi.command.SpaceCommandSender;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Single;
+import co.aikar.commands.annotation.Subcommand;
 import dev.spaceseries.spacechat.Messages;
-import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.api.message.Message;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.api.command.SpaceChatCommand;
 import dev.spaceseries.spacechat.model.Channel;
+import org.bukkit.entity.Player;
 
-@Permissible("space.chat.command.channel.listen")
-@PlayersOnly
-public class ListenCommand extends Command {
+@CommandPermission("space.chat.command.channel.listen")
+@Subcommand("listen")
+@CommandAlias("channel")
+public class ListenCommand extends SpaceChatCommand {
 
-    private final SpaceChat plugin;
-
-    public ListenCommand(SpaceChat plugin) {
-        super(plugin.getPlugin(), "listen");
-        this.plugin = plugin;
+    public ListenCommand(SpaceChatPlugin plugin) {
+        super(plugin);
     }
 
-    @Override
-    public void onCommand(SpaceCommandSender sender, String label, String... args) {
-        // args
-        if (args.length != 1) {
-            Messages.getInstance(plugin).generalHelp.msg(sender);
-            return;
-        }
-
-        String channel = args[0];
-
+    @Default
+    public void onListen(Player player, @Single String channel) {
         // get channel
         Channel applicable = plugin.getChannelManager().get(channel, null);
         if (applicable == null) {
             // send message
-            Messages.getInstance(plugin).channelInvalid.msg(sender, "%channel%", channel);
+            Messages.getInstance(plugin).channelInvalid.message(player, "%channel%", channel);
             return;
         }
 
         // do they have permission?
-        if (!sender.hasPermission(applicable.getPermission())) {
-            Message.Global.ACCESS_DENIED.msg(sender);
+        if (!player.hasPermission(applicable.getPermission())) {
+            Messages.getInstance(plugin).channelAccessDenied.message(player);
             return;
         }
 
         // set current channel
-        plugin.getUserManager().use(sender.getUuid(), (user) -> {
+        plugin.getUserManager().use(player.getUniqueId(), (user) -> {
             user.subscribeToChannel(applicable);
 
             // send message
-            Messages.getInstance(plugin).channelListen.msg(sender, "%channel%", channel);
+            Messages.getInstance(plugin).channelListen.message(player, "%channel%", channel);
         });
     }
 }

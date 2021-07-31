@@ -1,36 +1,28 @@
 package dev.spaceseries.spacechat.command;
 
-import dev.spaceseries.spaceapi.command.Command;
-import dev.spaceseries.spaceapi.command.Permissible;
-import dev.spaceseries.spaceapi.command.SpaceCommandSender;
+import co.aikar.commands.annotation.CatchUnknown;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.HelpCommand;
 import dev.spaceseries.spacechat.Messages;
-import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.command.channel.JoinCommand;
-import dev.spaceseries.spacechat.command.channel.LeaveCommand;
-import dev.spaceseries.spacechat.command.channel.ListenCommand;
-import dev.spaceseries.spacechat.command.channel.MuteCommand;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.api.command.SpaceChatCommand;
+import org.bukkit.entity.Player;
 
-@Permissible("space.chat.command.channel")
-public class ChannelCommand extends Command {
+@CommandPermission("space.chat.command.channel")
+@CommandAlias("channel")
+public class ChannelCommand extends SpaceChatCommand {
 
-    private final SpaceChat plugin;
-
-    public ChannelCommand(SpaceChat plugin) {
-        super(plugin.getPlugin(), "channel");
-        this.plugin = plugin;
-
-        // add sub commands
-        addSubCommands(
-                new JoinCommand(plugin),
-                new LeaveCommand(plugin),
-                new ListenCommand(plugin),
-                new MuteCommand(plugin)
-        );
+    public ChannelCommand(SpaceChatPlugin plugin) {
+        super(plugin);
     }
 
-    @Override
-    public void onCommand(SpaceCommandSender sender, String label, String... args) {
+    @Default
+    @CatchUnknown
+    @HelpCommand
+    public void onCommand(Player player) {
         // send help message
-        Messages.getInstance(plugin).generalHelp.msg(sender);
+        Messages.getInstance(plugin).generalHelp.message(player);
     }
 }

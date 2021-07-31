@@ -1,6 +1,6 @@
 name: SpaceChat
 version: @version@
-main: dev.spaceseries.spacechat.SpaceChat
+main: dev.spaceseries.spacechat.SpaceChatPlugin
 authors: [yakovliam]
 description: Simple and effective chat formatting
 website: https://www.spaceseries.dev/

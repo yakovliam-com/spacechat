@@ -1,13 +1,13 @@
 package dev.spaceseries.spacechat.sync.redis.data;
 
-import dev.spaceseries.spaceapi.lib.redis.jedis.Jedis;
-import dev.spaceseries.spaceapi.lib.redis.jedis.JedisPool;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.sync.ServerDataSyncService;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
      *
      * @param serviceManager service manager
      */
-    public RedisServerDataSyncService(SpaceChat plugin, ServerSyncServiceManager serviceManager) {
+    public RedisServerDataSyncService(SpaceChatPlugin plugin, ServerSyncServiceManager serviceManager) {
         super(plugin, serviceManager);
 
         // initialize pool

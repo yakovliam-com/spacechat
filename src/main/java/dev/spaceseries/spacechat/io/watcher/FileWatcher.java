@@ -1,9 +1,8 @@
 package dev.spaceseries.spacechat.io.watcher;
 
 import com.google.common.io.Files;
-import dev.spaceseries.spaceapi.command.BukkitSpaceCommandSender;
 import dev.spaceseries.spacechat.Messages;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import org.bukkit.Bukkit;
 
 import java.util.concurrent.CompletableFuture;
@@ -13,7 +12,7 @@ public class FileWatcher {
     /**
      * Construct file watcher
      */
-    public FileWatcher(SpaceChat plugin) {
+    public FileWatcher(SpaceChatPlugin plugin) {
         DirectoryWatcher fileWatcher = new DirectoryWatcher.Builder()
                 .addDirectories(plugin.getDataFolder().getPath())
                 .setFilter((p) -> {
@@ -48,11 +47,11 @@ public class FileWatcher {
                             // load dynamic connections
                             plugin.loadSyncServices();
                         } catch (Exception e) {
-                            Messages.getInstance(plugin).reloadFailure.msg(new BukkitSpaceCommandSender(Bukkit.getConsoleSender()));
+                            Messages.getInstance(plugin).reloadFailure.message(Bukkit.getConsoleSender());
                             e.printStackTrace();
                             return;
                         }
-                        Messages.getInstance(plugin).reloadSuccess.msg(new BukkitSpaceCommandSender(Bukkit.getConsoleSender()));
+                        Messages.getInstance(plugin).reloadSuccess.message(Bukkit.getConsoleSender());
                     });
                 });
 

@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.parser;
 
-import dev.spaceseries.spaceapi.util.Pair;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.api.wrapper.Pair;
 import dev.spaceseries.spacechat.parser.itemchat.ItemChatParser;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -19,7 +19,7 @@ public class MessageParser {
     /**
      * Construct message parser
      */
-    public MessageParser(SpaceChat plugin) {
+    public MessageParser(SpaceChatPlugin plugin) {
         this.parsers = Collections.singletonList(
                 new ItemChatParser(plugin)
         );

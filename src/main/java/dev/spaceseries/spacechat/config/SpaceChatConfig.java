@@ -1,8 +1,8 @@
 package dev.spaceseries.spacechat.config;
 
-import dev.spaceseries.spaceapi.config.adapter.BukkitConfigAdapter;
-import dev.spaceseries.spaceapi.config.generic.KeyedConfiguration;
-import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
+import dev.spaceseries.spacechat.api.config.adapter.BukkitConfigAdapter;
+import dev.spaceseries.spacechat.api.config.generic.KeyedConfiguration;
+import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
 
 public final class SpaceChatConfig extends KeyedConfiguration {
 

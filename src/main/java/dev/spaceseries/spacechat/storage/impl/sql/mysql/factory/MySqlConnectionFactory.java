@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.sql.mysql.factory;
 
-import dev.spaceseries.spaceapi.lib.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariConfig;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.StorageCredentials;
 
 import java.sql.Driver;

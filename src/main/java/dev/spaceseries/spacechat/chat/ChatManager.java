@@ -1,14 +1,12 @@
 package dev.spaceseries.spacechat.chat;
 
-import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
-import dev.spaceseries.spaceapi.util.ColorUtil;
-import dev.spaceseries.spaceapi.util.Quad;
-import dev.spaceseries.spaceapi.util.Trio;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
 import dev.spaceseries.spacechat.api.message.Message;
+import dev.spaceseries.spacechat.api.wrapper.Quad;
+import dev.spaceseries.spacechat.api.wrapper.Trio;
 import dev.spaceseries.spacechat.builder.live.NormalLiveChatFormatBuilder;
 import dev.spaceseries.spacechat.builder.live.RelationalLiveChatFormatBuilder;
-import dev.spaceseries.spacechat.config.SpaceChatConfig;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
@@ -19,6 +17,7 @@ import dev.spaceseries.spacechat.model.manager.Manager;
 import dev.spaceseries.spacechat.sync.ServerDataSyncService;
 import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacket;
+import dev.spaceseries.spacechat.util.color.ColorUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -32,7 +31,7 @@ import java.util.stream.Collectors;
 
 public class ChatManager implements Manager {
 
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
     private ServerStreamSyncService serverStreamSyncService;
     private ServerDataSyncService serverDataSyncService;
     private final ConfigurationAdapter config;
@@ -42,7 +41,7 @@ public class ChatManager implements Manager {
      *
      * @param plugin plugin
      */
-    public ChatManager(SpaceChat plugin) {
+    public ChatManager(SpaceChatPlugin plugin) {
         this.plugin = plugin;
         this.config = plugin.getSpaceChatConfig().getAdapter();
     }

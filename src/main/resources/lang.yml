@@ -2,62 +2,26 @@ general:
   help:
     text:
       - "&8&l[&d&lS&5&lS&8&l]&r &bChat &7&o(v2)&r &3help"
-      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/spacechat reload $&f&l(CLICK ME)$"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/spacechat reload"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Reload plugin &7(chat formats, messages)"
-      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/broadcast $&f&l(CLICK ME)$"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/broadcast"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Broadcast a message to the server"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
-      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/broadcastminimessage $&f&l(CLICK ME)$"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/broadcastminimessage"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Broadcast a message &7(using minimessage) &3to the server"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
-      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/channel join &7<channel> $&f&l(CLICK ME)$"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/channel join &7<channel>"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Start talking in a specific channel"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
-      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/channel leave $&f&l(CLICK ME)$"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/channel leave"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Stop talking in your current channel"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
-      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/channel listen &7<channel> $&f&l(CLICK ME)$"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/channel listen &7<channel>"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Subscribe to messages from a specific channel"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
-      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/channel mute &7<channel> $&f&l(CLICK ME)$"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/channel mute &7<channel>"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Unsubscribe to messages from a specific channel"
       - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
-    extras:
-      1:
-        tooltip:
-          - "&bClick to reload chat formats"
-        action: "RUN_COMMAND"
-        content: "/spacechat reload"
-      2:
-        tooltip:
-          - "&bClick to broadcast a message"
-        action: "SUGGEST"
-        content: "/broadcast "
-      3:
-        tooltip:
-          - "&bClick to broadcast a message with minimessage"
-        action: "SUGGEST"
-        content: "/broadcastminimessage "
-      4:
-        tooltip:
-          - "&bClick to join a channel"
-        action: "SUGGEST"
-        content: "/spacechat channel join "
-      5:
-        tooltip:
-          - "&bClick to leave a channel"
-        action: "RUN_COMMAND"
-        content: "/channel leave"
-      6:
-        tooltip:
-          - "&bClick to listen to a channel"
-        action: "SUGGEST"
-        content: "/channel listen "
-      7:
-        tooltip:
-          - "&bClick to mute a channel"
-        action: "SUGGEST"
-        content: "/channel mute "
 channel:
   join:
     text:
@@ -74,6 +38,9 @@ channel:
   invalid:
     text:
       - "&8&l[&d&lS&5&lS&8&l]&r &cOops! We can't find a channel with the name of &7%channel%&c."
+  access-denied:
+    text:
+      - "&8&l[&d&lS&5&lS&8&l]&r &cOops! You aren't allowed to interact with that channel!"
 ignore:
   player-not-found:
     text:
@@ -85,18 +52,10 @@ reload:
   failure:
     text:
       - "&8&l[&d&lS&5&lS&8&l]&r $&cFailed to reload &bChat$"
-    extras:
-      1:
-        tooltip:
-          - "&cCheck console for details!"
 broadcast:
   args:
     text:
       - "&8&l[&d&lS&5&lS&8&l]&r &cOops! &7You need to specify a message."
   wrapper:
     text:
-      - "&8&l[&d&lS&5&lS&8&l]&r $&f&oBroadcast$ \u00BB &7%message%"
-    extras:
-      1:
-        tooltip:
-          - "&bThis is a broadcast message!"
+      - "&8&l[&d&lS&5&lS&8&l]&r [&f&oBroadcast](text: &cThis is a broadcast!) \u00BB &7%message%"

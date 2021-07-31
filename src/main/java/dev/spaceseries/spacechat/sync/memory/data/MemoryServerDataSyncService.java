@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.sync.memory.data;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.model.manager.MapManager;
 import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.sync.ServerDataSyncService;
@@ -33,7 +33,7 @@ public class MemoryServerDataSyncService extends ServerDataSyncService {
      * @param plugin         plugin
      * @param serviceManager service manager
      */
-    public MemoryServerDataSyncService(SpaceChat plugin, ServerSyncServiceManager serviceManager) {
+    public MemoryServerDataSyncService(SpaceChatPlugin plugin, ServerSyncServiceManager serviceManager) {
         super(plugin, serviceManager);
         this.playerSubscribedChannelManager = new PlayerSubscribedChannelManager();
         this.playerCurrentChannelManager = new PlayerCurrentChannelManager();

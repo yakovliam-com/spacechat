@@ -1,13 +1,13 @@
 package dev.spaceseries.spacechat.sync.redis.stream;
 
-import dev.spaceseries.spaceapi.lib.redis.jedis.Jedis;
-import dev.spaceseries.spaceapi.lib.redis.jedis.JedisPool;
-import dev.spaceseries.spaceapi.lib.redis.jedis.JedisPubSub;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.sync.packet.StreamDataPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.RedisPublishDataPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.RedisStringReceiveDataPacket;
 import org.bukkit.Bukkit;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPubSub;
 
 import java.util.logging.Level;
 
@@ -28,12 +28,12 @@ public class RedisMessenger extends JedisPubSub {
     /**
      * Plugin
      */
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
 
     /**
      * Construct redis connector
      */
-    public RedisMessenger(SpaceChat plugin, RedisServerStreamSyncService syncService) {
+    public RedisMessenger(SpaceChatPlugin plugin, RedisServerStreamSyncService syncService) {
         this.plugin = plugin;
         this.syncService = syncService;
 

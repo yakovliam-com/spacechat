@@ -1,27 +1,27 @@
 package dev.spaceseries.spacechat.command.spacechat;
 
-import dev.spaceseries.spaceapi.command.Command;
-import dev.spaceseries.spaceapi.command.Permissible;
-import dev.spaceseries.spaceapi.command.SpaceCommandSender;
-import dev.spaceseries.spaceapi.command.SubCommand;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Subcommand;
 import dev.spaceseries.spacechat.Messages;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.api.command.SpaceChatCommand;
+import org.bukkit.command.CommandSender;
 
 import java.util.concurrent.CompletableFuture;
 
-@SubCommand
-@Permissible("space.chat.command.reload")
-public class ReloadCommand extends Command {
+@CommandAlias("spacechat")
+@Subcommand("reload")
+@CommandPermission("space.chat.command.reload")
+public class ReloadCommand extends SpaceChatCommand {
 
-    private final SpaceChat plugin;
-
-    public ReloadCommand(SpaceChat plugin) {
-        super(plugin.getPlugin(), "reload");
-        this.plugin = plugin;
+    public ReloadCommand(SpaceChatPlugin plugin) {
+        super(plugin);
     }
 
-    @Override
-    public void onCommand(SpaceCommandSender sender, String s, String... args) {
+    @Default
+    public void onReload(CommandSender sender) {
         // run async task
         CompletableFuture.runAsync(() -> {
             try {
@@ -52,11 +52,11 @@ public class ReloadCommand extends Command {
                 plugin.loadUsers();
 
             } catch (Exception e) {
-                Messages.getInstance(plugin).reloadFailure.msg(sender);
+                Messages.getInstance(plugin).reloadFailure.message(sender);
                 e.printStackTrace();
                 return;
             }
-            Messages.getInstance(plugin).reloadSuccess.msg(sender);
+            Messages.getInstance(plugin).reloadSuccess.message(sender);
         });
     }
 }

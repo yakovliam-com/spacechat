@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.util.version;
 
-import dev.spaceseries.spaceapi.lib.google.common.base.Objects;
-import dev.spaceseries.spaceapi.lib.google.common.base.Preconditions;
+import com.google.common.base.Objects;
+import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 
 import java.util.regex.Matcher;

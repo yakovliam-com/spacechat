@@ -1,12 +1,12 @@
 package dev.spaceseries.spacechat.builder.live;
 
+import dev.spaceseries.spacechat.api.wrapper.Quad;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentBuilder;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import dev.spaceseries.spaceapi.util.Quad;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.model.formatting.Extra;
 import dev.spaceseries.spacechat.model.formatting.Format;
@@ -30,7 +30,7 @@ public class RelationalLiveChatFormatBuilder extends LiveChatFormatBuilder imple
      */
     private static final SectionReplacer SECTION_REPLACER = new SectionReplacer();
 
-    public RelationalLiveChatFormatBuilder(SpaceChat plugin) {
+    public RelationalLiveChatFormatBuilder(SpaceChatPlugin plugin) {
         super(plugin);
     }
 

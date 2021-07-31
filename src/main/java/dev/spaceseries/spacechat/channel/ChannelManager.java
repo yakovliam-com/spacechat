@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.channel;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.loader.ChannelLoader;
 import dev.spaceseries.spacechat.model.ChannelType;
 import dev.spaceseries.spacechat.model.Channel;
@@ -17,12 +17,12 @@ public class ChannelManager extends MapManager<String, Channel> {
      */
     private final ChannelLoader channelLoader;
 
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
 
     /**
      * Initializes
      */
-    public ChannelManager(SpaceChat plugin) {
+    public ChannelManager(SpaceChatPlugin plugin) {
         this.plugin = plugin;
 
         // create format manager

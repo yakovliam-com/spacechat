@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.logging;
 
-import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
@@ -13,9 +13,9 @@ import java.util.logging.Level;
 
 public class LogManagerImpl implements LogManager {
 
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
 
-    public LogManagerImpl(SpaceChat plugin) {
+    public LogManagerImpl(SpaceChatPlugin plugin) {
         this.plugin = plugin;
     }
 

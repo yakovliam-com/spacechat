@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat;
 
-import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
+import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
 import dev.spaceseries.spacechat.api.message.Message;
 
 public class Messages {
@@ -23,14 +23,14 @@ public class Messages {
      *
      * @return messages
      */
-    public static Messages getInstance(SpaceChat context) {
+    public static Messages getInstance(SpaceChatPlugin context) {
         if (instance == null) {
             instance = new Messages(context);
         }
         return instance;
     }
 
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
 
     /* General */
 
@@ -70,7 +70,11 @@ public class Messages {
     // mute
     public Message channelMute;
     // invalid
+
     public Message channelInvalid;
+
+    // access denied
+    public Message channelAccessDenied;
 
     /**
      * Ignore
@@ -79,33 +83,22 @@ public class Messages {
     // player not found
     public Message playerNotFound;
 
-
-    public Messages(SpaceChat plugin) {
+    public Messages(SpaceChatPlugin plugin) {
         this.plugin = plugin;
 
 
-        generalHelp = Message.fromConfigurationSection(this.getLangConfiguration(), "general.help")
-                .build();
-        reloadSuccess = Message.fromConfigurationSection(this.getLangConfiguration(), "reload.success")
-                .build();
-        reloadFailure = Message.fromConfigurationSection(this.getLangConfiguration(), "reload.failure")
-                .build();
-        broadcastArgs = Message.fromConfigurationSection(this.getLangConfiguration(), "broadcast.args")
-                .build();
-        broadcastWrapper = Message.fromConfigurationSection(this.getLangConfiguration(), "broadcast.wrapper")
-                .build();
-        channelJoin = Message.fromConfigurationSection(this.getLangConfiguration(), "channel.join")
-                .build();
-        channelLeave = Message.fromConfigurationSection(this.getLangConfiguration(), "channel.leave")
-                .build();
-        channelListen = Message.fromConfigurationSection(this.getLangConfiguration(), "channel.listen")
-                .build();
-        channelMute = Message.fromConfigurationSection(this.getLangConfiguration(), "channel.mute")
-                .build();
-        channelInvalid = Message.fromConfigurationSection(this.getLangConfiguration(), "channel.invalid")
-                .build();
-        playerNotFound = Message.fromConfigurationSection(this.getLangConfiguration(), "ignore.player-not-found")
-                .build();
+        generalHelp = Message.fromConfigurationSection("general.help", this.getLangConfiguration());
+        reloadSuccess = Message.fromConfigurationSection("reload.success", this.getLangConfiguration());
+        reloadFailure = Message.fromConfigurationSection("reload.failure", this.getLangConfiguration());
+        broadcastArgs = Message.fromConfigurationSection("broadcast.args", this.getLangConfiguration());
+        broadcastWrapper = Message.fromConfigurationSection("broadcast.wrapper", this.getLangConfiguration());
+        channelJoin = Message.fromConfigurationSection("channel.join", this.getLangConfiguration());
+        channelLeave = Message.fromConfigurationSection("channel.leave", this.getLangConfiguration());
+        channelListen = Message.fromConfigurationSection("channel.listen", this.getLangConfiguration());
+        channelMute = Message.fromConfigurationSection("channel.mute", this.getLangConfiguration());
+        channelAccessDenied = Message.fromConfigurationSection("channel.access-denied", this.getLangConfiguration());
+        channelInvalid = Message.fromConfigurationSection("channel.invalid", this.getLangConfiguration());
+        playerNotFound = Message.fromConfigurationSection("ignore.player-not-found", this.getLangConfiguration());
     }
 
     /**

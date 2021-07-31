@@ -1,7 +1,6 @@
 package dev.spaceseries.spacechat;
 
-import dev.spaceseries.spaceapi.abstraction.plugin.BukkitPlugin;
-import dev.spaceseries.spaceapi.config.adapter.BukkitConfigAdapter;
+import dev.spaceseries.spacechat.api.config.adapter.BukkitConfigAdapter;
 import dev.spaceseries.spacechat.api.message.Message;
 import dev.spaceseries.spacechat.channel.ChannelManager;
 import dev.spaceseries.spacechat.chat.ChatFormatManager;
@@ -12,7 +11,6 @@ import dev.spaceseries.spacechat.command.ChannelCommand;
 import dev.spaceseries.spacechat.command.SpaceChatCommand;
 import dev.spaceseries.spacechat.config.SpaceChatConfig;
 import dev.spaceseries.spacechat.external.papi.SpaceChatExpansion;
-import dev.spaceseries.spacechat.internal.space.SpacePlugin;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.listener.JoinQuitListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
@@ -32,12 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.NoSuchAlgorithmException;
 
-public final class SpaceChat extends JavaPlugin {
-
-    /**
-     * The instance of the space api
-     */
-    private SpacePlugin plugin;
+public final class SpaceChatPlugin extends JavaPlugin {
 
     /**
      * The formats config
@@ -111,9 +104,6 @@ public final class SpaceChat extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        // initialize space api
-        plugin = new SpacePlugin(this);
-
         Message.initAudience(this);
 
         // load configs
@@ -298,7 +288,7 @@ public final class SpaceChat extends JavaPlugin {
      * @return config adapter
      */
     private BukkitConfigAdapter provideConfigAdapter(String fileName) {
-        return new BukkitConfigAdapter(plugin.getPlugin(), resolveConfig(fileName).toFile());
+        return new BukkitConfigAdapter(this, resolveConfig(fileName).toFile());
     }
 
     /**
@@ -306,15 +296,6 @@ public final class SpaceChat extends JavaPlugin {
      */
     public void loadMessages() {
         Messages.renew();
-    }
-
-    /**
-     * Returns space plugin
-     *
-     * @return plugin
-     */
-    public BukkitPlugin getPlugin() {
-        return plugin.getPlugin();
     }
 
     /**

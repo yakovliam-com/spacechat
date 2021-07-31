@@ -1,31 +1,27 @@
 package dev.spaceseries.spacechat.command;
 
-import dev.spaceseries.spaceapi.command.Command;
-import dev.spaceseries.spaceapi.command.Permissible;
-import dev.spaceseries.spaceapi.command.SpaceCommandSender;
+import co.aikar.commands.annotation.CatchUnknown;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.HelpCommand;
 import dev.spaceseries.spacechat.Messages;
-import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.command.spacechat.ReloadCommand;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
+import org.bukkit.command.CommandSender;
 
-@Permissible("space.chat.command")
-public class SpaceChatCommand extends Command {
+@CommandAlias("spacechat")
+@CommandPermission("space.chat.command")
+public class SpaceChatCommand extends dev.spaceseries.spacechat.api.command.SpaceChatCommand {
 
-    private final SpaceChat plugin;
-
-    public SpaceChatCommand(SpaceChat plugin) {
-        super(plugin.getPlugin(), "spacechat");
-
-        this.plugin = plugin;
-
-        // add sub commands
-        addSubCommands(
-                new ReloadCommand(plugin)
-        );
+    public SpaceChatCommand(SpaceChatPlugin plugin) {
+        super(plugin);
     }
 
-    @Override
-    public void onCommand(SpaceCommandSender sender, String s, String... args) {
+    @Default
+    @CatchUnknown
+    @HelpCommand
+    public void onDefault(CommandSender sender) {
         // send help message
-        Messages.getInstance(plugin).generalHelp.msg(sender);
+        Messages.getInstance(plugin).generalHelp.message(sender);
     }
 }

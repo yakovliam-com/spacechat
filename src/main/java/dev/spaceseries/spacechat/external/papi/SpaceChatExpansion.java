@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.external.papi;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import org.bukkit.OfflinePlayer;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
@@ -16,9 +16,9 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
  */
 public class SpaceChatExpansion extends PlaceholderExpansion {
 
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
 
-    public SpaceChatExpansion(SpaceChat plugin) {
+    public SpaceChatExpansion(SpaceChatPlugin plugin) {
         this.plugin = plugin;
     }
 

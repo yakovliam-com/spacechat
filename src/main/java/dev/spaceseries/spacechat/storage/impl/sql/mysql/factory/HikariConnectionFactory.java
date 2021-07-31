@@ -1,8 +1,7 @@
 package dev.spaceseries.spacechat.storage.impl.sql.mysql.factory;
 
-import dev.spaceseries.spaceapi.lib.hikari.HikariConfig;
-import dev.spaceseries.spaceapi.lib.hikari.HikariDataSource;
-import dev.spaceseries.spacechat.SpaceChat;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import dev.spaceseries.spacechat.storage.impl.ConnectionFactory;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.StorageCredentials;
 

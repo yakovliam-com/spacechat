@@ -1,17 +1,16 @@
 package dev.spaceseries.spacechat.storage;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.User;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 public abstract class Storage {
 
-    protected final SpaceChat plugin;
+    protected final SpaceChatPlugin plugin;
 
-    public Storage(SpaceChat plugin) throws StorageInitializationException {
+    public Storage(SpaceChatPlugin plugin) {
         this.plugin = plugin;
     }
 

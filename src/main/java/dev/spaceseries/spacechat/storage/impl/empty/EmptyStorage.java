@@ -1,17 +1,16 @@
 package dev.spaceseries.spacechat.storage.impl.empty;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.storage.Storage;
 import dev.spaceseries.spacechat.storage.StorageInitializationException;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 public class EmptyStorage extends Storage {
 
-    public EmptyStorage(SpaceChat plugin) throws StorageInitializationException {
+    public EmptyStorage(SpaceChatPlugin plugin) throws StorageInitializationException {
         super(plugin);
     }
 

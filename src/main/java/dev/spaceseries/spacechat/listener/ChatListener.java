@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.listener;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.model.Channel;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,9 +9,9 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 public class ChatListener implements Listener {
 
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
 
-    public ChatListener(SpaceChat plugin) {
+    public ChatListener(SpaceChatPlugin plugin) {
         this.plugin = plugin;
     }
 

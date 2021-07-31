@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.sql.mysql;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
@@ -61,7 +61,7 @@ public class MysqlStorage extends Storage {
     /**
      * Initializes new mysql storage
      */
-    public MysqlStorage(SpaceChat plugin) throws StorageInitializationException {
+    public MysqlStorage(SpaceChatPlugin plugin) throws StorageInitializationException {
         super(plugin);
         // initialize new connection manager
         mysqlConnectionFactory = new MySqlConnectionFactory(plugin.getSpaceChatConfig().get(SpaceChatConfigKeys.DATABASE_VALUES));
