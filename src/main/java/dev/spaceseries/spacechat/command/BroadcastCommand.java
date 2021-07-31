@@ -16,7 +16,7 @@ import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.BROADCAST_USE
 import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.REDIS_SERVER_IDENTIFIER;
 
 @CommandPermission("space.chat.command.broadcast")
-@CommandAlias("broadcast|scbcast,bcast")
+@CommandAlias("broadcast|scbcast|bcast")
 public class BroadcastCommand extends SpaceChatCommand {
 
     public BroadcastCommand(SpaceChatPlugin plugin) {
