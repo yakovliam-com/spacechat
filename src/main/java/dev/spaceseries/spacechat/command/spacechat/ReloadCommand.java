@@ -41,13 +41,6 @@ public class ReloadCommand extends SpaceChatCommand {
                 // load channels
                 plugin.loadChannels();
 
-                // close the storage connection pool (if applicable)
-                if (plugin.getStorageManager() != null && plugin.getStorageManager().getCurrent() != null) {
-                    plugin.getStorageManager().getCurrent().close();
-                }
-
-                // load storage
-                plugin.loadStorage();
                 // load users
                 plugin.loadUsers();
 

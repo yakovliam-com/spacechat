@@ -38,9 +38,6 @@ public class FileWatcher {
                             // reload channels
                             plugin.loadChannels();
 
-                            // reload storage
-                            plugin.loadStorage();
-
                             // load messages
                             plugin.loadMessages();
 
