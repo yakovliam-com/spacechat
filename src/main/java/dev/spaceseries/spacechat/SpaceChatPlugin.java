@@ -8,6 +8,7 @@ import dev.spaceseries.spacechat.chat.ChatManager;
 import dev.spaceseries.spacechat.command.BroadcastCommand;
 import dev.spaceseries.spacechat.command.BroadcastMinimessageCommand;
 import dev.spaceseries.spacechat.command.ChannelCommand;
+import dev.spaceseries.spacechat.command.CommandManager;
 import dev.spaceseries.spacechat.command.SpaceChatCommand;
 import dev.spaceseries.spacechat.config.SpaceChatConfig;
 import dev.spaceseries.spacechat.external.papi.SpaceChatExpansion;
@@ -134,11 +135,7 @@ public final class SpaceChatPlugin extends JavaPlugin {
         logManagerImpl = new LogManagerImpl(this);
 
         // initialize commands
-        new SpaceChatCommand(this);
-        new ChannelCommand(this);
-        // new IgnoreCommand();
-        new BroadcastCommand(this);
-        new BroadcastMinimessageCommand(this);
+        new CommandManager(this);
 
         // register chat listener
         this.getServer().getPluginManager().registerEvents(new ChatListener(this), this);

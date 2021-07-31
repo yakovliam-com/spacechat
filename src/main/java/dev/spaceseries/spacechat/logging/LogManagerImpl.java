@@ -3,7 +3,7 @@ package dev.spaceseries.spacechat.logging;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
-import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
+import dev.spaceseries.spacechat.logging.wrap.LogChatWrapper;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
@@ -35,8 +35,8 @@ public class LogManagerImpl implements LogManager {
                     }
                     break;
                 case STORAGE:
-                    if (SpaceChatConfigKeys.LOGGING_CHAT_LOG_TO_STORAGE.get(getConfig()) && t instanceof LogChatWrap) {
-                        storage((LogChatWrap) t);
+                    if (SpaceChatConfigKeys.LOGGING_CHAT_LOG_TO_STORAGE.get(getConfig()) && t instanceof LogChatWrapper) {
+                        storage((LogChatWrapper) t);
                     }
                     break;
             }

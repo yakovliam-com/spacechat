@@ -21,8 +21,8 @@ repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
     maven { url 'https://oss.sonatype.org/content/repositories/central/' }
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-    maven { url = "https://repo.mattstudios.me/artifactory/public/" }
-    maven { url = "https://repo.aikar.co/content/groups/aikar/" }
+    maven { url 'https://repo.mattstudios.me/artifactory/public/' }
+    maven { url 'https://repo.aikar.co/content/groups/aikar/' }
 }
 
 dependencies {
@@ -60,8 +60,8 @@ dependencies {
     slim "redis.clients:jedis:3.6.0"
 
     // google
-    slim 'com.google.code.gson:gson:2.8.6'
-    slim 'com.google.guava:guava:30.1.1-jre'
+    compileOnly 'com.google.code.gson:gson:2.8.0'
+    compileOnly 'com.google.guava:guava:21.0'
 
     // hikari
     slim('com.zaxxer:HikariCP:4.0.2') {
@@ -91,8 +91,6 @@ shadowJar {
     relocate "co.aikar.commands", "${packageGroup}.lib.acf"
     relocate "redis.clients.jedis", "${packageGroup}.lib.jedis"
     relocate "com.zaxxer.hikari", "${packageGroup}.lib.hikari"
-    relocate "org.apache", "${packageGroup}.lib.apache"
-    relocate "com.google", "${packageGroup}.lib.google"
 }
 
 slimJar {
@@ -105,8 +103,6 @@ slimJar {
     relocate "co.aikar.commands", "${packageGroup}.lib.acf"
     relocate "redis.clients.jedis", "${packageGroup}.lib.jedis"
     relocate "com.zaxxer.hikari", "${packageGroup}.lib.hikari"
-    relocate "org.apache", "${packageGroup}.lib.apache"
-    relocate "com.google", "${packageGroup}.lib.google"
 }
 
 processResources {

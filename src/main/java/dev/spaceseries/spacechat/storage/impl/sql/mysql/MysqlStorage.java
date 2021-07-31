@@ -2,7 +2,7 @@ package dev.spaceseries.spacechat.storage.impl.sql.mysql;
 
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
-import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
+import dev.spaceseries.spacechat.logging.wrap.LogChatWrapper;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.Channel;
@@ -89,7 +89,7 @@ public class MysqlStorage extends Storage {
     public void log(LogWrapper data, boolean async) {
         // if chat
         if (data.getLogType() == LogType.CHAT) {
-            logChat((LogChatWrap) data, async);
+            logChat((LogChatWrapper) data, async);
         }
     }
 
@@ -311,7 +311,7 @@ public class MysqlStorage extends Storage {
      * @param data  The data
      * @param async async
      */
-    private void logChat(LogChatWrap data, boolean async) {
+    private void logChat(LogChatWrapper data, boolean async) {
         Runnable task = () -> {
             // create prepared statement
             try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(LOG_CHAT)) {

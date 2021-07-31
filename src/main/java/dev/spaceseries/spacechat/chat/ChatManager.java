@@ -8,7 +8,7 @@ import dev.spaceseries.spacechat.api.wrapper.Trio;
 import dev.spaceseries.spacechat.builder.live.NormalLiveChatFormatBuilder;
 import dev.spaceseries.spacechat.builder.live.RelationalLiveChatFormatBuilder;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
-import dev.spaceseries.spacechat.logging.wrap.LogChatWrap;
+import dev.spaceseries.spacechat.logging.wrap.LogChatWrapper;
 import dev.spaceseries.spacechat.logging.wrap.LogToType;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.model.Channel;
@@ -19,6 +19,7 @@ import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacket;
 import dev.spaceseries.spacechat.util.color.ColorUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
@@ -171,7 +172,7 @@ public class ChatManager implements Manager {
 
         // log to storage
         plugin.getLogManagerImpl()
-                .log(new LogChatWrap(LogType.CHAT, from.getName(), from.getUniqueId(), message, new Date()),
+                .log(new LogChatWrapper(LogType.CHAT, from.getName(), from.getUniqueId(), message, new Date()),
                         LogType.CHAT,
                         LogToType.STORAGE
                 );
@@ -252,7 +253,7 @@ public class ChatManager implements Manager {
 
         // log to storage
         plugin.getLogManagerImpl()
-                .log(new LogChatWrap(LogType.CHAT, from.getName(), from.getUniqueId(), message, new Date()),
+                .log(new LogChatWrapper(LogType.CHAT, from.getName(), from.getUniqueId(), message, new Date()),
                         LogType.CHAT,
                         LogToType.STORAGE
                 );

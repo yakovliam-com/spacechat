@@ -3,7 +3,7 @@ package dev.spaceseries.spacechat.logging.wrap;
 import java.util.Date;
 import java.util.UUID;
 
-public class LogChatWrap extends LogWrapper {
+public class LogChatWrapper extends LogWrapper {
 
     /**
      * The sender's name
@@ -16,7 +16,7 @@ public class LogChatWrap extends LogWrapper {
     private UUID senderUUID;
 
     /**
-     * The actual message contents of the chat
+     * Message
      */
     private String message;
 
@@ -31,10 +31,10 @@ public class LogChatWrap extends LogWrapper {
      * @param logType    The log type
      * @param senderName The sender name
      * @param senderUUID The sender uuid
-     * @param message    The message
+     * @param message    message
      * @param at         The time
      */
-    public LogChatWrap(LogType logType, String senderName, UUID senderUUID, String message, Date at) {
+    public LogChatWrapper(LogType logType, String senderName, UUID senderUUID, String message, Date at) {
         super(logType);
 
         this.senderName = senderName;
@@ -80,24 +80,6 @@ public class LogChatWrap extends LogWrapper {
     }
 
     /**
-     * Returns message
-     *
-     * @return message
-     */
-    public String getMessage() {
-        return message;
-    }
-
-    /**
-     * Sets message
-     *
-     * @param message message
-     */
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    /**
      * Returns date
      *
      * @return date
@@ -113,5 +95,23 @@ public class LogChatWrap extends LogWrapper {
      */
     public void setAt(Date at) {
         this.at = at;
+    }
+
+    /**
+     * Returns message
+     *
+     * @return message
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Sets message
+     *
+     * @param message message
+     */
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
