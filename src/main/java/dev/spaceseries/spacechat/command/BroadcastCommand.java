@@ -24,18 +24,18 @@ public class BroadcastCommand extends SpaceChatCommand {
     }
 
     @Default
-    public void onBroadcast(CommandSender sender, @Split(" ") String[] args) {
+    public void onBroadcast(CommandSender sender, @Split(" ") String[] message) {
         // if message length is not long enough
-        if (args.length <= 0) {
+        if (message.length <= 0) {
             Messages.getInstance(plugin).broadcastArgs.message(sender);
             return;
         }
 
-        // compile args into single message
-        String message = String.join(" ", args);
+        // compile message into single message
+        String messageString = String.join(" ", message);
 
         // convert to component
-        Component component = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
+        Component component = LegacyComponentSerializer.legacyAmpersand().deserialize(messageString);
 
         // use lang wrapper?
         if (BROADCAST_USE_LANG_WRAPPER.get(plugin.getSpaceChatConfig().getAdapter())) {
