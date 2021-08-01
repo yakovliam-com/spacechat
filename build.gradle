@@ -63,6 +63,9 @@ dependencies {
     compileOnly 'com.google.code.gson:gson:2.8.0'
     compileOnly 'com.google.guava:guava:21.0'
 
+    // configurate
+    implementation "org.spongepowered:configurate-gson:4.0.0"
+
     // hikari
     slim('com.zaxxer:HikariCP:4.0.2') {
         exclude group: 'org.slf4j'
