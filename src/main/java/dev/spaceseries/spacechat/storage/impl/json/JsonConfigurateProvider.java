@@ -36,6 +36,7 @@ public class JsonConfigurateProvider {
     public JsonConfigurateProvider(SpaceChatPlugin plugin) {
         this.plugin = plugin;
         this.loader = GsonConfigurationLoader.builder()
+                .indent(2)
                 .path(resolveJsonFile(FILE_NAME))
                 .build();
     }

@@ -1,12 +1,15 @@
 package dev.spaceseries.spacechat.storage.impl.json;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.mysql.cj.log.Log;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.storage.Storage;
 import dev.spaceseries.spacechat.storage.StorageInitializationException;
+import dev.spaceseries.spacechat.storage.impl.json.gson.UserGsonDeserializer;
+import dev.spaceseries.spacechat.storage.impl.json.gson.UserGsonSerializer;
 import org.bukkit.Bukkit;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -24,9 +27,18 @@ public class JsonStorage extends Storage {
      */
     private final JsonConfigurateProvider jsonConfigurateProvider;
 
+    /**
+     * Gson
+     */
+    private final Gson gson;
+
     public JsonStorage(SpaceChatPlugin plugin) {
         super(plugin);
         this.jsonConfigurateProvider = new JsonConfigurateProvider(plugin);
+        this.gson = new GsonBuilder()
+                .registerTypeAdapter(User.class, new UserGsonDeserializer(plugin))
+                .registerTypeAdapter(User.class, new UserGsonSerializer(plugin))
+                .create();
     }
 
     /**
@@ -73,7 +85,6 @@ public class JsonStorage extends Storage {
      */
     @Override
     public User getUser(UUID uuid) {
-        // TODO finish
         BasicConfigurationNode users = jsonConfigurateProvider.provideRoot().node("users");
 
         // get users
@@ -96,7 +107,7 @@ public class JsonStorage extends Storage {
                 return user;
             } else {
                 // deserialize and return
-                return null;
+                return gson.fromJson(userObject, User.class);
             }
 
         } catch (SerializationException e) {
@@ -120,6 +131,20 @@ public class JsonStorage extends Storage {
     }
 
     /**
+     * Finds a user object by their username
+     *
+     * @param jsonObjects json objects
+     * @param username    username
+     * @return json object
+     */
+    private JsonObject findUserByUsername(List<JsonObject> jsonObjects, String username) {
+        return jsonObjects.stream()
+                .filter(object -> object.get("username").getAsString().equals(username))
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
      * Gets a user by their username
      *
      * @param username username
@@ -127,7 +152,25 @@ public class JsonStorage extends Storage {
      */
     @Override
     public User getUser(String username) {
-        return null;
+        BasicConfigurationNode users = jsonConfigurateProvider.provideRoot().node("users");
+
+        // get users
+        try {
+            List<JsonObject> userObjectList = users.getList(JsonObject.class);
+            // find user
+            JsonObject userObject = findUserByUsername(userObjectList, username);
+
+            if (userObject == null) {
+                return null;
+            } else {
+                // deserialize and return
+                return gson.fromJson(userObject, User.class);
+            }
+
+        } catch (SerializationException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -137,7 +180,6 @@ public class JsonStorage extends Storage {
      */
     @Override
     public void updateUser(User user) {
-
     }
 
     /**
@@ -145,6 +187,5 @@ public class JsonStorage extends Storage {
      */
     @Override
     public void close() {
-
     }
 }
