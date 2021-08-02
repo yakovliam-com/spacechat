@@ -21,7 +21,7 @@ public class LeaveCommand extends SpaceChatCommand {
     }
 
     @Default
-    public void onLeave(Player player, @Single String channel) {
+    public void onLeave(Player player) {
         // get current
         Channel current = plugin.getServerSyncServiceManager().getDataService().getCurrentChannel(player.getUniqueId());
 

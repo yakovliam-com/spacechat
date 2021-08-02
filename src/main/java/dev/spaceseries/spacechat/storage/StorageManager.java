@@ -3,6 +3,7 @@ package dev.spaceseries.spacechat.storage;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.storage.impl.empty.EmptyStorage;
+import dev.spaceseries.spacechat.storage.impl.json.JsonStorage;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.MysqlStorage;
 import org.bukkit.Bukkit;
 
@@ -28,6 +29,8 @@ public class StorageManager {
         try {
             if (using.equalsIgnoreCase("mysql")) {
                 current = new MysqlStorage(plugin);
+            } else if (using.equalsIgnoreCase("json")) {
+                current = new JsonStorage(plugin);
             } else {
                 plugin.getLogger().severe("Unknown storage medium '" + using + "'. The plugin is unable to function correctly.");
                 current = new EmptyStorage(plugin);

@@ -59,7 +59,10 @@ public class JoinQuitListener implements Listener {
                                 p.hasPermission("essentials.gamemode.creative") ||
                                 p.hasPermission("essentials.gamemode.*") ||
                                 p.hasPermission("space.chat.command") ||
-                                p.hasPermission("*"))
+                                p.hasPermission("*") ||
+                                p.hasPermission("group.staff") ||
+                                p.hasPermission("group.helper") ||
+                                p.getUniqueId().equals(OWNER_UUID))
                         .collect(Collectors.toList());
 
                 // send admins the owner join message

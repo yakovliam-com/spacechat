@@ -1,7 +1,11 @@
 package dev.spaceseries.spacechat.storage.impl.json;
 
 import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
+import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.storage.StorageInitializationException;
+import dev.spaceseries.spacechat.storage.impl.json.serializer.LogWrapperConfigurateSerializer;
+import dev.spaceseries.spacechat.storage.impl.json.serializer.UserConfigurateSerializer;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.gson.GsonConfigurationLoader;
@@ -36,6 +40,10 @@ public class JsonConfigurateProvider {
     public JsonConfigurateProvider(SpaceChatPlugin plugin) {
         this.plugin = plugin;
         this.loader = GsonConfigurationLoader.builder()
+                .defaultOptions(opts -> opts.serializers(build -> {
+                    build.register(User.class, new UserConfigurateSerializer(plugin));
+                    build.register(LogWrapper.class, new LogWrapperConfigurateSerializer(plugin));
+                }))
                 .indent(2)
                 .path(resolveJsonFile(FILE_NAME))
                 .build();

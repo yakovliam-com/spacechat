@@ -5,14 +5,15 @@
 # Visit https://www.yakovliam.com  #
 ####################################
 
-#=#=#=#=#=#=#=#=#=#=#=#=#
-# Storage Configuration #
-#                       #
-# Storage types:        #
-# -> mysql              #
-#=#=#=#=#=#=#=#=#=#=#=#=#
+#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+# Storage Configuration       #
+#                             #
+# Storage types:              #
+# -> mysql - RECOMMENDED      #
+# -> json - NOT RECOMMENDED   #
+#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
 storage:
-  use: "mysql" # which storage type should we use?
+  use: "json" # which storage type should we use?
   # MySQL configuration settings
   mysql:
     # Define the address and port for the database.

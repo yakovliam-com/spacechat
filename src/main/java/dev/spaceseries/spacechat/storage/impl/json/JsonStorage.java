@@ -1,15 +1,10 @@
 package dev.spaceseries.spacechat.storage.impl.json;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.storage.Storage;
 import dev.spaceseries.spacechat.storage.StorageInitializationException;
-import dev.spaceseries.spacechat.storage.impl.json.gson.UserGsonDeserializer;
-import dev.spaceseries.spacechat.storage.impl.json.gson.UserGsonSerializer;
 import org.bukkit.Bukkit;
 import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
@@ -28,17 +23,15 @@ public class JsonStorage extends Storage {
     private final JsonConfigurateProvider jsonConfigurateProvider;
 
     /**
-     * Gson
+     * Json storage
+     *
+     * @param plugin plugin
      */
-    private final Gson gson;
-
-    public JsonStorage(SpaceChatPlugin plugin) {
+    public JsonStorage(SpaceChatPlugin plugin) throws StorageInitializationException {
         super(plugin);
         this.jsonConfigurateProvider = new JsonConfigurateProvider(plugin);
-        this.gson = new GsonBuilder()
-                .registerTypeAdapter(User.class, new UserGsonDeserializer(plugin))
-                .registerTypeAdapter(User.class, new UserGsonSerializer(plugin))
-                .create();
+
+        this.init();
     }
 
     /**
@@ -64,7 +57,8 @@ public class JsonStorage extends Storage {
                 list.add(data);
 
                 logs.setList(LogWrapper.class, list);
-                jsonConfigurateProvider.save(logs);
+
+                save();
             } catch (SerializationException e) {
                 e.printStackTrace();
             }
@@ -89,59 +83,35 @@ public class JsonStorage extends Storage {
 
         // get users
         try {
-            List<JsonObject> userObjectList = users.getList(JsonObject.class);
-            // find user
-            JsonObject userObject = findUserByUUID(userObjectList, uuid);
+            List<User> usersList = users.getList(User.class);
+            // get user
+            User user = usersList.stream()
+                    .filter(u -> u.getUuid().equals(uuid))
+                    .findFirst()
+                    .orElse(null);
 
-            if (userObject == null) {
+            if (user == null) {
                 // since it's null, create it
-                User user = new User(plugin, uuid, null, Date.from(Instant.now()), new ArrayList<>());
+                user = new User(plugin, uuid, null, Date.from(Instant.now()), new ArrayList<>());
 
-                // serialize and add to list
-                userObjectList.add(null);
-                users.setList(JsonObject.class, userObjectList);
+                // add to configuration file
+                usersList.add(user);
+                users.setList(User.class, usersList);
 
-                jsonConfigurateProvider.save(users);
+                // save
+                save();
 
                 // return
                 return user;
             } else {
-                // deserialize and return
-                return gson.fromJson(userObject, User.class);
+                // return
+                return user;
             }
 
         } catch (SerializationException e) {
             e.printStackTrace();
             return null;
         }
-    }
-
-    /**
-     * Finds a user object by their uuid
-     *
-     * @param jsonObjects json objects
-     * @param uuid        uuid
-     * @return json object
-     */
-    private JsonObject findUserByUUID(List<JsonObject> jsonObjects, UUID uuid) {
-        return jsonObjects.stream()
-                .filter(object -> object.get("uuid").getAsString().equals(uuid.toString()))
-                .findFirst()
-                .orElse(null);
-    }
-
-    /**
-     * Finds a user object by their username
-     *
-     * @param jsonObjects json objects
-     * @param username    username
-     * @return json object
-     */
-    private JsonObject findUserByUsername(List<JsonObject> jsonObjects, String username) {
-        return jsonObjects.stream()
-                .filter(object -> object.get("username").getAsString().equals(username))
-                .findFirst()
-                .orElse(null);
     }
 
     /**
@@ -156,16 +126,13 @@ public class JsonStorage extends Storage {
 
         // get users
         try {
-            List<JsonObject> userObjectList = users.getList(JsonObject.class);
-            // find user
-            JsonObject userObject = findUserByUsername(userObjectList, username);
+            List<User> usersList = users.getList(User.class);
 
-            if (userObject == null) {
-                return null;
-            } else {
-                // deserialize and return
-                return gson.fromJson(userObject, User.class);
-            }
+            // get and return
+            return usersList.stream()
+                    .filter(u -> u.getUsername().equals(username))
+                    .findFirst()
+                    .orElse(null);
 
         } catch (SerializationException e) {
             e.printStackTrace();
@@ -180,6 +147,26 @@ public class JsonStorage extends Storage {
      */
     @Override
     public void updateUser(User user) {
+        BasicConfigurationNode users = jsonConfigurateProvider.provideRoot().node("users");
+
+        // get users
+        try {
+            List<User> usersList = users.getList(User.class);
+
+            // remove if exists
+            usersList.removeIf(u -> u.getUuid().equals(user.getUuid()));
+
+            // add to list
+            usersList.add(user);
+
+            users.setList(User.class, usersList);
+
+            // save
+            save();
+
+        } catch (SerializationException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -187,5 +174,13 @@ public class JsonStorage extends Storage {
      */
     @Override
     public void close() {
+        save();
+    }
+
+    /**
+     * Saves the file
+     */
+    private void save() {
+        jsonConfigurateProvider.save(jsonConfigurateProvider.provideRoot());
     }
 }
