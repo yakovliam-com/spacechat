@@ -86,7 +86,6 @@ public class Messages {
     public Messages(SpaceChatPlugin plugin) {
         this.plugin = plugin;
 
-
         generalHelp = Message.fromConfigurationSection("general.help", this.getLangConfiguration());
         reloadSuccess = Message.fromConfigurationSection("reload.success", this.getLangConfiguration());
         reloadFailure = Message.fromConfigurationSection("reload.failure", this.getLangConfiguration());

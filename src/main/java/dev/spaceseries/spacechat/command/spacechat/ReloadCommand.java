@@ -44,6 +44,9 @@ public class ReloadCommand extends SpaceChatCommand {
                 // load users
                 plugin.loadUsers();
 
+                // renew messages
+                Messages.renew();
+
             } catch (Exception e) {
                 Messages.getInstance(plugin).reloadFailure.message(sender);
                 e.printStackTrace();

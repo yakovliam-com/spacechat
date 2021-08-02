@@ -64,7 +64,7 @@ dependencies {
     compileOnly 'com.google.guava:guava:21.0'
 
     // configurate
-    implementation "org.spongepowered:configurate-gson:4.0.0"
+    slim "org.spongepowered:configurate-gson:4.0.0"
 
     // hikari
     slim('com.zaxxer:HikariCP:4.0.2') {
@@ -94,6 +94,9 @@ shadowJar {
     relocate "co.aikar.commands", "${packageGroup}.lib.acf"
     relocate "redis.clients.jedis", "${packageGroup}.lib.jedis"
     relocate "com.zaxxer.hikari", "${packageGroup}.lib.hikari"
+    relocate "org.spongepowered.configurate", "${packageGroup}.lib.configurate"
+    relocate "io.leangen.geantyref", "${packageGroup}.lib.geantyref"
+    relocate "io.github.slimjar", "${packageGroup}.lib.slimjar"
 }
 
 slimJar {
@@ -106,6 +109,9 @@ slimJar {
     relocate "co.aikar.commands", "${packageGroup}.lib.acf"
     relocate "redis.clients.jedis", "${packageGroup}.lib.jedis"
     relocate "com.zaxxer.hikari", "${packageGroup}.lib.hikari"
+    relocate "org.spongepowered.configurate", "${packageGroup}.lib.configurate"
+    relocate "io.leangen.geantyref", "${packageGroup}.lib.geantyref"
+    relocate "io.github.slimjar", "${packageGroup}.lib.slimjar"
 }
 
 processResources {

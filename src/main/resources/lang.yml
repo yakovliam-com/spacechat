@@ -1,50 +1,50 @@
 general:
   help:
-    - "&8&l[&d&lS&5&lS&8&l]&r &bChat &7&o(v2)&r &3help"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/spacechat reload"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Reload plugin &7(chat formats, messages)"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/broadcast"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Broadcast a message to the server"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/broadcastminimessage"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Broadcast a message &7(using minimessage) &3to the server"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/channel join &7<channel>"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Start talking in a specific channel"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/channel leave"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Stop talking in your current channel"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/channel listen &7<channel>"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Subscribe to messages from a specific channel"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/channel mute &7<channel>"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Unsubscribe to messages from a specific channel"
-    - "&8&l[&d&lS&5&lS&8&l]&r &f-   &7(Seamlessly works with redis)"
+    - "&bSpaceChat &7&o(v2)&r &3help"
+    - "&f- &d/spacechat reload"
+    - "&f-   &3Reload plugin &7(chat formats, messages)"
+    - "&f- &d/broadcast"
+    - "&f-   &3Broadcast a message to the server"
+    - "&f-   &7(Seamlessly works with redis)"
+    - "&f- &d/broadcastminimessage"
+    - "&f-   &3Broadcast a message &7(using minimessage) &3to the server"
+    - "&f-   &7(Seamlessly works with redis)"
+    - "&f- &d/channel join &7<channel>"
+    - "&f-   &3Start talking in a specific channel"
+    - "&f-   &7(Seamlessly works with redis)"
+    - "&f- &d/channel leave"
+    - "&f-   &3Stop talking in your current channel"
+    - "&f-   &7(Seamlessly works with redis)"
+    - "&f- &d/channel listen &7<channel>"
+    - "&f-   &3Subscribe to messages from a specific channel"
+    - "&f-   &7(Seamlessly works with redis)"
+    - "&f- &d/channel mute &7<channel>"
+    - "&f-   &3Unsubscribe to messages from a specific channel"
+    - "&f-   &7(Seamlessly works with redis)"
 channel:
   join:
-    - "&8&l[&d&lS&5&lS&8&l]&r &aYou &ejoined &7%channel%"
+    - "&aYou &ejoined &7%channel%"
   leave:
-    - "&8&l[&d&lS&5&lS&8&l]&r &aYou &cleft &7%channel%"
+    - "&aYou &cleft &7%channel%"
   listen:
-    - "&8&l[&d&lS&5&lS&8&l]&r &aYou &estarted listening to &7%channel%"
+    - "&aYou &estarted listening to &7%channel%"
   mute:
-    - "&8&l[&d&lS&5&lS&8&l]&r &aYou &cstopped listening to &7%channel%"
+    - "&aYou &cstopped listening to &7%channel%"
   invalid:
-    - "&8&l[&d&lS&5&lS&8&l]&r &cOops! We can't find a channel with the name of &7%channel%&c."
+    - "&cOops! We can't find a channel with the name of &7%channel%&c."
   access-denied:
-    - "&8&l[&d&lS&5&lS&8&l]&r &cOops! You aren't allowed to interact with that channel!"
+    - "&cOops! You aren't allowed to interact with that channel!"
 ignore:
   player-not-found:
     text:
       - "&cCould not find specified player."
 reload:
   success:
-    - "&8&l[&d&lS&5&lS&8&l]&r &aSuccessfully reloaded &bChat"
+    - "&aSuccessfully reloaded &bChat"
   failure:
-    - "&8&l[&d&lS&5&lS&8&l]&r $&cFailed to reload &bChat$"
+    - "$&cFailed to reload &bChat$"
 broadcast:
   args:
-    - "&8&l[&d&lS&5&lS&8&l]&r &cOops! &7You need to specify a message."
+    - "&cOops! &7You need to specify a message."
   wrapper:
-    - "&8&l[&d&lS&5&lS&8&l]&r [&f&oBroadcast](text: &cThis is a broadcast!) \u00BB &7%message%"
+    - "[&f&oBroadcast](hover: &cThis is a broadcast!) \u00BB &7%message%"
