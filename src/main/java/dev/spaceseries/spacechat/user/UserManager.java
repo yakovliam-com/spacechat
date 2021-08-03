@@ -2,7 +2,7 @@ package dev.spaceseries.spacechat.user;
 
 import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.model.manager.Manager;
 import dev.spaceseries.spacechat.storage.StorageManager;
@@ -16,14 +16,14 @@ import java.util.function.Consumer;
 
 public class UserManager implements Manager {
 
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
     private final AsyncLoadingCache<UUID, User> userAsyncCache;
     private final StorageManager storageManager;
 
     /**
      * Construct user manager
      */
-    public UserManager(SpaceChat plugin) {
+    public UserManager(SpaceChatPlugin plugin) {
         this.plugin = plugin;
         this.storageManager = plugin.getStorageManager();
 
@@ -67,9 +67,7 @@ public class UserManager implements Manager {
      * @param user user
      */
     public void update(User user) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            storageManager.getCurrent().updateUser(user);
-        });
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> storageManager.getCurrent().updateUser(user));
     }
 
     /**

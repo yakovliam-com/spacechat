@@ -1,9 +1,8 @@
 package dev.spaceseries.spacechat.builder.live;
 
-import dev.spaceseries.spaceapi.util.Trio;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.api.wrapper.Trio;
 import dev.spaceseries.spacechat.builder.Builder;
-import dev.spaceseries.spacechat.config.SpaceChatConfig;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.model.formatting.Extra;
 import dev.spaceseries.spacechat.model.formatting.Format;
@@ -30,7 +29,7 @@ public class NormalLiveChatFormatBuilder extends LiveChatFormatBuilder implement
      */
     private static final SectionReplacer SECTION_REPLACER = new SectionReplacer();
 
-    public NormalLiveChatFormatBuilder(SpaceChat plugin) {
+    public NormalLiveChatFormatBuilder(SpaceChatPlugin plugin) {
         super(plugin);
     }
 

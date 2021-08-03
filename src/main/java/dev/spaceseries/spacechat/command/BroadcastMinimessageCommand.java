@@ -1,48 +1,46 @@
 package dev.spaceseries.spacechat.command;
 
-import dev.spaceseries.spaceapi.command.Command;
-import dev.spaceseries.spaceapi.command.Permissible;
-import dev.spaceseries.spaceapi.command.SpaceCommandSender;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Split;
+import dev.spaceseries.spacechat.api.command.SpaceChatCommand;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import dev.spaceseries.spacechat.Messages;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.broadcast.RedisBroadcastPacket;
-
-import java.util.Arrays;
-import java.util.Collections;
+import org.bukkit.command.CommandSender;
 
 import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.BROADCAST_USE_LANG_WRAPPER;
 import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.REDIS_SERVER_IDENTIFIER;
 
-@Permissible("space.chat.command.broadcastminimessage")
-public class BroadcastMinimessageCommand extends Command {
+@CommandPermission("space.chat.command.broadcastminimessage")
+@CommandAlias("broadcastminimessage|scbcastm|bcastm")
+public class BroadcastMinimessageCommand extends SpaceChatCommand {
 
-    private final SpaceChat plugin;
-
-    public BroadcastMinimessageCommand(SpaceChat plugin) {
-        super(plugin.getPlugin(), "broadcastminimessage", "Broadcast (minimessage) command", Arrays.asList("scbcastm", "bcastm"));
-        this.plugin = plugin;
+    public BroadcastMinimessageCommand(SpaceChatPlugin plugin) {
+        super(plugin);
     }
 
-    @Override
-    public void onCommand(SpaceCommandSender sender, String label, String... args) {
+    @Default
+    public void onBroadcastMinimessage(CommandSender sender, @Split(" ") String[] message) {
         // if message length is not long enough
-        if (args.length <= 0) {
-            Messages.getInstance(plugin).broadcastArgs.msg(sender);
+        if (message.length <= 0) {
+            Messages.getInstance(plugin).broadcastArgs.message(sender);
             return;
         }
 
-        // compile args into single message
-        String message = String.join(" ", args);
+        // compile message into single message
+        String messageString = String.join(" ", message);
 
         // parse through minimessage
-        Component component = MiniMessage.get().deserialize(message);
+        Component component = MiniMessage.get().deserialize(messageString);
 
         // use lang wrapper?
         if (BROADCAST_USE_LANG_WRAPPER.get(plugin.getSpaceChatConfig().getAdapter())) {
             Component previousComponent = component;
-            component = Messages.getInstance(plugin).broadcastWrapper.toComponent()
+            component = Messages.getInstance(plugin).broadcastWrapper.compile()
                     .replaceText((b) -> b.match("%message%")
                             .replacement(previousComponent));
         }

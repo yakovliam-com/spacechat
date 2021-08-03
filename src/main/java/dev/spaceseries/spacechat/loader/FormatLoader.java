@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.loader;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 
 public abstract class FormatLoader<T> implements Loader<FormatManager<T>> {
 
@@ -12,7 +12,7 @@ public abstract class FormatLoader<T> implements Loader<FormatManager<T>> {
     /**
      * Plugin
      */
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
 
     /**
      * Construct format loader
@@ -20,7 +20,7 @@ public abstract class FormatLoader<T> implements Loader<FormatManager<T>> {
      * @param plugin         plugin
      * @param formatsSection section
      */
-    public FormatLoader(SpaceChat plugin, String formatsSection) {
+    public FormatLoader(SpaceChatPlugin plugin, String formatsSection) {
         this.plugin = plugin;
         this.formatsSection = formatsSection;
     }
@@ -29,7 +29,7 @@ public abstract class FormatLoader<T> implements Loader<FormatManager<T>> {
      * Gets plugin
      * @return plugin
      */
-    protected SpaceChat getPlugin() {
+    protected SpaceChatPlugin getPlugin() {
         return plugin;
     }
 

@@ -1,35 +1,29 @@
 package dev.spaceseries.spacechat.command;
 
-import dev.spaceseries.spaceapi.command.Command;
-import dev.spaceseries.spaceapi.command.Permissible;
-import dev.spaceseries.spaceapi.command.PlayersOnly;
-import dev.spaceseries.spaceapi.command.SpaceCommandSender;
+import co.aikar.commands.annotation.CatchUnknown;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.HelpCommand;
 import dev.spaceseries.spacechat.Messages;
-import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.command.ignore.AddCommand;
-import dev.spaceseries.spacechat.command.ignore.ListCommand;
-import dev.spaceseries.spacechat.command.ignore.RemoveCommand;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
+import org.bukkit.entity.Player;
 
-@PlayersOnly
-@Permissible("space.chat.command.ignore")
-public class IgnoreCommand extends Command {
+@CommandPermission("space.chat.command.ignore")
+@CommandAlias("ignore")
+public class IgnoreCommand extends SpaceChatCommand {
 
-    private SpaceChat plugin;
+    private SpaceChatPlugin plugin;
 
-    public IgnoreCommand(SpaceChat plugin) {
-        super(plugin.getPlugin(), "ignore");
-
-        // add sub commands
-        addSubCommands(
-                new AddCommand(plugin),
-                new RemoveCommand(plugin),
-                new ListCommand(plugin)
-        );
+    public IgnoreCommand(SpaceChatPlugin plugin) {
+        super(plugin);
     }
 
-    @Override
-    public void onCommand(SpaceCommandSender sender, String label, String... args) {
+    @Default
+    @CatchUnknown
+    @HelpCommand
+    public void onDefault(Player player) {
         // send help message
-        Messages.getInstance(plugin).generalHelp.msg(sender);
+        Messages.getInstance(plugin).generalHelp.message(player);
     }
 }

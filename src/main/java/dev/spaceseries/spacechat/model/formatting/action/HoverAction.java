@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.model.formatting.action;
 
-import dev.spaceseries.spaceapi.lib.google.common.base.Joiner;
+import com.google.common.base.Joiner;
 import dev.spaceseries.spacechat.replacer.AmpersandReplacer;
 import dev.spaceseries.spacechat.replacer.SectionReplacer;
 import me.clip.placeholderapi.PlaceholderAPI;

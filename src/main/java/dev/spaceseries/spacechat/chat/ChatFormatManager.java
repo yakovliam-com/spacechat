@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.chat;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.loader.ChatFormatLoader;
 import dev.spaceseries.spacechat.loader.FormatLoader;
@@ -29,7 +29,7 @@ public class ChatFormatManager extends FormatManager<ChatFormat> {
     /**
      * Initializes
      */
-    public ChatFormatManager(SpaceChat plugin) {
+    public ChatFormatManager(SpaceChatPlugin plugin) {
         super(plugin);
         this.serverSyncServiceManager = plugin.getServerSyncServiceManager();
 

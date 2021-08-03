@@ -7,7 +7,7 @@ public class RomanNumber {
     /**
      * Roman numeral tree mep
      */
-    private final static TreeMap<Integer, String> map = new TreeMap<Integer, String>();
+    private final static TreeMap<Integer, String> map = new TreeMap<>();
 
     static {
         map.put(1000, "M");

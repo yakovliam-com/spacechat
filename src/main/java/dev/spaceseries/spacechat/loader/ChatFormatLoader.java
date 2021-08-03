@@ -1,9 +1,8 @@
 package dev.spaceseries.spacechat.loader;
 
-import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
-import dev.spaceseries.spaceapi.util.Pair;
-import dev.spaceseries.spaceapi.util.Trio;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
+import dev.spaceseries.spacechat.api.wrapper.Trio;
 import dev.spaceseries.spacechat.builder.chatformat.ChatFormatBuilder;
 import dev.spaceseries.spacechat.model.formatting.ChatFormat;
 
@@ -14,7 +13,7 @@ public class ChatFormatLoader extends FormatLoader<ChatFormat> {
     /**
      * Initializes
      */
-    public ChatFormatLoader(SpaceChat plugin, String formatsSection) {
+    public ChatFormatLoader(SpaceChatPlugin plugin, String formatsSection) {
         super(plugin, formatsSection);
     }
 

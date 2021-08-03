@@ -1,8 +1,8 @@
 package dev.spaceseries.spacechat.sync.redis.stream;
 
-import dev.spaceseries.spaceapi.lib.google.gson.Gson;
-import dev.spaceseries.spaceapi.lib.google.gson.GsonBuilder;
-import dev.spaceseries.spacechat.SpaceChat;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.chat.ChatManager;
 import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
@@ -46,7 +46,7 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
      * @param plugin         plugin
      * @param serviceManager service manager
      */
-    public RedisServerStreamSyncService(SpaceChat plugin, ServerSyncServiceManager serviceManager) {
+    public RedisServerStreamSyncService(SpaceChatPlugin plugin, ServerSyncServiceManager serviceManager) {
         super(plugin, serviceManager);
         this.chatManager = plugin.getChatManager();
     }

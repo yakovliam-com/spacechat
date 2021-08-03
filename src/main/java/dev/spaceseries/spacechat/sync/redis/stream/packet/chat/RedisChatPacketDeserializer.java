@@ -2,11 +2,11 @@ package dev.spaceseries.spacechat.sync.redis.stream.packet.chat;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import dev.spaceseries.spaceapi.lib.google.gson.JsonDeserializationContext;
-import dev.spaceseries.spaceapi.lib.google.gson.JsonDeserializer;
-import dev.spaceseries.spaceapi.lib.google.gson.JsonElement;
-import dev.spaceseries.spaceapi.lib.google.gson.JsonObject;
-import dev.spaceseries.spacechat.SpaceChat;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.model.Channel;
 
 import java.lang.reflect.Type;
@@ -14,9 +14,9 @@ import java.util.UUID;
 
 public class RedisChatPacketDeserializer implements JsonDeserializer<RedisChatPacket> {
 
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
 
-    public RedisChatPacketDeserializer(SpaceChat plugin) {
+    public RedisChatPacketDeserializer(SpaceChatPlugin plugin) {
         this.plugin = plugin;
     }
 

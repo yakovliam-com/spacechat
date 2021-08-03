@@ -1,7 +1,6 @@
 package dev.spaceseries.spacechat.sync;
 
-import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.SpaceChatConfig;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.sync.memory.data.MemoryServerDataSyncService;
 import dev.spaceseries.spacechat.sync.memory.stream.MemoryServerStreamSyncService;
@@ -39,7 +38,7 @@ public class ServerSyncServiceManager {
     /**
      * Construct server sync service manager
      */
-    public ServerSyncServiceManager(SpaceChat plugin) {
+    public ServerSyncServiceManager(SpaceChatPlugin plugin) {
         // if redis is enabled, use that
         if (SpaceChatConfigKeys.REDIS_ENABLED.get(plugin.getSpaceChatConfig().getAdapter())) {
             // initialize redis services

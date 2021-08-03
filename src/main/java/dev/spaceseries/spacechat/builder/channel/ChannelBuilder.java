@@ -1,8 +1,8 @@
 package dev.spaceseries.spacechat.builder.channel;
 
-import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
-import dev.spaceseries.spaceapi.util.Pair;
-import dev.spaceseries.spaceapi.util.Trio;
+import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
+import dev.spaceseries.spacechat.api.wrapper.Pair;
+import dev.spaceseries.spacechat.api.wrapper.Trio;
 import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.builder.format.FormatBuilder;
 import dev.spaceseries.spacechat.model.Channel;

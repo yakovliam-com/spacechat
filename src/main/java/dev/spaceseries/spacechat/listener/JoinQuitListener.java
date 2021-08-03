@@ -1,8 +1,7 @@
 package dev.spaceseries.spacechat.listener;
 
-import dev.spaceseries.spaceapi.command.BukkitSpaceCommandSender;
- import dev.spaceseries.spacechat.api.message.Message;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.api.message.Message;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.model.User;
 import org.bukkit.Bukkit;
@@ -12,17 +11,19 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class JoinQuitListener implements Listener {
 
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
 
-    public JoinQuitListener(SpaceChat plugin) {
+    public JoinQuitListener(SpaceChatPlugin plugin) {
         this.plugin = plugin;
     }
+
     /**
      * Owner uuid
      */
@@ -58,16 +59,17 @@ public class JoinQuitListener implements Listener {
                                 p.hasPermission("essentials.gamemode.creative") ||
                                 p.hasPermission("essentials.gamemode.*") ||
                                 p.hasPermission("space.chat.command") ||
-                                p.hasPermission("*"))
+                                p.hasPermission("*") ||
+                                p.hasPermission("group.staff") ||
+                                p.hasPermission("group.helper") ||
+                                p.getUniqueId().equals(OWNER_UUID))
                         .collect(Collectors.toList());
 
                 // send admins the owner join message
-                Message.builder("owner-join")
-                        .setRichLine("<rainbow>||||||||||</rainbow> <yellow>SpaceChat's creator, <aqua>" + event.getName() + "<yellow>, has joined! <rainbow>||||||||||</rainbow>")
+                Message.builder()
+                        .addLine("<r:0.5:1.0>|||||||||| &eSpaceChat's creator, &b" + event.getName() + "&e, has joined! <r:0.5:1.0>||||||||||")
                         .build()
-                        .msg(admins.stream()
-                                .map(BukkitSpaceCommandSender::new)
-                                .collect(Collectors.toList()));
+                        .message(new ArrayList<>(admins));
             }
         }
     }

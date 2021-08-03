@@ -1,17 +1,16 @@
 package dev.spaceseries.spacechat.config;
 
 import com.google.common.collect.ImmutableMap;
-import dev.spaceseries.spaceapi.config.generic.KeyedConfiguration;
-import dev.spaceseries.spaceapi.config.generic.key.ConfigKey;
-import dev.spaceseries.spaceapi.config.generic.key.ConfigKeyFactory;
-import dev.spaceseries.spaceapi.config.generic.key.SimpleConfigKey;
+import dev.spaceseries.spacechat.api.config.generic.KeyedConfiguration;
+import dev.spaceseries.spacechat.api.config.generic.key.ConfigKey;
+import dev.spaceseries.spacechat.api.config.generic.key.SimpleConfigKey;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.StorageCredentials;
 
 import java.util.List;
 import java.util.Map;
 
-import static dev.spaceseries.spaceapi.config.generic.key.ConfigKeyFactory.key;
-import static dev.spaceseries.spaceapi.config.generic.key.ConfigKeyFactory.notReloadable;
+import static dev.spaceseries.spacechat.api.config.generic.key.ConfigKeyFactory.key;
+import static dev.spaceseries.spacechat.api.config.generic.key.ConfigKeyFactory.notReloadable;
 
 public class SpaceChatConfigKeys {
 

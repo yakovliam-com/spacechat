@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.model;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 
 import java.util.Date;
 import java.util.List;
@@ -37,14 +37,14 @@ public final class User {
     /**
      * Plugin context
      */
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
 
     /**
      * @param uuid     uuid
      * @param username username
      * @param date     date
      */
-    public User(SpaceChat plugin, UUID uuid, String username, Date date, List<Channel> subscribedChannels) {
+    public User(SpaceChatPlugin plugin, UUID uuid, String username, Date date, List<Channel> subscribedChannels) {
         this.plugin = plugin;
         this.username = username;
         this.uuid = uuid;
@@ -61,17 +61,13 @@ public final class User {
                 .filter(element -> !subscribedChannels.contains(element))
                 .collect(Collectors.toList());
 
-        toUnsubscribe.forEach(u -> {
-            plugin.getServerSyncServiceManager().getDataService().unsubscribeFromChannel(uuid, u);
-        });
+        toUnsubscribe.forEach(u -> plugin.getServerSyncServiceManager().getDataService().unsubscribeFromChannel(uuid, u));
 
         List<Channel> toSubscribe = subscribedChannels.stream()
                 .filter(element -> !serverSideSubscribedList.contains(element))
                 .collect(Collectors.toList());
 
-        toSubscribe.forEach(u -> {
-            plugin.getServerSyncServiceManager().getDataService().subscribeToChannel(uuid, u);
-        });
+        toSubscribe.forEach(u -> plugin.getServerSyncServiceManager().getDataService().subscribeToChannel(uuid, u));
     }
 
     /**

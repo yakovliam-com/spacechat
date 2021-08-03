@@ -1,9 +1,8 @@
 package dev.spaceseries.spacechat.parser.itemchat;
 
-import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
-import dev.spaceseries.spaceapi.util.Pair;
-import dev.spaceseries.spacechat.SpaceChat;
-import dev.spaceseries.spacechat.config.SpaceChatConfig;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
+import dev.spaceseries.spacechat.api.wrapper.Pair;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.parser.Parser;
 import net.kyori.adventure.text.Component;
@@ -28,7 +27,7 @@ public class ItemChatParser extends Parser<Pair<Player, Component>, Component> {
 
     private final ConfigurationAdapter configuration;
 
-    public ItemChatParser(SpaceChat plugin) {
+    public ItemChatParser(SpaceChatPlugin plugin) {
         super(plugin);
         this.configuration = plugin.getSpaceChatConfig().getAdapter();
     }

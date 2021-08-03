@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.sync.memory.stream;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 import dev.spaceseries.spacechat.sync.packet.ReceiveStreamDataPacket;
@@ -14,7 +14,7 @@ public class MemoryServerStreamSyncService extends ServerStreamSyncService {
      * @param serviceManager service manager
      * @param plugin         plugin
      */
-    public MemoryServerStreamSyncService(SpaceChat plugin, ServerSyncServiceManager serviceManager) {
+    public MemoryServerStreamSyncService(SpaceChatPlugin plugin, ServerSyncServiceManager serviceManager) {
         super(plugin, serviceManager);
     }
 

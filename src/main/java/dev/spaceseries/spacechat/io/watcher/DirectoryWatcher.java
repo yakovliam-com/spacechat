@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.io.watcher;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -33,9 +33,9 @@ public class DirectoryWatcher implements Runnable, IoService {
     private final boolean mPreExistingAsCreated;
     private final Listener mListener;
     private final Filter<Path> mFilter;
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
 
-    public DirectoryWatcher(SpaceChat plugin, Builder builder) {
+    public DirectoryWatcher(SpaceChatPlugin plugin, Builder builder) {
         this.plugin = plugin;
 
         mWatched = builder.mWatched;
@@ -50,7 +50,7 @@ public class DirectoryWatcher implements Runnable, IoService {
     }
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         mExecutor = Executors.newSingleThreadExecutor();
         mWatcherTask = mExecutor.submit(this);
     }
@@ -181,7 +181,7 @@ public class DirectoryWatcher implements Runnable, IoService {
             return this;
         }
 
-        public DirectoryWatcher build(SpaceChat plugin, Listener listener) {
+        public DirectoryWatcher build(SpaceChatPlugin plugin, Listener listener) {
             mListener = listener;
             return new DirectoryWatcher(plugin, this);
         }

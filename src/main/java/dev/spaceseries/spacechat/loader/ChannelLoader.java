@@ -1,8 +1,8 @@
 package dev.spaceseries.spacechat.loader;
 
-import dev.spaceseries.spaceapi.config.generic.adapter.ConfigurationAdapter;
-import dev.spaceseries.spaceapi.util.Trio;
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
+import dev.spaceseries.spacechat.api.wrapper.Trio;
 import dev.spaceseries.spacechat.builder.channel.ChannelBuilder;
 import dev.spaceseries.spacechat.model.manager.MapManager;
 import dev.spaceseries.spacechat.model.Channel;
@@ -19,13 +19,13 @@ public class ChannelLoader implements Loader<MapManager<String, Channel>> {
     /**
      * Plugin
      */
-    private final SpaceChat plugin;
+    private final SpaceChatPlugin plugin;
 
 
     /**
      * Initializes
      */
-    public ChannelLoader(SpaceChat plugin, String channelsSection) {
+    public ChannelLoader(SpaceChatPlugin plugin, String channelsSection) {
         this.plugin = plugin;
         this.channelsSection = channelsSection;
     }

@@ -1,12 +1,12 @@
 package dev.spaceseries.spacechat.parser;
 
-import dev.spaceseries.spacechat.SpaceChat;
+import dev.spaceseries.spacechat.SpaceChatPlugin;
 
 public abstract class Parser<K, V> {
 
-    protected final SpaceChat plugin;
+    protected final SpaceChatPlugin plugin;
 
-    public Parser(SpaceChat plugin) {
+    public Parser(SpaceChatPlugin plugin) {
         this.plugin = plugin;
     }
 
