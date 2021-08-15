@@ -149,11 +149,6 @@ item-chat:
 # <!> <!> <!> <!> <!> You can only enable this if your server is [NOT] USING MULTI-SERVER CAPABILITIES (redis, etc) <!> <!> <!> <!> <!> Y
 use-relational-placeholders: false
 
-# Enables or disables owner recognition
-# No need to change this value as it is set to "true" by default (and forced)
-# in every other version of SpaceChat
-owner-join: true
-
 #=#=#=#=#=#=#=#=#=#=#=#=#=#
 # Permissions             #
 #                         #

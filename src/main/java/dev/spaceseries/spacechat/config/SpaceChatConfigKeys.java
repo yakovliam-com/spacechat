@@ -66,8 +66,6 @@ public class SpaceChatConfigKeys {
 
     public static ConfigKey<Boolean> USE_RELATIONAL_PLACEHOLDERS = key(c -> c.getBoolean("use-relational-placeholders", false));
 
-    public static ConfigKey<Boolean> OWNER_JOIN = key(c -> c.getBoolean("owner-join", true));
-
     private static final List<SimpleConfigKey<?>> KEYS = KeyedConfiguration.initialise(SpaceChatConfigKeys.class);
 
     public static List<? extends ConfigKey<?>> getKeys() {
