@@ -42,7 +42,7 @@ dependencies {
     slim 'com.github.ben-manes.caffeine:caffeine:2.9.2'
 
     // adventure
-    slim "net.kyori:adventure-api:4.8.1"
+    slim "net.kyori:adventure-api:4.9.0-SNAPSHOT"
     slim "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
     slim "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
 
@@ -57,17 +57,17 @@ dependencies {
     slim group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
 
     // jedis
-    slim "redis.clients:jedis:3.6.0"
+    slim 'redis.clients:jedis:3.6.3'
 
     // google
     compileOnly 'com.google.code.gson:gson:2.8.0'
     compileOnly 'com.google.guava:guava:21.0'
 
     // configurate
-    slim "org.spongepowered:configurate-gson:4.0.0"
+    slim 'org.spongepowered:configurate-gson:4.1.1'
 
     // hikari
-    slim('com.zaxxer:HikariCP:4.0.2') {
+    slim('com.zaxxer:HikariCP:5.0.0') {
         exclude group: 'org.slf4j'
     }
 }
