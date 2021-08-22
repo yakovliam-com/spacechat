@@ -5,31 +5,49 @@ import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter
 import dev.spaceseries.spacechat.api.wrapper.Pair;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.parser.Parser;
+import dev.spaceseries.spacechat.util.nbt.NBTUtil;
+import me.pikamug.localelib.LocaleManager;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.key.Namespaced;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.apache.commons.lang.WordUtils;
+import net.kyori.adventure.translation.TranslationRegistry;
+import org.bukkit.Keyed;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.jglrxavpok.hephaistos.nbt.NBTCompound;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Objects;
 
 public class ItemChatParser extends Parser<Pair<Player, Component>, Component> {
 
+    /**
+     * Configuration
+     */
     private final ConfigurationAdapter configuration;
 
+    /**
+     * Locale manager
+     */
+    private final LocaleManager localeManager;
+
+    /**
+     * Item Chat parser
+     *
+     * @param plugin plugin
+     */
     public ItemChatParser(SpaceChatPlugin plugin) {
         super(plugin);
         this.configuration = plugin.getSpaceChatConfig().getAdapter();
+        this.localeManager = new LocaleManager();
     }
 
     /**
@@ -44,24 +62,29 @@ public class ItemChatParser extends Parser<Pair<Player, Component>, Component> {
         Component message = playerStringPair.getRight();
 
         // if not enabled, return
-        if (!SpaceChatConfigKeys.ITEM_CHAT_ENABLED.get(configuration) || !player.hasPermission(SpaceChatConfigKeys.PERMISSIONS_USE_ITEM_CHAT.get(configuration)))
+        if (!SpaceChatConfigKeys.ITEM_CHAT_ENABLED.get(configuration) || !player.hasPermission(SpaceChatConfigKeys.PERMISSIONS_USE_ITEM_CHAT.get(configuration))) {
             return message;
+        }
 
         // get item in hand
         ItemStack itemStack = player.getItemInHand();
 
         // if null or air, return
-        if (itemStack.getType().equals(Material.AIR) || itemStack.getAmount() <= 0) return message;
+        if (itemStack.getType().equals(Material.AIR) || itemStack.getAmount() <= 0) {
+            return message;
+        }
+
+        // get item key
+        String itemKey = localeManager.queryMaterial(itemStack.getType());
 
         // get display name
-        String name = itemStack.hasItemMeta() ?
-                Objects.requireNonNull(itemStack.getItemMeta()).hasDisplayName() ? itemStack.getItemMeta().getDisplayName() : WordUtils.capitalize(itemStack.getType().name().replace("_", " ").toLowerCase()) :
-                WordUtils.capitalize(itemStack.getType().name().replace("_", " ").toLowerCase());
+        Component name = itemStack.hasItemMeta() ?
+                Objects.requireNonNull(itemStack.getItemMeta()).hasDisplayName() ? LegacyComponentSerializer.legacySection().deserialize(itemStack.getItemMeta().getDisplayName()) : Component.translatable(itemKey) :
+                Component.translatable(itemKey);
 
         // replacement config for %item% and %amount%
         TextReplacementConfig nameReplacementConfig = TextReplacementConfig.builder()
-                .matchLiteral("%name%").replacement(TextComponent.ofChildren(LegacyComponentSerializer.legacySection().deserialize(name))
-                        .colorIfAbsent(NamedTextColor.WHITE))
+                .matchLiteral("%name%").replacement(TextComponent.ofChildren(name))
                 .build();
 
         TextReplacementConfig amountReplacementConfig = TextReplacementConfig.builder()
@@ -70,11 +93,12 @@ public class ItemChatParser extends Parser<Pair<Player, Component>, Component> {
                 .build();
 
         // convert lore (if exists)
-        TextComponent.Builder loreBuilder = Component.text();
+        TextComponent.Builder loreBuilder = null;
 
         // if using custom lore, use that instead
         if (SpaceChatConfigKeys.ITEM_CHAT_WITH_LORE_USE_CUSTOM.get(configuration)) {
             List<String> lore = SpaceChatConfigKeys.ITEM_CHAT_WITH_LORE_CUSTOM.get(configuration);
+            loreBuilder = Component.text();
 
             for (Iterator<String> it = lore.iterator(); it.hasNext(); ) {
                 loreBuilder.append(LegacyComponentSerializer.legacyAmpersand().deserialize(it.next())
@@ -82,64 +106,6 @@ public class ItemChatParser extends Parser<Pair<Player, Component>, Component> {
                         .replaceText(amountReplacementConfig));
                 if (it.hasNext()) {
                     loreBuilder.append(Component.newline());
-                }
-            }
-
-        } else { // not using custom lore, so just parse the lore regularly
-
-            // always append name to lore first
-            loreBuilder.append(LegacyComponentSerializer.legacySection().deserialize(name));
-
-            boolean hasLore = itemStack.hasItemMeta() && itemStack.getItemMeta().hasLore();
-            boolean hasEnchantments = itemStack.getEnchantments().size() >= 1 || (itemStack.hasItemMeta() && itemStack.getItemMeta() instanceof EnchantmentStorageMeta);
-
-            // if either lore or enchantments, append a newline
-            if (hasEnchantments || hasLore) loreBuilder.append(Component.newline());
-
-
-            // append enchantments
-            if (hasEnchantments) {
-                Map<Enchantment, Integer> enchantmentMap;
-
-                // if it is enchantment storage meta
-                if (itemStack.hasItemMeta() && itemStack.getItemMeta() instanceof EnchantmentStorageMeta) {
-                    // get meta
-                    EnchantmentStorageMeta meta = (EnchantmentStorageMeta) itemStack.getItemMeta();
-                    // set map
-                    enchantmentMap = meta.getStoredEnchants();
-                } else { // else regular enchantments
-                    enchantmentMap = itemStack.getEnchantments();
-                }
-
-                // credits to PlanetTeamSpeak#4157 for informing me about translatable locale components
-                List<TextComponent> enchantments = enchantmentMap.entrySet().stream()
-                        .filter(entry -> "minecraft".equalsIgnoreCase(entry.getKey().getKey().getNamespace()))
-                        .map(entry -> Component.empty().style(Style.style(NamedTextColor.GRAY).decoration(TextDecoration.ITALIC, false))
-                                .append(Component.translatable("enchantment.minecraft." + entry.getKey().getKey().getKey()))
-                                .append(entry.getKey().getMaxLevel() > 1 ? Component.space()
-                                        .append(Component.translatable("enchantment.level." + entry.getValue())) : Component.empty()))
-                        .collect(Collectors.toList());
-
-                // loop through enchantments and apply to lore
-                for (Iterator<TextComponent> it = enchantments.iterator(); it.hasNext(); ) {
-                    loreBuilder.append(it.next());
-
-                    // if there's a next enchantment, append a newline
-                    if (it.hasNext()) {
-                        loreBuilder.append(Component.newline());
-                    }
-                }
-            } else if (hasLore) {
-                List<String> lore = itemStack.getItemMeta().getLore();
-
-                // loop through lore
-                for (Iterator<String> it = lore.iterator(); it.hasNext(); ) {
-                    loreBuilder.append(LegacyComponentSerializer.legacySection().deserialize(it.next()));
-
-                    // if not the end, append a newline
-                    if (it.hasNext()) {
-                        loreBuilder.append(Component.newline());
-                    }
                 }
             }
         }
@@ -155,8 +121,35 @@ public class ItemChatParser extends Parser<Pair<Player, Component>, Component> {
                 .decoration(TextDecoration.STRIKETHROUGH, TextDecoration.State.NOT_SET)
                 .decoration(TextDecoration.UNDERLINED, TextDecoration.State.NOT_SET);
 
-        // set hover
-        itemMessage = itemMessage.hoverEvent(HoverEvent.showText(loreBuilder.build()));
+        // create hover event
+        HoverEvent<?> hoverEvent;
+
+        if (loreBuilder != null) {
+            hoverEvent = HoverEvent.showText(loreBuilder.build());
+        } else {
+            // show item
+
+            // get namespaced key
+            NBTCompound compound = NBTUtil.compoundFromItemStack(itemStack);
+            String compoundId = compound != null ? compound.getString("id") : null;
+            Key key;
+
+            if (compoundId != null) {
+                key = Key.key(compoundId);
+            } else {
+                try {
+                    Material material = itemStack.getType();
+                    NamespacedKey namespacedKey = material.getKey();
+                    key = Key.key(namespacedKey.getNamespace(), namespacedKey.getKey());
+                } catch (NoSuchMethodError ignored) {
+                    key = Key.key(itemStack.getType().name());
+                }
+            }
+
+            hoverEvent = HoverEvent.showItem(key, itemStack.getAmount(), NBTUtil.fromItemStack(itemStack));
+        }
+
+        itemMessage = itemMessage.hoverEvent(hoverEvent);
 
         Component finalItemMessage = itemMessage;
 

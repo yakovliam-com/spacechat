@@ -3,7 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id "com.github.johnrengelman.shadow" version "5.2.0"
     id "java"
-    id 'io.github.slimjar' version '1.2.1'
+    id 'io.github.slimjar' version '1.3.0'
 }
 
 // naming
@@ -23,9 +23,12 @@ repositories {
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
     maven { url 'https://repo.mattstudios.me/artifactory/public/' }
     maven { url 'https://repo.aikar.co/content/groups/aikar/' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
+    implementation slimjar("1.2.6")
+
     // https://mvnrepository.com/artifact/org.jetbrains/annotations
     compileOnly group: 'org.jetbrains', name: 'annotations', version: '16.0.1'
 
@@ -70,6 +73,15 @@ dependencies {
     slim('com.zaxxer:HikariCP:5.0.0') {
         exclude group: 'org.slf4j'
     }
+
+    // nbt api
+    slim 'de.tr7zw:item-nbt-api-plugin:2.8.0'
+
+    // nbt api (second)
+    slim 'io.github.jglrxavpok.hephaistos:common:2.2.0'
+
+    // locale library
+    slim 'com.github.PikaMug:LocaleLib:2.2'
 }
 
 artifacts {
@@ -97,6 +109,7 @@ shadowJar {
     relocate "org.spongepowered.configurate", "${packageGroup}.lib.configurate"
     relocate "io.leangen.geantyref", "${packageGroup}.lib.geantyref"
     relocate "io.github.slimjar", "${packageGroup}.lib.slimjar"
+    relocate "de.tr7zw.changeme.nbtapi", "${packageGroup}.lib.nbtapi"
 }
 
 slimJar {
@@ -112,6 +125,7 @@ slimJar {
     relocate "org.spongepowered.configurate", "${packageGroup}.lib.configurate"
     relocate "io.leangen.geantyref", "${packageGroup}.lib.geantyref"
     relocate "io.github.slimjar", "${packageGroup}.lib.slimjar"
+    relocate "de.tr7zw.changeme.nbtapi", "${packageGroup}.lib.nbtapi"
 }
 
 processResources {
