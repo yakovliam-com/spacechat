@@ -38,7 +38,7 @@ public class IgnoreCommand extends SpaceChatCommand {
     @Subcommand("list")
     @CommandAlias("ignore")
     @CommandPermission("space.chat.command.ignore.list")
-    public class ListCommand extends BaseCommand {
+    public static class ListCommand extends BaseCommand {
 
         @Default
         public void onList(Player player) {

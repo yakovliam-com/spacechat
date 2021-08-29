@@ -12,7 +12,6 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import org.spongepowered.configurate.serialize.TypeSerializer;
 
 import java.lang.reflect.Type;
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.UUID;
 
