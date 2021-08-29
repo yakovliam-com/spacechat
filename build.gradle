@@ -3,11 +3,11 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id "com.github.johnrengelman.shadow" version "5.2.0"
     id "java"
-    id 'io.github.slimjar' version '1.2.1'
+    id 'io.github.slimjar' version '1.3.0'
 }
 
 // naming
-version = '2.3.1-SNAPSHOT'
+version = '2.3.2-SNAPSHOT'
 group = 'dev.spaceseries'
 def packageGroup = group + '.spacechat'
 
@@ -23,9 +23,12 @@ repositories {
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
     maven { url 'https://repo.mattstudios.me/artifactory/public/' }
     maven { url 'https://repo.aikar.co/content/groups/aikar/' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
+    implementation slimjar("1.2.6")
+
     // https://mvnrepository.com/artifact/org.jetbrains/annotations
     compileOnly group: 'org.jetbrains', name: 'annotations', version: '16.0.1'
 
@@ -42,9 +45,15 @@ dependencies {
     slim 'com.github.ben-manes.caffeine:caffeine:2.9.2'
 
     // adventure
-    slim "net.kyori:adventure-api:4.8.1"
-    slim "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
-    slim "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
+    slim("net.kyori:adventure-api:4.9.0-SNAPSHOT") {
+        exclude group: 'net.kyori', module: 'adventure-bom'
+    }
+    slim("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT") {
+        exclude group: 'net.kyori', module: 'adventure-bom'
+    }
+    slim("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT") {
+        exclude group: 'net.kyori', module: 'adventure-bom'
+    }
 
     // triumph msg adventure
     slim "me.mattstudios:triumph-msg-adventure:2.2.4-SNAPSHOT"
@@ -57,19 +66,28 @@ dependencies {
     slim group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
 
     // jedis
-    slim "redis.clients:jedis:3.6.0"
+    slim 'redis.clients:jedis:3.6.3'
 
     // google
     compileOnly 'com.google.code.gson:gson:2.8.0'
     compileOnly 'com.google.guava:guava:21.0'
 
     // configurate
-    slim "org.spongepowered:configurate-gson:4.0.0"
+    slim 'org.spongepowered:configurate-gson:4.1.1'
 
     // hikari
-    slim('com.zaxxer:HikariCP:4.0.2') {
+    slim('com.zaxxer:HikariCP:5.0.0') {
         exclude group: 'org.slf4j'
     }
+
+    // nbt api
+    slim 'de.tr7zw:item-nbt-api-plugin:2.8.0'
+
+    // nbt api (second)
+    slim 'io.github.jglrxavpok.hephaistos:common:2.2.0'
+
+    // locale library
+    slim 'com.github.PikaMug:LocaleLib:2.2'
 }
 
 artifacts {
@@ -84,19 +102,6 @@ jar {
 
 shadowJar {
     archiveName("SpaceChat-${project.version}.jar")
-
-    relocate 'dev.spaceseries.spaceapi', "${packageGroup}.lib.spaceapi"
-    relocate 'org.bstats', "${packageGroup}.lib.bstats"
-    relocate 'net.kyori', "${packageGroup}.lib.kyori"
-    relocate 'com.github.benmanes.caffeine', "${packageGroup}.lib.caffeine"
-    relocate 'com.mysql', "${packageGroup}.lib.mysql"
-    relocate 'me.mattstudios.msg', "${packageGroup}.lib.msg"
-    relocate "co.aikar.commands", "${packageGroup}.lib.acf"
-    relocate "redis.clients.jedis", "${packageGroup}.lib.jedis"
-    relocate "com.zaxxer.hikari", "${packageGroup}.lib.hikari"
-    relocate "org.spongepowered.configurate", "${packageGroup}.lib.configurate"
-    relocate "io.leangen.geantyref", "${packageGroup}.lib.geantyref"
-    relocate "io.github.slimjar", "${packageGroup}.lib.slimjar"
 }
 
 slimJar {
@@ -112,6 +117,7 @@ slimJar {
     relocate "org.spongepowered.configurate", "${packageGroup}.lib.configurate"
     relocate "io.leangen.geantyref", "${packageGroup}.lib.geantyref"
     relocate "io.github.slimjar", "${packageGroup}.lib.slimjar"
+    relocate "de.tr7zw.changeme.nbtapi", "${packageGroup}.lib.nbtapi"
 }
 
 processResources {
