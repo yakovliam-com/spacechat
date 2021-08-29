@@ -119,7 +119,7 @@ redis:
 #=#=#=#=#=#=#=#=#=#=#=#=#
 logging:
   chat:
-    log-to-storage: true
+    log-to-storage: false
 
 broadcast:
   # If enabled, any 'broadcast commands' will broadcast using the wrapper specified

@@ -45,9 +45,15 @@ dependencies {
     slim 'com.github.ben-manes.caffeine:caffeine:2.9.2'
 
     // adventure
-    slim "net.kyori:adventure-api:4.9.0-SNAPSHOT"
-    slim "net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT"
-    slim "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
+    slim("net.kyori:adventure-api:4.9.0-SNAPSHOT") {
+        exclude group: 'net.kyori', module: 'adventure-bom'
+    }
+    slim("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT") {
+        exclude group: 'net.kyori', module: 'adventure-bom'
+    }
+    slim("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT") {
+        exclude group: 'net.kyori', module: 'adventure-bom'
+    }
 
     // triumph msg adventure
     slim "me.mattstudios:triumph-msg-adventure:2.2.4-SNAPSHOT"
@@ -96,20 +102,6 @@ jar {
 
 shadowJar {
     archiveName("SpaceChat-${project.version}.jar")
-
-    relocate 'dev.spaceseries.spaceapi', "${packageGroup}.lib.spaceapi"
-    relocate 'org.bstats', "${packageGroup}.lib.bstats"
-    relocate 'net.kyori', "${packageGroup}.lib.kyori"
-    relocate 'com.github.benmanes.caffeine', "${packageGroup}.lib.caffeine"
-    relocate 'com.mysql', "${packageGroup}.lib.mysql"
-    relocate 'me.mattstudios.msg', "${packageGroup}.lib.msg"
-    relocate "co.aikar.commands", "${packageGroup}.lib.acf"
-    relocate "redis.clients.jedis", "${packageGroup}.lib.jedis"
-    relocate "com.zaxxer.hikari", "${packageGroup}.lib.hikari"
-    relocate "org.spongepowered.configurate", "${packageGroup}.lib.configurate"
-    relocate "io.leangen.geantyref", "${packageGroup}.lib.geantyref"
-    relocate "io.github.slimjar", "${packageGroup}.lib.slimjar"
-    relocate "de.tr7zw.changeme.nbtapi", "${packageGroup}.lib.nbtapi"
 }
 
 slimJar {
