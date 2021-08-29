@@ -19,7 +19,6 @@ import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacket;
 import dev.spaceseries.spacechat.util.color.ColorUtil;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;

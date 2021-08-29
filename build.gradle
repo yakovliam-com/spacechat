@@ -84,7 +84,8 @@ dependencies {
     slim 'de.tr7zw:item-nbt-api-plugin:2.8.0'
 
     // nbt api (second)
-    slim 'io.github.jglrxavpok.hephaistos:common:2.2.0'
+    // https://mvnrepository.com/artifact/io.github.jglrxavpok.hephaistos/common
+    slim group: 'io.github.jglrxavpok.hephaistos', name: 'common', version: '2.2.0'
 
     // locale library
     slim 'com.github.PikaMug:LocaleLib:2.2'
