@@ -7,22 +7,24 @@ plugins {
 }
 
 // naming
-version = '2.3.2-SNAPSHOT'
+version = '2.3.3-SNAPSHOT'
 group = 'dev.spaceseries'
 def packageGroup = group + '.spacechat'
 
 repositories {
     mavenCentral()
 
-    maven { url 'https://repo.yakovliam.com/releases/' }
-    maven { url 'https://oss.sonatype.org/content/groups/public/' }
-    maven { url 'https://repo.codemc.org/repository/maven-public/' }
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+
+    maven { url 'https://oss.sonatype.org/content/groups/public/' }
     maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
-    maven { url 'https://oss.sonatype.org/content/repositories/central/' }
+
+    maven { url 'https://repo.yakovliam.com/releases/' }
+    maven { url 'https://repo.codemc.org/repository/maven-public/' }
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
     maven { url 'https://repo.mattstudios.me/artifactory/public/' }
     maven { url 'https://repo.aikar.co/content/groups/aikar/' }
+
     maven { url 'https://jitpack.io' }
 }
 
@@ -45,7 +47,7 @@ dependencies {
     slim 'com.github.ben-manes.caffeine:caffeine:2.9.2'
 
     // adventure
-    slim("net.kyori:adventure-api:4.9.0-SNAPSHOT") {
+    slim("net.kyori:adventure-api:4.9.1") {
         exclude group: 'net.kyori', module: 'adventure-bom'
     }
     slim("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT") {
