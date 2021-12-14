@@ -1,13 +1,12 @@
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "5.2.0"
+    id "com.github.johnrengelman.shadow" version "7.1.0"
     id "java"
-    id 'io.github.slimjar' version '1.3.0'
 }
 
 // naming
-version = '2.3.3-SNAPSHOT'
+version = '2.3.4-SNAPSHOT'
 group = 'dev.spaceseries'
 def packageGroup = group + '.spacechat'
 
@@ -29,68 +28,60 @@ repositories {
 }
 
 dependencies {
-    implementation slimjar("1.2.6")
-
     // https://mvnrepository.com/artifact/org.jetbrains/annotations
     compileOnly group: 'org.jetbrains', name: 'annotations', version: '16.0.1'
 
     // spigot
-    compileOnly 'org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.18.1-R0.1-SNAPSHOT'
 
     // placeholderAPI
     compileOnly 'me.clip:placeholderapi:2.10.9'
 
     // bstats
-    slim "org.bstats:bstats-bukkit:2.2.1"
+    implementation "org.bstats:bstats-bukkit:2.2.1"
 
     // caffeine
-    slim 'com.github.ben-manes.caffeine:caffeine:2.9.2'
+    implementation 'com.github.ben-manes.caffeine:caffeine:2.9.2'
 
     // adventure
-    slim("net.kyori:adventure-api:4.9.1") {
-        exclude group: 'net.kyori', module: 'adventure-bom'
-    }
-    slim("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT") {
-        exclude group: 'net.kyori', module: 'adventure-bom'
-    }
-    slim("net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT") {
-        exclude group: 'net.kyori', module: 'adventure-bom'
-    }
+    implementation "net.kyori:adventure-api:4.9.3"
+    implementation "net.kyori:adventure-platform-bukkit:4.0.1"
+    implementation "net.kyori:adventure-text-minimessage:4.1.0-SNAPSHOT"
 
     // triumph msg adventure
-    slim "me.mattstudios:triumph-msg-adventure:2.2.4-SNAPSHOT"
+    implementation "me.mattstudios:triumph-msg-adventure:2.2.4-SNAPSHOT"
 
     // acf
-    slim "co.aikar:acf-bukkit:0.5.0-SNAPSHOT"
+    implementation "co.aikar:acf-bukkit:0.5.0-SNAPSHOT"
 
     // mysql
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
-    slim group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
+    implementation group: 'mysql', name: 'mysql-connector-java', version: '8.0.25'
 
     // jedis
-    slim 'redis.clients:jedis:3.6.3'
+    implementation 'redis.clients:jedis:3.6.3'
 
     // google
     compileOnly 'com.google.code.gson:gson:2.8.0'
     compileOnly 'com.google.guava:guava:21.0'
 
     // configurate
-    slim 'org.spongepowered:configurate-gson:4.1.1'
+    implementation 'org.spongepowered:configurate-gson:4.1.1'
 
     // hikari
-    slim('com.zaxxer:HikariCP:5.0.0') {
+    implementation('com.zaxxer:HikariCP:5.0.0') {
         exclude group: 'org.slf4j'
     }
 
     // nbt api
-    slim 'de.tr7zw:item-nbt-api-plugin:2.8.0'
+    implementation 'de.tr7zw:item-nbt-api-plugin:2.8.0'
 
     // nbt api (second)
     // https://mvnrepository.com/artifact/io.github.jglrxavpok.hephaistos/common
-    slim group: 'io.github.jglrxavpok.hephaistos', name: 'common', version: '2.2.0'
+    implementation group: 'io.github.jglrxavpok.hephaistos', name: 'common', version: '2.2.0'
 
     // locale library
-    slim 'com.github.PikaMug:LocaleLib:2.2'
+    implementation 'com.github.PikaMug:LocaleLib:2.2'
 }
 
 artifacts {
@@ -105,9 +96,7 @@ jar {
 
 shadowJar {
     archiveName("SpaceChat-${project.version}.jar")
-}
 
-slimJar {
     relocate 'dev.spaceseries.spaceapi', "${packageGroup}.lib.spaceapi"
     relocate 'org.bstats', "${packageGroup}.lib.bstats"
     relocate 'net.kyori', "${packageGroup}.lib.kyori"
