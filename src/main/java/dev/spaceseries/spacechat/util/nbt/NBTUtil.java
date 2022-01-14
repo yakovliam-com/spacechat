@@ -41,6 +41,7 @@ public class NBTUtil {
      * @return compound
      */
     public static org.jglrxavpok.hephaistos.nbt.NBTCompound compoundFromItemStack(ItemStack itemStack) {
+        // TODO fix 'convertItemtoNBT' not working by updating the dependency when 1.18 comes out
         // get nbt from item using NBT-API
         NBTCompound compound = NBTItem.convertItemtoNBT(itemStack);
         // convert to string

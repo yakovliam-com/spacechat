@@ -20,9 +20,11 @@ public class MessageParser {
      * Construct message parser
      */
     public MessageParser(SpaceChatPlugin plugin) {
-        this.parsers = Collections.singletonList(
-                new ItemChatParser(plugin)
-        );
+//        this.parsers = Collections.singletonList(
+//                new ItemChatParser(plugin)
+//        );
+        // TODO temporarily disabled
+        this.parsers = Collections.emptyList();
     }
 
     /**

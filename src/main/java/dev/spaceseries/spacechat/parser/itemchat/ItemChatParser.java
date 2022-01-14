@@ -58,6 +58,17 @@ public class ItemChatParser extends Parser<Pair<Player, Component>, Component> {
         Player player = playerStringPair.getLeft();
         Component message = playerStringPair.getRight();
 
+        boolean containsItemChatAliases = false;
+        for (String s : SpaceChatConfigKeys.ITEM_CHAT_REPLACE_ALIASES.get(configuration)) {
+            if (message.contains(Component.text(s))) {
+                containsItemChatAliases = true;
+            }
+        }
+
+        if (!containsItemChatAliases) {
+            return message;
+        }
+
         // if not enabled, return
         if (!SpaceChatConfigKeys.ITEM_CHAT_ENABLED.get(configuration) || !player.hasPermission(SpaceChatConfigKeys.PERMISSIONS_USE_ITEM_CHAT.get(configuration))) {
             return message;
