@@ -81,7 +81,7 @@ public class ItemChatParser extends Parser<Pair<Player, Component>, Component> {
 
         // replacement config for %item% and %amount%
         TextReplacementConfig nameReplacementConfig = TextReplacementConfig.builder()
-                .matchLiteral("%name%").replacement(TextComponent.ofChildren(name))
+                .matchLiteral("%name%").replacement(name)
                 .build();
 
         TextReplacementConfig amountReplacementConfig = TextReplacementConfig.builder()
