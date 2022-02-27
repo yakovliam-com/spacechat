@@ -18,13 +18,13 @@ repositories {
     maven { url 'https://oss.sonatype.org/content/groups/public/' }
     maven { url 'https://oss.sonatype.org/content/repositories/releases/' }
 
-    maven { url 'https://repo.yakovliam.com/releases/' }
     maven { url 'https://repo.codemc.org/repository/maven-public/' }
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
-    maven { url 'https://repo.mattstudios.me/artifactory/public/' }
     maven { url 'https://repo.aikar.co/content/groups/aikar/' }
 
     maven { url 'https://jitpack.io' }
+
+    maven {url 'https://repo.triumphteam.dev/snapshots/' }
 }
 
 dependencies {
@@ -73,9 +73,6 @@ dependencies {
         exclude group: 'org.slf4j'
     }
 
-    // nbt api
-    implementation 'de.tr7zw:item-nbt-api-plugin:2.8.0'
-
     // nbt api (second)
     // https://mvnrepository.com/artifact/io.github.jglrxavpok.hephaistos/common
     implementation group: 'io.github.jglrxavpok.hephaistos', name: 'common', version: '2.2.0'
@@ -109,7 +106,6 @@ shadowJar {
     relocate "org.spongepowered.configurate", "${packageGroup}.lib.configurate"
     relocate "io.leangen.geantyref", "${packageGroup}.lib.geantyref"
     relocate "io.github.slimjar", "${packageGroup}.lib.slimjar"
-    relocate "de.tr7zw.changeme.nbtapi", "${packageGroup}.lib.nbtapi"
 }
 
 processResources {
