@@ -16,17 +16,20 @@ import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 import dev.spaceseries.spacechat.user.UserManager;
 import dev.spaceseries.spacechat.util.version.VersionUtil;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.plugin.AuthorNagException;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.security.NoSuchAlgorithmException;
 
 public final class SpaceChatPlugin extends JavaPlugin {
+
+    /**
+     * The library loader
+     */
+    private LibraryLoader libraryLoader;
 
     /**
      * The formats config
@@ -85,8 +88,9 @@ public final class SpaceChatPlugin extends JavaPlugin {
 
     @Override
     public void onLoad() {
-//        getLogger().info("We're currently downloading some data to make this plugin work correctly, so please wait. This may take a while.");
-        // TODO implement good dependency downloader
+        getLogger().info("We're currently downloading some data to make this plugin work correctly, so please wait. This may take a while.");
+        libraryLoader = new LibraryLoader(this);
+        libraryLoader.load();
     }
 
     /**
@@ -282,6 +286,15 @@ public final class SpaceChatPlugin extends JavaPlugin {
      */
     public void loadMessages() {
         Messages.renew();
+    }
+
+    /**
+     * Returns the library loader
+     *
+     * @return library loader
+     */
+    public LibraryLoader getLibraryLoader() {
+        return libraryLoader;
     }
 
     /**

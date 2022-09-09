@@ -35,7 +35,7 @@ public class BroadcastMinimessageCommand extends SpaceChatCommand {
         String messageString = String.join(" ", message);
 
         // parse through minimessage
-        Component component = MiniMessage.get().deserialize(messageString);
+        Component component = MiniMessage.miniMessage().deserialize(messageString);
 
         // use lang wrapper?
         if (BROADCAST_USE_LANG_WRAPPER.get(plugin.getSpaceChatConfig().getAdapter())) {
