@@ -4,10 +4,9 @@ import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.sync.ServerDataSyncService;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
+import dev.spaceseries.spacechat.sync.provider.redis.RedisProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +19,9 @@ import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.*;
 public class RedisServerDataSyncService extends ServerDataSyncService {
 
     /**
-     * Pool
+     * Provider
      */
-    private final JedisPool pool;
+    private final RedisProvider provider;
 
     /**
      * Construct server sync service
@@ -33,7 +32,7 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
         super(plugin, serviceManager);
 
         // initialize pool
-        this.pool = this.getServiceManager().getRedisProvider().provide();
+        this.provider = this.getServiceManager().getRedisProvider();
     }
 
     /**
@@ -44,7 +43,7 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
      */
     @Override
     public void subscribeToChannel(UUID uuid, Channel channel) {
-        try (Jedis jedis = pool.getResource()) {
+        provider.consumer((jedis) -> {
             // update
 
             // lpush new channel
@@ -54,7 +53,7 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
             // also lpush to master channels list that contains a list of uuids for every player subscribed to that given channel
             jedis.lpush(REDIS_CHANNELS_SUBSCRIBED_UUIDS_LIST_KEY.get(plugin.getSpaceChatConfig().getAdapter())
                     .replace("%channel%", channel.getHandle()), uuid.toString());
-        }
+        }).run();
     }
 
     /**
@@ -65,7 +64,7 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
      */
     @Override
     public void unsubscribeFromChannel(UUID uuid, Channel subscribedChannel) {
-        try (Jedis jedis = pool.getResource()) {
+        provider.consumer((jedis) -> {
             // update
 
             // lrem channel
@@ -75,7 +74,7 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
             // also lrem from master channels list that contains a list of uuids for every player subscribed to that given channel
             jedis.lrem(REDIS_CHANNELS_SUBSCRIBED_UUIDS_LIST_KEY.get(plugin.getSpaceChatConfig().getAdapter())
                     .replace("%channel%", subscribedChannel.getHandle()), 0, uuid.toString());
-        }
+        }).run();
     }
 
     /**
@@ -86,7 +85,7 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
      */
     @Override
     public void updateCurrentChannel(UUID uuid, Channel channel) {
-        try (Jedis jedis = pool.getResource()) {
+        provider.consumer((jedis) -> {
             // update key
             if (channel != null)
                 jedis.set(REDIS_PLAYER_CURRENT_CHANNEL_KEY.get(plugin.getSpaceChatConfig().getAdapter())
@@ -98,7 +97,7 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
                     jedis.del(REDIS_PLAYER_CURRENT_CHANNEL_KEY.get(plugin.getSpaceChatConfig().getAdapter())
                             .replace("%uuid%", uuid.toString()), current.getHandle());
             }
-        }
+        }).run();
     }
 
     /**
@@ -109,17 +108,15 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
      */
     @Override
     public List<Channel> getSubscribedChannels(UUID uuid) {
-        try (Jedis jedis = pool.getResource()) {
+        return provider.function((jedis) -> {
             List<Channel> channels = jedis.lrange(REDIS_PLAYER_SUBSCRIBED_CHANNELS_LIST_KEY.get(plugin.getSpaceChatConfig().getAdapter())
-                    .replace("%uuid%", uuid.toString()), 0, -1).stream()
+                            .replace("%uuid%", uuid.toString()), 0, -1).stream()
                     .map(s -> plugin.getChannelManager().get(s, null))
                     .filter(Objects::nonNull)
                     .collect(Collectors.toList());
             jedis.close();
             return channels;
-        } catch (Exception e) {
-            return new ArrayList<>();
-        }
+        }).or(new ArrayList<>()).get();
     }
 
     /**
@@ -130,12 +127,12 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
      */
     @Override
     public Channel getCurrentChannel(UUID uuid) {
-        try (Jedis jedis = pool.getResource()) {
+        return provider.function((jedis) -> {
             Channel channel = plugin.getChannelManager().get(jedis.get(REDIS_PLAYER_CURRENT_CHANNEL_KEY.get(plugin.getSpaceChatConfig().getAdapter())
                     .replace("%uuid%", uuid.toString())), null);
             jedis.close();
             return channel;
-        }
+        }).get();
     }
 
     /**
@@ -148,7 +145,7 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
      */
     @Override
     public List<UUID> getSubscribedUUIDs(Channel channel) {
-        try (Jedis jedis = pool.getResource()) {
+        return provider.function((jedis) -> {
             // get list of uuids of players who've subscribed to a given channel
             List<String> uuids = jedis.lrange(REDIS_CHANNELS_SUBSCRIBED_UUIDS_LIST_KEY.get(plugin.getSpaceChatConfig().getAdapter())
                     .replace("%channel%", channel.getHandle()), 0, -1);
@@ -161,6 +158,6 @@ public class RedisServerDataSyncService extends ServerDataSyncService {
                         return p != null && p.isOnline();
                     })
                     .collect(Collectors.toList());
-        }
+        }).get();
     }
 }

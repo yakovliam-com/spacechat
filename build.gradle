@@ -79,6 +79,7 @@ jar {
 shadowJar {
     archiveClassifier.set('')
 
+    // Only need the resource bundle
     exclude 'co/aikar/**/*'
 
     relocate 'com.saicone.ezlib', project.group + '.lib.ezlib'
