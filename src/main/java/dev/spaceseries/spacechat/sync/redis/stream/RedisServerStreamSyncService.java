@@ -8,6 +8,7 @@ import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 import dev.spaceseries.spacechat.sync.packet.ReceiveStreamDataPacket;
 import dev.spaceseries.spacechat.sync.packet.SendStreamDataPacket;
+import dev.spaceseries.spacechat.sync.packet.StreamDataPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.RedisPublishDataPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.RedisStringReceiveDataPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.broadcast.RedisBroadcastPacket;
@@ -16,17 +17,30 @@ import dev.spaceseries.spacechat.sync.redis.stream.packet.broadcast.RedisBroadca
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacketDeserializer;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacketSerializer;
+import org.bukkit.Bukkit;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPubSub;
+
+import java.util.logging.Level;
 
 import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.*;
 
 public class RedisServerStreamSyncService extends ServerStreamSyncService {
 
     /**
+     * Pool
+     */
+    private JedisPool pool;
+
+    /**
      * Redis Messenger
      * <p>
      * This class does all of the actual work and connection management
      */
-    private RedisMessenger redisMessenger;
+    private Messenger messenger;
+
+    private boolean messengerEnabled = true;
 
     /**
      * Gson
@@ -64,7 +78,7 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
         String json = gson.toJson(redisChatPacket, RedisChatPacket.class);
 
         // publish to redis
-        redisMessenger.publish(new RedisPublishDataPacket(REDIS_CHAT_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()), json));
+        messenger.publish(new RedisPublishDataPacket(REDIS_CHAT_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()), json));
     }
 
     /**
@@ -80,7 +94,7 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
         String json = gson.toJson(redisBroadcastPacket, RedisBroadcastPacket.class);
 
         // publish to redis
-        redisMessenger.publish(new RedisPublishDataPacket(REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()), json));
+        messenger.publish(new RedisPublishDataPacket(REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()), json));
     }
 
     /**
@@ -135,8 +149,12 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
      */
     @Override
     public void start() {
+        // initialize pool
+        this.pool = getServiceManager().getRedisProvider().provide();
         // initialize messenger
-        this.redisMessenger = new RedisMessenger(plugin, this);
+        this.messenger = new Messenger();
+        // It's alive!
+        alive();
         // initialize my super-duper gson adapter
         gson = new GsonBuilder()
                 .registerTypeAdapter(RedisChatPacket.class, new RedisChatPacketSerializer())
@@ -146,11 +164,113 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
                 .create();
     }
 
+    private void alive() {
+        // subscribing to redis pub/sub is a blocking operation.
+        // we need to make a new thread in order to not block the main thread....
+        new Thread(() -> {
+            boolean reconnected = false;
+            while (messengerEnabled && !Thread.interrupted() && pool != null && !pool.isClosed()) {
+                try (Jedis jedis = pool.getResource()) {
+                    if (reconnected) {
+                        plugin.getLogger().log(Level.INFO, "Redis connection is alive again");
+                    }
+                    // Lock the thread
+                    jedis.subscribe(messenger,
+                            REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                            REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
+                    );
+                } catch (Throwable t) {
+                    // Thread was unlocked
+                    if (messengerEnabled) {
+                        plugin.getLogger().log(Level.WARNING, "Redis connection dropped, automatic reconnection in 8 seconds...");
+                        t.printStackTrace();
+                        try {
+                            messenger.unsubscribe(
+                                    REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                                    REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
+                            );
+                        } catch (Throwable ignored) { }
+
+                        // Make an instant subscribe if occurs any error on initialization
+                        if (!reconnected) {
+                            reconnected = true;
+                        } else {
+                            try {
+                                Thread.sleep(8000);
+                            } catch (InterruptedException e) {
+                                Thread.currentThread().interrupt();
+                            }
+                        }
+                    } else {
+                        return;
+                    }
+                }
+            }
+        }).start();
+    }
+
     /**
      * Ends the service in question
      */
     @Override
     public void end() {
-        this.redisMessenger.shutdown();
+        messengerEnabled = false;
+        if (this.pool != null && this.pool.getResource().getClient() != null) {
+            // unsubscribe from chat channel
+            messenger.unsubscribe(
+                    REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                    REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
+            );
+
+            if (!pool.isClosed()) {
+                pool.close();
+            }
+        }
+    }
+
+    private class Messenger extends JedisPubSub {
+
+        @Override
+        public void onMessage(String channel, String message) {
+            // receiving
+            // [channel] sent [message]
+
+            // if it's the correct channel
+            if (channel.equalsIgnoreCase(REDIS_CHAT_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()))) {
+                receiveChat(new RedisStringReceiveDataPacket(message));
+            } else if (channel.equalsIgnoreCase(REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()))) {
+                receiveBroadcast(new RedisStringReceiveDataPacket(message));
+            }
+        }
+
+        @Override
+        public void onSubscribe(String channel, int subscribedChannels) {
+            // we have subscribed to [channel]. We are currently subscribed to [subscribedChannels] channels.
+            plugin.getLogger().log(Level.INFO, "SpaceChat subscribed to the redis channel '" + channel + "'");
+        }
+
+        @Override
+        public void onUnsubscribe(String channel, int subscribedChannels) {
+            // we have unsubscribed from [channel]. We are currently subscribed to another [subscribedChannels] channels.
+            plugin.getLogger().log(Level.INFO, "SpaceChat unsubscribed from the redis channel '" + channel + "'");
+        }
+
+        /**
+         * Publish a message
+         *
+         * @param dataPacket packet
+         */
+        public void publish(StreamDataPacket dataPacket) {
+            RedisPublishDataPacket redisPublishDataPacket = (RedisPublishDataPacket) dataPacket;
+
+            String channel = redisPublishDataPacket.getChannel();
+            String message = redisPublishDataPacket.getMessage();
+            // run async
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                try (Jedis jedis = pool.getResource()) {
+                    jedis.publish(channel, message);
+                }
+            });
+        }
     }
 }
