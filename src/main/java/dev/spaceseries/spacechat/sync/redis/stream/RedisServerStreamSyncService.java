@@ -9,6 +9,7 @@ import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 import dev.spaceseries.spacechat.sync.packet.ReceiveStreamDataPacket;
 import dev.spaceseries.spacechat.sync.packet.SendStreamDataPacket;
 import dev.spaceseries.spacechat.sync.packet.StreamDataPacket;
+import dev.spaceseries.spacechat.sync.provider.redis.RedisProvider;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.RedisPublishDataPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.RedisStringReceiveDataPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.broadcast.RedisBroadcastPacket;
@@ -19,7 +20,6 @@ import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacketDe
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacketSerializer;
 import org.bukkit.Bukkit;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
 
 import java.util.logging.Level;
@@ -29,9 +29,9 @@ import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.*;
 public class RedisServerStreamSyncService extends ServerStreamSyncService {
 
     /**
-     * Pool
+     * Redis provider
      */
-    private JedisPool pool;
+    private RedisProvider provider;
 
     /**
      * Redis Messenger
@@ -149,8 +149,8 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
      */
     @Override
     public void start() {
-        // initialize pool
-        this.pool = getServiceManager().getRedisProvider().provide();
+        // initialize provider
+        this.provider = getServiceManager().getRedisProvider();
         // initialize messenger
         this.messenger = new Messenger();
         // It's alive!
@@ -169,8 +169,8 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
         // we need to make a new thread in order to not block the main thread....
         new Thread(() -> {
             boolean reconnected = false;
-            while (messengerEnabled && !Thread.interrupted() && pool != null && !pool.isClosed()) {
-                try (Jedis jedis = pool.getResource()) {
+            while (messengerEnabled && !Thread.interrupted() && provider.provide() != null && !provider.provide().isClosed()) {
+                try (Jedis jedis = provider.provide().getResource()) {
                     if (reconnected) {
                         plugin.getLogger().log(Level.INFO, "Redis connection is alive again");
                     }
@@ -215,15 +215,15 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
     @Override
     public void end() {
         messengerEnabled = false;
-        if (this.pool != null && this.pool.getResource().getClient() != null) {
+        if (this.provider.provide() != null && this.provider.provide().getResource().getClient() != null) {
             // unsubscribe from chat channel
             messenger.unsubscribe(
                     REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
                     REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
             );
 
-            if (!pool.isClosed()) {
-                pool.close();
+            if (!provider.provide().isClosed()) {
+                provider.provide().close();
             }
         }
     }
@@ -267,9 +267,7 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
             String message = redisPublishDataPacket.getMessage();
             // run async
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                try (Jedis jedis = pool.getResource()) {
-                    jedis.publish(channel, message);
-                }
+                provider.consumer(jedis -> jedis.publish(channel, message));
             });
         }
     }
