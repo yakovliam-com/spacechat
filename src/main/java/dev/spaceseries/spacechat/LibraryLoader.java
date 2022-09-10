@@ -12,6 +12,7 @@ import java.util.Map;
 public class LibraryLoader {
 
     private static final String MAVEN_REPOSITORY = "https://repo.maven.apache.org/maven2/";
+    private static final String JITPACK_REPOSITORY = "https://jitpack.io/";
     private static final String DOT_ALIAS = "{}";
     private static final String PACKAGE_ALIAS = "{package}";
 
@@ -96,6 +97,7 @@ public class LibraryLoader {
         public static final String ADVENTURE_PLATFORM = "4.1.2";
         public static final String MSG = "2.2.4-SNAPSHOT@2.2.4-20210406.012549-1";
         public static final String CONFIGURATE = "4.1.2";
+        public static final String RTAG = "1.2.0";
 
     }
 
@@ -300,8 +302,21 @@ public class LibraryLoader {
         LOCALE_LIB(
                 "{0}.LocaleManager",
                 "com{}github{}PikaMug:LocaleLib:2.8",
-                "https://jitpack.io/",
+                JITPACK_REPOSITORY,
                 Relocation.of("me{}pikamug{}localelib", "{package}.lib.localelib")
+        ),
+        // Rtag
+        RTAG(
+                "{0}.Rtag",
+                "com{}saicone{}rtag:rtag:" + Version.RTAG,
+                JITPACK_REPOSITORY,
+                Relocation.of("com{}saicone{}rtag", "{package}.lib.rtag")
+        ),
+        RTAG_ITEM(
+                "{0}.RtagItem",
+                "com{}saicone{}rtag:rtag-item:" + Version.RTAG,
+                JITPACK_REPOSITORY,
+                RTAG.relocation
         );
 
         public static final Dependency[] VALUES = values();

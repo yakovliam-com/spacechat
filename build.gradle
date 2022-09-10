@@ -20,10 +20,10 @@ repositories {
     maven { url 'https://repo.triumphteam.dev/snapshots/' }
     // acf
     maven { url 'https://repo.aikar.co/content/groups/aikar/' }
-    // localelib
+    // localelib, rtag
     maven { url 'https://jitpack.io' }
 
-    // bstats, caffeine, adventure, mysql-driver, hikaricp, jedis, configurate, hephaistos
+    // bstats, caffeine, adventure, mysql-driver, hikaricp, jedis, configurate
     mavenCentral()
 }
 
@@ -58,6 +58,9 @@ dependencies {
 
     compileOnly 'org.spongepowered:configurate-gson:4.1.2'
     compileOnly 'com.github.PikaMug:LocaleLib:2.8'
+
+    compileOnly 'com.saicone.rtag:rtag:1.2.0'
+    compileOnly 'com.saicone.rtag:rtag-item:1.2.0'
 }
 
 compileJava {
@@ -94,6 +97,7 @@ shadowJar {
     relocate 'com.zaxxer.hikari', project.group + '.lib.hikari'
     relocate 'org.spongepowered.configurate', project.group + '.lib.configurate'
     relocate 'me.pikamug.localelib', project.group + '.lib.localelib'
+    relocate 'com.saicone.rtag', project.group + '.lib.rtag'
 
     minimize()
 }
