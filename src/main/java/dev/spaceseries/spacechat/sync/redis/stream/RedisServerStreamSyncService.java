@@ -267,7 +267,7 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
             String message = redisPublishDataPacket.getMessage();
             // run async
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-                provider.consumer(jedis -> jedis.publish(channel, message));
+                provider.consumer(jedis -> jedis.publish(channel, message)).run();
             });
         }
     }
