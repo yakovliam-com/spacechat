@@ -42,10 +42,6 @@ public class MessageCommand extends SpaceChatCommand {
                 .replace(targetName, "") //Replace target to empty
                 .trim(); //Remove unnecessary spaces
 
-        //DEBUG
-        System.out.println(plugin.getUserManager().getAll());
-        //DEBUG
-
         Component formatSend = Messages.getInstance(plugin).messageFormatSend
                 .compile("%receiver%", targetName, "%message%", messageStr);
         Component formatReceive = Messages.getInstance(plugin).messageFormatReceive
@@ -54,14 +50,12 @@ public class MessageCommand extends SpaceChatCommand {
         // get user
         plugin.getUserManager().getByName(targetName, user -> {
             if (user == null) {
-                System.out.println(1);
                 Messages.getInstance(plugin).messagePlayerNotFound.message(sender);
                 return;
             }
             Player target = Bukkit.getPlayerExact(targetName);
 
             plugin.getUserManager().getReplyTargetMap().put(targetName, sender.getName());
-            System.out.println(plugin.getUserManager().getReplyTargetMap());
             plugin.getChatManager().sendComponentMessage(formatSend, (Player) sender);
             plugin.getChatManager().sendComponentMessage(formatReceive, Objects.requireNonNull(target));
 
