@@ -54,6 +54,42 @@ public class Messages {
     // wrapper
     public Message broadcastWrapper;
 
+    /*
+      Message
+     */
+    // args
+    public Message messageArgs;
+
+    // self message
+    public Message messageSelf;
+
+    // player not found
+    public Message messagePlayerNotFound;
+
+    // format send
+    public Message messageFormatSend;
+
+    // format receive
+    public Message messageFormatReceive;
+
+    /*
+       Reply
+     */
+    // args
+    public Message replyArgs;
+
+    // player not found
+    public Message replyNoTarget;
+
+    // player offline
+    public Message replyTargetOffline;
+
+    // format send
+    public Message replyFormatSend;
+
+    // format receive
+    public Message replyFormatReceive;
+
     /**
      * Channel
      */
@@ -91,6 +127,20 @@ public class Messages {
         reloadFailure = Message.fromConfigurationSection("reload.failure", this.getLangConfiguration());
         broadcastArgs = Message.fromConfigurationSection("broadcast.args", this.getLangConfiguration());
         broadcastWrapper = Message.fromConfigurationSection("broadcast.wrapper", this.getLangConfiguration());
+
+        messageArgs = Message.fromConfigurationSection("message.args", this.getLangConfiguration());
+        messagePlayerNotFound = Message.fromConfigurationSection("message.player-not-found.text", this.getLangConfiguration());
+        messageSelf = Message.fromConfigurationSection("message.self-message", this.getLangConfiguration());
+        messageFormatSend = Message.fromConfigurationSection("message.format.send", this.getLangConfiguration());
+        messageFormatReceive = Message.fromConfigurationSection("message.format.receive", this.getLangConfiguration());
+
+        replyArgs = Message.fromConfigurationSection("reply.args", this.getLangConfiguration());
+        replyNoTarget = Message.fromConfigurationSection("reply.no-target", this.getLangConfiguration());
+        replyTargetOffline = Message.fromConfigurationSection("reply.offline-target", this.getLangConfiguration());
+        replyFormatSend = Message.fromConfigurationSection("reply.format.send", this.getLangConfiguration());
+        replyFormatReceive = Message.fromConfigurationSection("reply.format.receive", this.getLangConfiguration());
+
+
         channelJoin = Message.fromConfigurationSection("channel.join", this.getLangConfiguration());
         channelLeave = Message.fromConfigurationSection("channel.leave", this.getLangConfiguration());
         channelListen = Message.fromConfigurationSection("channel.listen", this.getLangConfiguration());
@@ -107,6 +157,29 @@ public class Messages {
      */
     private ConfigurationAdapter getLangConfiguration() {
         return plugin.getLangConfig().getAdapter();
+    }
+
+    @Override
+    public String toString() {
+        return "Messages{" +
+                "plugin=" + plugin +
+                ", generalHelp=" + generalHelp +
+                ", reloadSuccess=" + reloadSuccess +
+                ", reloadFailure=" + reloadFailure +
+                ", broadcastArgs=" + broadcastArgs +
+                ", broadcastWrapper=" + broadcastWrapper +
+                ", messageArgs=" + messageArgs +
+                ", messagePlayerNotFound=" + messagePlayerNotFound +
+                ", formatSend=" + messageFormatSend +
+                ", formatReceive=" + messageFormatReceive +
+                ", channelJoin=" + channelJoin +
+                ", channelLeave=" + channelLeave +
+                ", channelListen=" + channelListen +
+                ", channelMute=" + channelMute +
+                ", channelInvalid=" + channelInvalid +
+                ", channelAccessDenied=" + channelAccessDenied +
+                ", playerNotFound=" + playerNotFound +
+                '}';
     }
 }
 
