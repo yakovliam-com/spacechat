@@ -48,3 +48,28 @@ broadcast:
     - "&cOops! &7You need to specify a message."
   wrapper:
     - "[&f&oBroadcast](hover: &cThis is a broadcast!) \u00BB &7%message%"
+message:
+  args:
+    - "&cInvalid args, correct usage: /msg (playerName) (message)"
+  self-message:
+    - "&cYou can't send a message to yourself"
+  player-not-found:
+    text:
+      - "&cCould not find specified player."
+  format:
+    send:
+      - "&8(&6Me &7▻ &e%receiver%&8) &f%message%"
+    receive:
+      - "&8(&6%sender% &7▻ &eMe&8) &f%message%"
+reply:
+  args:
+    - "&cInvalid args, correct usage: /r (message)"
+  no-target:
+    - "&cYou do not have a message to reply to"
+  offline-target:
+    - "&c%target% is offline."
+  format:
+    send:
+      - "&8(&6Me &7▻ &e%receiver%&8) &f%message%"
+    receive:
+      - "&8(&6%sender% &7▻ &eMe&8) &f%message%"
