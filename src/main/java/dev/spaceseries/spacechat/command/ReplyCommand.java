@@ -4,12 +4,10 @@ import co.aikar.commands.annotation.*;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.api.command.SpaceChatCommand;
-import net.kyori.adventure.text.Component;
+import dev.spaceseries.spacechat.api.message.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.Objects;
 
 @CommandPermission("space.chat.command.reply")
 @CommandAlias("reply|r")
@@ -29,33 +27,38 @@ public class ReplyCommand extends SpaceChatCommand {
             Messages.getInstance(plugin).replyArgs.message(sender);
             return;
         }
+        String targetName = plugin.getUserManager().getReplyTarget(sender.getName());
 
-        plugin.getUserManager().getByName(sender.getName(), user -> {
-            String targetName = plugin.getUserManager().getReplyTargetMap().get(sender.getName());
-            if(targetName == null){
-                Messages.getInstance(plugin).replyNoTarget.message(sender);
-                return;
-            }
+        // Verify if player has a replier
+        if(targetName == null){
+            Messages.getInstance(plugin).replyNoTarget.message(sender);
+            return;
+        }
 
-            Player target = Bukkit.getPlayerExact(targetName);
+        // Verify if player is online
+        if(!plugin.getUserManager().getOnlinePlayers().contains(targetName)){
+            Messages.getInstance(plugin).replyTargetOffline.message(sender, "%target%", targetName);
+            return;
+        }
 
-            if(target == null){
-                Messages.getInstance(plugin).replyTargetOffline.message(sender, "%target%", targetName);
-                return;
-            }
+        // Construct reply message
+        final String messageStr = String.join(" ", args).trim(); //Remove unnecessary spaces
 
-            final String messageStr = String.join(" ", args).trim(); //Remove unnecessary spaces
 
-            Component formatSend = Messages.getInstance(plugin).replyFormatSend
-                    .compile("%receiver%", targetName, "%message%", messageStr);
-            Component formatReceive = Messages.getInstance(plugin).replyFormatReceive
-                    .compile("%sender%", sender.getName(), "%message%", messageStr);
+        // messages
+        Message formatSend = Messages.getInstance(plugin).replyFormatSend;
+        Message formatReceive = Messages.getInstance(plugin).replyFormatReceive;
 
-            plugin.getUserManager().getReplyTargetMap().put(targetName, sender.getName());
+        // send a message to player in the same server if is connected
+        formatReceive.message(Bukkit.getPlayer(targetName),
+                "%sender%", sender.getName(),
+                "%message%", messageStr);
 
-            plugin.getChatManager().sendComponentMessage(formatSend, (Player) sender);
-            plugin.getChatManager().sendComponentMessage(formatReceive, Objects.requireNonNull(target));
+        // put replier in map
+        plugin.getUserManager().getReplyTargetMap().put(targetName, sender.getName());
 
-        });
+        // send to player
+        plugin.getChatManager().sendPlayerMessage((Player) sender, targetName, messageStr, formatSend, formatReceive);
+
     }
 }
