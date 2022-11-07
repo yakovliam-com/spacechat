@@ -203,7 +203,6 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
 
         Set<String> players = gson.fromJson(redisStringReceiveDataPacket.getData(), Set.class);
 
-        System.out.println(players);
         //Update the online players
         plugin.getUserManager().setOnlinePlayers(players);
     }
