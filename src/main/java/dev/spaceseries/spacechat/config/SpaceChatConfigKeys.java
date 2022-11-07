@@ -42,7 +42,9 @@ public class SpaceChatConfigKeys {
     public static ConfigKey<Boolean> REDIS_ENABLED = key(c -> c.getBoolean("redis.enabled", false));
     public static ConfigKey<String> REDIS_URL = key(c -> c.getString("redis.url", null));
     public static ConfigKey<String> REDIS_CHAT_CHANNEL = key(c -> c.getString("redis.chat-channel", null));
+    public static ConfigKey<String> REDIS_MESSAGE_CHANNEL = key(c -> c.getString("redis.message-channel", null));
     public static ConfigKey<String> REDIS_BROADCAST_CHANNEL = key(c -> c.getString("redis.broadcast-channel", null));
+    public static ConfigKey<String> REDIS_ONLINE_PLAYERS_CHANNEL = key(c -> c.getString("redis.players-channel", null));
     public static ConfigKey<String> REDIS_SERVER_IDENTIFIER = key(c -> c.getString("redis.server.identifier", null));
     public static ConfigKey<String> REDIS_SERVER_DISPLAYNAME = key(c -> c.getString("redis.server.displayName", null));
     public static ConfigKey<String> REDIS_PLAYER_SUBSCRIBED_CHANNELS_LIST_KEY = key(c -> c.getString("redis.player-subscribed-channels-list-key", null));
