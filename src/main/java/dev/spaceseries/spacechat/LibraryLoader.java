@@ -301,7 +301,7 @@ public class LibraryLoader {
         // LocaleLib
         LOCALE_LIB(
                 "{0}.LocaleManager",
-                "com{}github{}PikaMug:LocaleLib:2.8",
+                "com{}github{}PikaMug:LocaleLib:3.0",
                 JITPACK_REPOSITORY,
                 Relocation.of("me{}pikamug{}localelib", "{package}.lib.localelib")
         ),

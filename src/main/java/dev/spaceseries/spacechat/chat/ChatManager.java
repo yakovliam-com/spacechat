@@ -17,6 +17,7 @@ import dev.spaceseries.spacechat.model.manager.Manager;
 import dev.spaceseries.spacechat.sync.ServerDataSyncService;
 import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacket;
+import dev.spaceseries.spacechat.sync.redis.stream.packet.message.RedisMessagePacket;
 import dev.spaceseries.spacechat.util.color.ColorUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -131,6 +132,27 @@ public class ChatManager implements Manager {
 
 
         subscribedPlayersWithPermission.forEach(p -> sendComponentMessage(component, p));
+    }
+
+    /**
+     * Send a chat message
+     *
+     * @param message message
+     */
+    public void sendPlayerMessage(Player sender, String receiver, String message, Message formatSend,
+                                  Message formatReceive) {
+        // get player's current channel, and send through that (if null, that means 'global')
+        Channel applicableChannel = serverDataSyncService.getCurrentChannel(sender.getUniqueId());
+
+        formatSend.message(sender, "%receiver%", receiver, "%message%", message);
+
+        Component componentReceive = formatReceive
+                .compile("%sender%", sender.getName(), "%message%", message);
+
+        // send via redis
+        serverStreamSyncService.publishMessage(new RedisMessagePacket(sender.getUniqueId(), sender.getName(),
+                receiver, applicableChannel, SpaceChatConfigKeys.REDIS_SERVER_IDENTIFIER.get(config),
+                SpaceChatConfigKeys.REDIS_SERVER_DISPLAYNAME.get(config), componentReceive));
     }
 
     /**

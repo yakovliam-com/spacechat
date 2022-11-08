@@ -18,10 +18,16 @@ import dev.spaceseries.spacechat.sync.redis.stream.packet.broadcast.RedisBroadca
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacketDeserializer;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacketSerializer;
+import dev.spaceseries.spacechat.sync.redis.stream.packet.message.RedisMessageDeserializer;
+import dev.spaceseries.spacechat.sync.redis.stream.packet.message.RedisMessagePacket;
+import dev.spaceseries.spacechat.sync.redis.stream.packet.message.RedisMessageSerializer;
 import org.bukkit.Bukkit;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.*;
@@ -82,6 +88,22 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
     }
 
     /**
+     * Publishes a player message across the server
+     *
+     * @param packet packet
+     */
+    @Override
+    public void publishMessage(SendStreamDataPacket<?> packet) {
+        RedisMessagePacket redisMessagePacket = (RedisMessagePacket) packet;
+
+        // gson-ify the redis message
+        String json = gson.toJson(redisMessagePacket, RedisMessagePacket.class);
+
+        //publish to redis
+        messenger.publish(new RedisPublishDataPacket(REDIS_MESSAGE_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()), json));
+    }
+
+    /**
      * Publishes a broadcast message across the server
      *
      * @param packet packet
@@ -94,8 +116,26 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
         String json = gson.toJson(redisBroadcastPacket, RedisBroadcastPacket.class);
 
         // publish to redis
-        messenger.publish(new RedisPublishDataPacket(REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()), json));
+        messenger.publish(new RedisPublishDataPacket(
+                REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()), json));
     }
+
+    /**
+     * Published a list of players across the server
+     *
+     * @param players players
+     */
+    @Override
+    public void publishPlayerList(Set<String> players) {
+
+        // gson-ify the list
+        String json = gson.toJson(players);
+
+        // publish to redis
+        messenger.publish(new RedisPublishDataPacket(
+                REDIS_ONLINE_PLAYERS_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()), json));
+    }
+
 
     /**
      * Receives an incoming chat message
@@ -121,6 +161,50 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
 
         // send to all players
         chatManager.sendComponentChatMessage(chatPacket.getComponent());
+    }
+
+    /**
+     * Receives an incoming player message
+     *
+     * @param packet packet
+     */
+    @Override
+    public void receiveMessage(ReceiveStreamDataPacket<?> packet) {
+        RedisStringReceiveDataPacket redisStringReceiveDataPacket = (RedisStringReceiveDataPacket) packet;
+        // deserialize
+        RedisMessagePacket messagePacket = gson.fromJson(redisStringReceiveDataPacket.getData(), RedisMessagePacket.class);
+
+        // if the message is from ourselves, then return
+        if (messagePacket.getServerIdentifier().equalsIgnoreCase(REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getAdapter()))) {
+            return;
+        }
+
+        // if channel exists, send through that instead
+        if (messagePacket.getChannel() != null && plugin.getChannelManager().get(messagePacket.getChannel().getHandle()) != null) {
+            chatManager.sendComponentChannelMessage(null, messagePacket.getComponent(), messagePacket.getChannel());
+            return;
+        }
+
+        // put replier in map
+        plugin.getUserManager().getReplyTargetMap().put(messagePacket.getReceiverName(), messagePacket.getSenderName());
+
+        // send to player
+        chatManager.sendComponentChatMessage(messagePacket.getComponent(), Bukkit.getPlayer(messagePacket.getReceiverName()));
+    }
+
+    /**
+     * Receives an incoming list of players
+     *
+     * @param packet packet
+     */
+    @Override
+    public void receivePlayerList(ReceiveStreamDataPacket<?> packet) {
+        RedisStringReceiveDataPacket redisStringReceiveDataPacket = (RedisStringReceiveDataPacket) packet;
+
+        Set<String> players = gson.fromJson(redisStringReceiveDataPacket.getData(), Set.class);
+
+        //Update the online players
+        plugin.getUserManager().setOnlinePlayers(players);
     }
 
     /**
@@ -161,6 +245,8 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
                 .registerTypeAdapter(RedisChatPacket.class, new RedisChatPacketDeserializer(plugin))
                 .registerTypeAdapter(RedisBroadcastPacket.class, new RedisBroadcastPacketSerializer())
                 .registerTypeAdapter(RedisBroadcastPacket.class, new RedisBroadcastPacketDeserializer())
+                .registerTypeAdapter(RedisMessagePacket.class, new RedisMessageDeserializer(plugin))
+                .registerTypeAdapter(RedisMessagePacket.class, new RedisMessageSerializer())
                 .create();
     }
 
@@ -177,7 +263,9 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
                     // Lock the thread
                     jedis.subscribe(messenger,
                             REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
-                            REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
+                            REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                            REDIS_MESSAGE_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                            REDIS_ONLINE_PLAYERS_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
                     );
                 } catch (Throwable t) {
                     // Thread was unlocked
@@ -187,7 +275,9 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
                         try {
                             messenger.unsubscribe(
                                     REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
-                                    REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
+                                    REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                                    REDIS_MESSAGE_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                                    REDIS_ONLINE_PLAYERS_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
                             );
                         } catch (Throwable ignored) { }
 
@@ -219,7 +309,9 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
             // unsubscribe from chat channel
             messenger.unsubscribe(
                     REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
-                    REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
+                    REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                    REDIS_MESSAGE_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                    REDIS_ONLINE_PLAYERS_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
             );
 
             if (!provider.provide().isClosed()) {
@@ -240,6 +332,10 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
                 receiveChat(new RedisStringReceiveDataPacket(message));
             } else if (channel.equalsIgnoreCase(REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()))) {
                 receiveBroadcast(new RedisStringReceiveDataPacket(message));
+            } else if(channel.equalsIgnoreCase(REDIS_MESSAGE_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()))){
+                receiveMessage(new RedisStringReceiveDataPacket(message));
+            } else if (channel.equalsIgnoreCase(REDIS_ONLINE_PLAYERS_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()))){
+                receivePlayerList(new RedisStringReceiveDataPacket(message));
             }
         }
 

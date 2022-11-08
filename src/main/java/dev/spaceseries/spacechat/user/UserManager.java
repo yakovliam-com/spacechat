@@ -8,8 +8,7 @@ import dev.spaceseries.spacechat.model.manager.Manager;
 import dev.spaceseries.spacechat.storage.StorageManager;
 import org.bukkit.Bukkit;
 
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -19,14 +18,14 @@ public class UserManager implements Manager {
     private final SpaceChatPlugin plugin;
     private final AsyncLoadingCache<UUID, User> userAsyncCache;
     private final StorageManager storageManager;
-
+    private Map<String, String> replyTarget;
+    private Set<String> onlinePlayers = new HashSet<>();
     /**
      * Construct user manager
      */
     public UserManager(SpaceChatPlugin plugin) {
         this.plugin = plugin;
         this.storageManager = plugin.getStorageManager();
-
         userAsyncCache = Caffeine.newBuilder()
                 .expireAfterAccess(1, TimeUnit.HOURS)
                 .buildAsync((u) -> storageManager.getCurrent().getUser(u));
@@ -79,7 +78,31 @@ public class UserManager implements Manager {
     public void getByName(String username, Consumer<User> consumer) {
         CompletableFuture.supplyAsync(() -> storageManager.getCurrent().getUser(username)).thenAccept(consumer);
     }
+    
+    public Map<String, String> getReplyTargetMap(){
+        if(replyTarget == null){
+            replyTarget = new HashMap<>();
+        }
+        return replyTarget;
+    }
 
+    public void setOnlinePlayers(Set<String> players){
+        onlinePlayers = players;
+    }
+    /**
+     * Get list off online players
+     * @return online players across the server
+     */
+    public Set<String> getOnlinePlayers(){
+        return onlinePlayers;
+    }
+
+    /*
+        Get reply target uuid
+     */
+    public String getReplyTarget(String sender){
+        return replyTarget.get(sender);
+    }
     /**
      * Returns all
      *
