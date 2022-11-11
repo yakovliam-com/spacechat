@@ -48,7 +48,7 @@ public class SpaceChatCommand extends dev.spaceseries.spacechat.api.command.Spac
                 .trim(); //Remove unnecessary spaces
 
         // put replier in map
-        plugin.getUserManager().getReplyTargetMap().put(senderName, targetName);
+        plugin.getUserManager().getReplyTargetMap().put(targetName, senderName);
 
         // messages
         Message formatSend = Messages.getInstance(plugin).messageFormatSend;
