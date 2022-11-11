@@ -23,6 +23,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
@@ -139,20 +140,18 @@ public class ChatManager implements Manager {
      *
      * @param message message
      */
-    public void sendPlayerMessage(Player sender, String receiver, String message, Message formatSend,
-                                  Message formatReceive) {
+    public void sendPrivateMessage(CommandSender sender, String receiver, String message, Message formatSend) {
+        final String senderName = sender instanceof Player ? sender.getName() : "@console";
+
         // get player's current channel, and send through that (if null, that means 'global')
-        Channel applicableChannel = serverDataSyncService.getCurrentChannel(sender.getUniqueId());
+        Channel applicableChannel = sender instanceof Player ? serverDataSyncService.getCurrentChannel(((Player) sender).getUniqueId()) : null;
 
         formatSend.message(sender, "%receiver%", receiver, "%message%", message);
 
-        Component componentReceive = formatReceive
-                .compile("%sender%", sender.getName(), "%message%", message);
-
         // send via redis
-        serverStreamSyncService.publishMessage(new RedisMessagePacket(sender.getUniqueId(), sender.getName(),
+        serverStreamSyncService.publishMessage(new RedisMessagePacket(sender instanceof Player ? ((Player) sender).getUniqueId() : null, senderName,
                 receiver, applicableChannel, SpaceChatConfigKeys.REDIS_SERVER_IDENTIFIER.get(config),
-                SpaceChatConfigKeys.REDIS_SERVER_DISPLAYNAME.get(config), componentReceive));
+                SpaceChatConfigKeys.REDIS_SERVER_DISPLAYNAME.get(config), message));
     }
 
     /**

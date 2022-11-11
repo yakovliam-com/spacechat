@@ -1,8 +1,11 @@
 package dev.spaceseries.spacechat.sync.redis.stream;
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.api.message.Message;
 import dev.spaceseries.spacechat.chat.ChatManager;
 import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
@@ -21,13 +24,16 @@ import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacketSe
 import dev.spaceseries.spacechat.sync.redis.stream.packet.message.RedisMessageDeserializer;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.message.RedisMessagePacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.message.RedisMessageSerializer;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.logging.Level;
 
 import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.*;
@@ -54,6 +60,8 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
      * Responsible for serializing and deserializing messages
      */
     private Gson gson;
+
+    private final Type mapType = new TypeToken<Map<String, Object>>(){}.getType();
 
     /**
      * Chat manager
@@ -120,16 +128,22 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
                 REDIS_BROADCAST_CHANNEL.get(plugin.getSpaceChatConfig().getAdapter()), json));
     }
 
+    @Override
+    public void publishPlayerList(List<String> players) {
+        publishPlayerList(REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getAdapter()), players);
+    }
+
     /**
      * Published a list of players across the server
      *
+     * @param id      Server id
      * @param players players
      */
     @Override
-    public void publishPlayerList(Set<String> players) {
+    public void publishPlayerList(String id, List<String> players) {
 
         // gson-ify the list
-        String json = gson.toJson(players);
+        String json = gson.toJson(Map.of("id", id, "players", players));
 
         // publish to redis
         messenger.publish(new RedisPublishDataPacket(
@@ -174,22 +188,55 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
         // deserialize
         RedisMessagePacket messagePacket = gson.fromJson(redisStringReceiveDataPacket.getData(), RedisMessagePacket.class);
 
+        final String currentID = REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getAdapter());
         // if the message is from ourselves, then return
-        if (messagePacket.getServerIdentifier().equalsIgnoreCase(REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getAdapter()))) {
-            return;
-        }
-
-        // if channel exists, send through that instead
-        if (messagePacket.getChannel() != null && plugin.getChannelManager().get(messagePacket.getChannel().getHandle()) != null) {
-            chatManager.sendComponentChannelMessage(null, messagePacket.getComponent(), messagePacket.getChannel());
+        if (messagePacket.getServerIdentifier().equalsIgnoreCase(currentID)) {
             return;
         }
 
         // put replier in map
         plugin.getUserManager().getReplyTargetMap().put(messagePacket.getReceiverName(), messagePacket.getSenderName());
 
-        // send to player
-        chatManager.sendComponentChatMessage(messagePacket.getComponent(), Bukkit.getPlayer(messagePacket.getReceiverName()));
+        // Display message in console
+        if (messagePacket.getSenderName().equalsIgnoreCase("@console")) {
+            Messages.getInstance(plugin).messageFormatSend.message(Bukkit.getConsoleSender(),
+                    "%receiver%", messagePacket.getReceiverName(),
+                    "%message%", '[' + currentID + "] " + messagePacket.getMessage()
+            );
+        }
+
+        final Message formatReceive;
+        final boolean consoleReceiver = messagePacket.getReceiverName().equalsIgnoreCase("@console");
+        final Player receiver;
+
+        if (!consoleReceiver) {
+            receiver = Bukkit.getPlayer(messagePacket.getReceiverName());
+            // return if the receiver is not online
+            if (receiver == null) {
+                return;
+            }
+
+            formatReceive = Messages.getInstance(plugin).messageFormatReceive;
+            Component componentReceive = formatReceive.compile(
+                    "%sender%", messagePacket.getSenderName(),
+                    "%message%", messagePacket.getMessage()
+            );
+
+            // if channel exists, send through that instead
+            if (messagePacket.getChannel() != null && plugin.getChannelManager().get(messagePacket.getChannel().getHandle()) != null) {
+                chatManager.sendComponentChannelMessage(null, componentReceive, messagePacket.getChannel());
+                return;
+            }
+        } else {
+            formatReceive = Messages.getInstance(plugin).messageFormatReceive;
+            receiver = null;
+        }
+
+        // send to receiver
+        formatReceive.message(consoleReceiver ? Bukkit.getConsoleSender() : receiver,
+                "%sender%", messagePacket.getSenderName(),
+                "%message%", messagePacket.getMessage()
+        );
     }
 
     /**
@@ -201,10 +248,23 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
     public void receivePlayerList(ReceiveStreamDataPacket<?> packet) {
         RedisStringReceiveDataPacket redisStringReceiveDataPacket = (RedisStringReceiveDataPacket) packet;
 
-        Set<String> players = gson.fromJson(redisStringReceiveDataPacket.getData(), Set.class);
+        Map<String, Object> map = gson.fromJson(redisStringReceiveDataPacket.getData(), mapType);
+        if (!map.containsKey("id")) {
+            return;
+        }
+        String id = String.valueOf(map.get("id"));
+        List<String> players = new ArrayList<>();
+        Object object = map.get("players");
+        if (object instanceof List) {
+            for (Object player : (List<?>) object) {
+                players.add(String.valueOf(player));
+            }
+        }
 
         //Update the online players
-        plugin.getUserManager().setOnlinePlayers(players);
+        if (!players.isEmpty()) {
+            plugin.getUserManager().setOnlinePlayers(id, players);
+        }
     }
 
     /**

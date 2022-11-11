@@ -1,10 +1,12 @@
 package dev.spaceseries.spacechat.command;
 
-import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
+import dev.spaceseries.spacechat.api.message.Message;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -16,46 +18,149 @@ public class SpaceChatCommand extends dev.spaceseries.spacechat.api.command.Spac
         super(plugin);
     }
 
-    @CommandAlias("spacechat")
+    @CommandAlias("message|msg|m|tell")
+    @Subcommand("message|msg|m|tell")
+    @CommandCompletion("@chatplayers")
+    @CommandPermission("space.chat.command.message")
+    public void onMessage(CommandSender sender, @Split(" ") String[] args) {
+        if (args.length <= 1) {
+            Messages.getInstance(plugin).messageArgs.message(sender);
+            return;
+        }
+
+        final String senderName = sender instanceof Player ? sender.getName() : "@console";
+        final String targetName = args[0];
+
+        if (senderName.equalsIgnoreCase(targetName)) {
+            Messages.getInstance(plugin).messageSelf.message(sender);
+            return;
+        }
+
+        // Verify if player exist
+        if (!plugin.getUserManager().isPlayerOnline(targetName)) {
+            Messages.getInstance(plugin).messagePlayerNotFound.message(sender);
+            return;
+        }
+
+        // Construct the message
+        final String messageStr = String.join(" ", args)
+                .replace(targetName, "") //Replace target to empty
+                .trim(); //Remove unnecessary spaces
+
+        // put replier in map
+        plugin.getUserManager().getReplyTargetMap().put(senderName, targetName);
+
+        // messages
+        Message formatSend = Messages.getInstance(plugin).messageFormatSend;
+
+        // send a message to player in the same server if is connected
+        final Player target = Bukkit.getPlayer(targetName);
+        if (target != null) {
+            Messages.getInstance(plugin).messageFormatReceive.message(target,
+                    "%sender%", senderName,
+                    "%message%", messageStr
+            );
+        }
+
+        // send to player
+        plugin.getChatManager().sendPrivateMessage(sender, targetName, messageStr, formatSend);
+
+    }
+
+    @CommandAlias("reply|r")
+    @Subcommand("reply|r")
+    @CommandCompletion("@chatplayers")
+    @CommandPermission("space.chat.command.reply")
+    public void onReply(CommandSender sender, @Split(" ") String[] args) {
+        if (args.length == 0) {
+            Messages.getInstance(plugin).replyArgs.message(sender);
+            return;
+        }
+        final String senderName = sender instanceof Player ? sender.getName() : "@console";
+        final String targetName = plugin.getUserManager().getReplyTarget(senderName);
+
+        // Verify if player has a replier
+        if (targetName == null) {
+            Messages.getInstance(plugin).replyNoTarget.message(sender);
+            return;
+        }
+
+        // Verify if player is online
+        if (!plugin.getUserManager().isPlayerOnline(targetName)) {
+            Messages.getInstance(plugin).replyTargetOffline.message(sender, "%target%", targetName);
+            return;
+        }
+
+        // Construct reply message
+        final String messageStr = String.join(" ", args).trim(); //Remove unnecessary spaces
+
+
+        // messages
+        Message formatSend = Messages.getInstance(plugin).replyFormatSend;
+
+        // send a message to player in the same server if is connected
+        final Player target = Bukkit.getPlayer(targetName);
+        if (target != null) {
+            Messages.getInstance(plugin).replyFormatReceive.message(target,
+                    "%sender%", senderName,
+                    "%message%", messageStr
+            );
+        }
+
+        // put replier in map
+        plugin.getUserManager().getReplyTargetMap().put(targetName, senderName);
+
+        // send to player
+        plugin.getChatManager().sendPrivateMessage(sender, targetName, messageStr, formatSend);
+
+    }
+
     @Subcommand("reload")
     @CommandPermission("space.chat.command.reload")
-    public class ReloadCommand extends BaseCommand {
+    public void onReload(CommandSender sender) {
+        // run async task
+        CompletableFuture.runAsync(() -> {
+            try {
+                // load configs
+                plugin.loadConfigs();
+                // load formats
+                plugin.loadFormats();
+                // load chat manager
+                plugin.loadChatManager();
+                // load connection managers
+                plugin.loadSyncServices();
 
-        @Default
-        public void onReload(CommandSender sender) {
-            // run async task
-            CompletableFuture.runAsync(() -> {
-                try {
-                    // load configs
-                    plugin.loadConfigs();
-                    // load formats
-                    plugin.loadFormats();
-                    // load chat manager
-                    plugin.loadChatManager();
-                    // load connection managers
-                    plugin.loadSyncServices();
+                // initialize sync services, since they have to be instantiated and used after the chat manager
+                // is created
+                plugin.getChatManager().initSyncServices();
 
-                    // initialize sync services, since they have to be instantiated and used after the chat manager
-                    // is created
-                    plugin.getChatManager().initSyncServices();
+                // load channels
+                plugin.loadChannels();
 
-                    // load channels
-                    plugin.loadChannels();
+                // load users
+                plugin.loadUsers();
 
-                    // load users
-                    plugin.loadUsers();
+                // renew messages
+                Messages.renew();
 
-                    // renew messages
-                    Messages.renew();
+            } catch (Exception e) {
+                Messages.getInstance(plugin).reloadFailure.message(sender);
+                e.printStackTrace();
+                return;
+            }
+            Messages.getInstance(plugin).reloadSuccess.message(sender);
+        });
+    }
 
-                } catch (Exception e) {
-                    Messages.getInstance(plugin).reloadFailure.message(sender);
-                    e.printStackTrace();
-                    return;
-                }
-                Messages.getInstance(plugin).reloadSuccess.message(sender);
-            });
+    @Subcommand("playerlist")
+    @CommandPermission("space.chat.command.playerlist")
+    public void onPlayerList(CommandSender sender) {
+        if (plugin.getUserManager().getOnlinePlayers().isEmpty()) {
+            sender.sendMessage("There's no online players");
+            return;
         }
+        sender.sendMessage("Online players (" + plugin.getUserManager().getOnlinePlayers().size() + "):");
+        plugin.getUserManager().getOnlinePlayersByServer().forEach((server, players) -> sender.sendMessage(server + " = " + String.join(", ", players)));
     }
 
     @Default

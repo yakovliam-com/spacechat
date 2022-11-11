@@ -41,14 +41,14 @@ public class RedisMessagePacket extends RedisPacket implements SendStreamDataPac
     private String serverDisplayName;
 
     /**
-     * The actual chat message as a component
+     * The actual chat message
      */
-    private Component component;
+    private String message;
 
     /**
      * Construct redis chat message
      */
-    public RedisMessagePacket(UUID sender, String senderName, String receiverName, Channel channel, String serverIdentifier, String serverDisplayName, Component component) {
+    public RedisMessagePacket(UUID sender, String senderName, String receiverName, Channel channel, String serverIdentifier, String serverDisplayName, String message) {
         this();
         this.sender = sender;
         this.senderName = senderName;
@@ -56,7 +56,7 @@ public class RedisMessagePacket extends RedisPacket implements SendStreamDataPac
         this.channel = channel;
         this.serverIdentifier = serverIdentifier;
         this.serverDisplayName = serverDisplayName;
-        this.component = component;
+        this.message = message;
     }
 
     /**
@@ -85,21 +85,21 @@ public class RedisMessagePacket extends RedisPacket implements SendStreamDataPac
     }
 
     /**
-     * Gets component
+     * Gets messag
      *
-     * @return component
+     * @return text message
      */
-    public Component getComponent() {
-        return component;
+    public String getMessage() {
+        return message;
     }
 
     /**
-     * Sets component
+     * Sets message
      *
-     * @param component component
+     * @param message text message
      */
-    public void setComponent(Component component) {
-        this.component = component;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     /**

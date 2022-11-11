@@ -4,7 +4,7 @@ import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.sync.packet.ReceiveStreamDataPacket;
 import dev.spaceseries.spacechat.sync.packet.SendStreamDataPacket;
 
-import java.util.Set;
+import java.util.List;
 
 public abstract class ServerStreamSyncService extends ServerSyncService {
 
@@ -35,7 +35,12 @@ public abstract class ServerStreamSyncService extends ServerSyncService {
     /**
      * Published a list of online players across the server
      */
-    public abstract void publishPlayerList(Set<String> players);
+    public abstract void publishPlayerList(List<String> players);
+
+    /**
+     * Published a list of online players across the server
+     */
+    public abstract void publishPlayerList(String id, List<String> players);
 
 
     /**

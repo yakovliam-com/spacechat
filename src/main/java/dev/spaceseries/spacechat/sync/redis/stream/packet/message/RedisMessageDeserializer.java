@@ -3,7 +3,6 @@ package dev.spaceseries.spacechat.sync.redis.stream.packet.message;
 import com.google.gson.*;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.model.Channel;
-import dev.spaceseries.spacechat.sync.redis.stream.packet.chat.RedisChatPacket;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
@@ -22,9 +21,9 @@ public class RedisMessageDeserializer implements JsonDeserializer<RedisMessagePa
         JsonObject object = json.getAsJsonObject();
 
         // get sender uuid
-        String senderUUIDString = object.get("senderUUID").getAsString();
+        String senderUUIDString = object.get("senderUUID") == null ? null : object.get("senderUUID").getAsString();
         // deserialize
-        UUID sender = UUID.fromString(senderUUIDString);
+        UUID sender = senderUUIDString == null ? null : UUID.fromString(senderUUIDString);
 
         // get sender name
         String senderName = object.get("senderName").getAsString();
@@ -42,12 +41,10 @@ public class RedisMessageDeserializer implements JsonDeserializer<RedisMessagePa
         // get server display name
         String serverDisplayName = object.get("serverDisplayName").getAsString();
 
-        // get component string
-        String componentString = object.get("component").getAsString();
-        // deserialize
-        Component component = GsonComponentSerializer.gson().deserialize(componentString);
+        // get text message
+        String message = object.get("message").getAsString();
 
         // return a new message
-        return new RedisMessagePacket(sender, senderName, receiverName, channel, serverIdentifier, serverDisplayName, component);
+        return new RedisMessagePacket(sender, senderName, receiverName, channel, serverIdentifier, serverDisplayName, message);
     }
 }

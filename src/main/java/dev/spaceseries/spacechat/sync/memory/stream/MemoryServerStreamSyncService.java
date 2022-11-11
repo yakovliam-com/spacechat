@@ -7,7 +7,6 @@ import dev.spaceseries.spacechat.sync.packet.ReceiveStreamDataPacket;
 import dev.spaceseries.spacechat.sync.packet.SendStreamDataPacket;
 
 import java.util.List;
-import java.util.Set;
 
 public class MemoryServerStreamSyncService extends ServerStreamSyncService {
 
@@ -57,7 +56,18 @@ public class MemoryServerStreamSyncService extends ServerStreamSyncService {
      * @param players players
      */
     @Override
-    public void publishPlayerList(Set<String> players) {
+    public void publishPlayerList(List<String> players) {
+
+    }
+
+    /**
+     * Publishes a online players across the server
+     *
+     * @param id      server id
+     * @param players players
+     */
+    @Override
+    public void publishPlayerList(String id, List<String> players) {
 
     }
 

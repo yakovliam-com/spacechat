@@ -7,8 +7,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.Set;
-
 public class JoinQuitListener implements Listener {
 
     private final SpaceChatPlugin plugin;
@@ -27,26 +25,12 @@ public class JoinQuitListener implements Listener {
         // remove replier
         plugin.getUserManager().getReplyTargetMap().remove(event.getPlayer().getName());
 
-        // update online players
-        Set<String> online = plugin.getUserManager().getOnlinePlayers();
-        online.remove(event.getPlayer().getName());
-
-        // publish to redis/memory
-        plugin.getServerSyncServiceManager().getStreamService().publishPlayerList(online);
-
         // invalidate
         plugin.getUserManager().invalidate(user.getUuid());
     }
 
     @EventHandler
     public void onPlayerJoin(AsyncPlayerPreLoginEvent event) {
-
-        // update online players
-        Set<String> online = plugin.getUserManager().getOnlinePlayers();
-        online.add(event.getName());
-
-        // publish to redis/memory
-        plugin.getServerSyncServiceManager().getStreamService().publishPlayerList(online);
 
         // handle with user manager
         plugin.getUserManager().use(event.getUniqueId(), (user) -> {
