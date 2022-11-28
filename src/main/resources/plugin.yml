@@ -1,5 +1,5 @@
 name: SpaceChat
-version: @version@
+version: ${version}
 main: dev.spaceseries.spacechat.SpaceChatPlugin
 authors: [yakovliam]
 description: Simple and effective chat formatting

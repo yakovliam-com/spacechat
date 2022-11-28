@@ -1,8 +1,10 @@
 package dev.spaceseries.spacechat.parser;
 
 import dev.spaceseries.spacechat.SpaceChatPlugin;
+import net.kyori.adventure.text.Component;
+import org.bukkit.entity.Player;
 
-public abstract class Parser<K, V> {
+public abstract class Parser {
 
     protected final SpaceChatPlugin plugin;
 
@@ -12,9 +14,9 @@ public abstract class Parser<K, V> {
 
     /**
      * Parse
-     *
-     * @param k k
-     * @return v
+     * @param player  player
+     * @param message message
+     * @return component
      */
-    public abstract V parse(K k);
+    public abstract Component parse(Player player, Component message);
 }

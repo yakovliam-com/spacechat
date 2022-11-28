@@ -140,7 +140,8 @@ public class MysqlStorage extends Storage {
      * @return channels
      */
     private List<Channel> getSubscribedChannels(UUID uuid) {
-        try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(SELECT_SUBSCRIBED_CHANNELS)) {
+        try (Connection connection = mysqlConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_SUBSCRIBED_CHANNELS)) {
             // replace
             preparedStatement.setString(1, uuid.toString());
 
@@ -229,7 +230,8 @@ public class MysqlStorage extends Storage {
     @Override
     public void updateUser(User user) {
         // create prepared statement
-        try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER)) {
+        try (Connection connection = mysqlConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER)) {
             // replace
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getUuid().toString());
@@ -239,7 +241,6 @@ public class MysqlStorage extends Storage {
 
             // delete remaining channels that shouldn't be there
             List<Channel> serverSideSubscribedList = getSubscribedChannels(user.getUuid());
-
             serverSideSubscribedList.forEach(serverSideSubscribedChannel -> {
                 if (user.getSubscribedChannels().stream()
                         .noneMatch(c -> c.getHandle().equals(serverSideSubscribedChannel.getHandle()))) {
@@ -268,7 +269,8 @@ public class MysqlStorage extends Storage {
      */
     private void insertChannelRow(UUID uuid, Channel channel) {
         // create prepared statement
-        try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SUBSCRIBED_CHANNEL)) {
+        try (Connection connection = mysqlConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(INSERT_SUBSCRIBED_CHANNEL)) {
             // replace
             preparedStatement.setString(1, uuid.toString());
             preparedStatement.setString(2, channel.getHandle());
@@ -288,7 +290,8 @@ public class MysqlStorage extends Storage {
      */
     private void deleteChannelRow(UUID uuid, Channel channel) {
         // create prepared statement
-        try (Connection connection = mysqlConnectionFactory.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SUBSCRIBED_CHANNEL)) {
+        try (Connection connection = mysqlConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_SUBSCRIBED_CHANNEL)) {
             // replace
             preparedStatement.setString(1, uuid.toString());
             preparedStatement.setString(2, channel.getHandle());

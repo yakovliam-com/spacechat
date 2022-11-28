@@ -1,7 +1,7 @@
 package dev.spaceseries.spacechat.parser;
 
 import dev.spaceseries.spacechat.SpaceChatPlugin;
-import dev.spaceseries.spacechat.api.wrapper.Pair;
+import dev.spaceseries.spacechat.parser.itemchat.ItemChatParser;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 
@@ -13,13 +13,13 @@ public class MessageParser {
     /**
      * Available parsers
      */
-    private final List<Parser<Pair<Player, Component>, Component>> parsers;
+    private final List<Parser> parsers;
 
     /**
      * Construct message parser
      */
     public MessageParser(SpaceChatPlugin plugin) {
-        this.parsers = Collections.emptyList();
+        this.parsers = Collections.singletonList(new ItemChatParser(plugin));
     }
 
     /**
@@ -31,8 +31,8 @@ public class MessageParser {
      */
     public Component parse(Player player, Component input) {
         // loop through parsers
-        for (Parser<Pair<Player, Component>, Component> parser : parsers) {
-            input = parser.parse(new Pair<>(player, input));
+        for (Parser parser : parsers) {
+            input = parser.parse(player, input);
         }
         return input;
     }

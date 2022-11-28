@@ -4,6 +4,8 @@ import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.sync.packet.ReceiveStreamDataPacket;
 import dev.spaceseries.spacechat.sync.packet.SendStreamDataPacket;
 
+import java.util.List;
+
 public abstract class ServerStreamSyncService extends ServerSyncService {
 
     /**
@@ -22,15 +24,39 @@ public abstract class ServerStreamSyncService extends ServerSyncService {
     public abstract void publishChat(SendStreamDataPacket<?> packet);
 
     /**
+     * Publishes a player message across the server
+     */
+    public abstract void publishMessage(SendStreamDataPacket<?> packet);
+    /**
      * Publishes a broadcast message across the server
      */
     public abstract void publishBroadcast(SendStreamDataPacket<?> packet);
+
+    /**
+     * Published a list of online players across the server
+     */
+    public abstract void publishPlayerList(List<String> players);
+
+    /**
+     * Published a list of online players across the server
+     */
+    public abstract void publishPlayerList(String id, List<String> players);
+
 
     /**
      * Receives an incoming chat message
      */
     public abstract void receiveChat(ReceiveStreamDataPacket<?> packet);
 
+    /**
+     * Receives an incoming player message
+     */
+    public abstract void receiveMessage(ReceiveStreamDataPacket<?> packet);
+
+    /**
+     * Receives an incoming player list
+     */
+    public abstract void receivePlayerList(ReceiveStreamDataPacket<?> packet);
     /**
      * Receives an incoming chat message
      */

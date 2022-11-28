@@ -22,12 +22,16 @@ public class JoinQuitListener implements Listener {
         // update
         plugin.getUserManager().update(user);
 
+        // remove replier
+        plugin.getUserManager().getReplyTargetMap().remove(event.getPlayer().getName());
+
         // invalidate
         plugin.getUserManager().invalidate(user.getUuid());
     }
 
     @EventHandler
     public void onPlayerJoin(AsyncPlayerPreLoginEvent event) {
+
         // handle with user manager
         plugin.getUserManager().use(event.getUniqueId(), (user) -> {
             // if username not equal, update

@@ -71,7 +71,7 @@ public class NormalLiveChatFormatBuilder extends LiveChatFormatBuilder implement
                 Component message = new MessageParser(plugin).parse(player, Component.text(chatMessage));
 
                 // parse miniMessage
-                Component parsedMiniMessage = MiniMessage.get().parse(mmWithPlaceholdersReplaced);
+                Component parsedMiniMessage = MiniMessage.miniMessage().deserialize(mmWithPlaceholdersReplaced);
 
                 // replace chat message
                 parsedMiniMessage = parsedMiniMessage.replaceText((text) -> text.match("<chat_message>").replacement(message));
