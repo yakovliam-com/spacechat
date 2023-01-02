@@ -35,9 +35,34 @@ channel:
   access-denied:
     - "&cOops! You aren't allowed to interact with that channel!"
 ignore:
+  help:
+    - "&6Help commands:"
+    - "&f"
+    - "&e/ignore add (playerName) &7- &fIgnore a player"
+    - "&e/ignore remove (playerName) &7- &fRemove a ignored player"
+    - "&e/ignore list &7- &fList of ignored players"
+  list:
+    page:
+      not-found:
+        - "&cThis page was not found"
+      empty:
+        - "&cThis page is empty"
+    header:
+      - "&aIgnored list. &7(Page &6%actual-page%&7/&6%max-page%&7)"
+    format:
+      - "&7- &e%player%"
+    footer:
+      - "&6Next page: /ignore list %next-page%"
   player-not-found:
-    text:
-      - "&cCould not find specified player."
+    - "&cCould not find specified player."
+  already-ignored:
+    - "&c%player% is already being ignored"
+  not-ignoring-player:
+    - "&cYou are not ignoring %player%"
+  added:
+    - "&cYou will no longer receive messages from %player%"
+  removed:
+    - "&aYou are now receiving messages from %player% again"
 reload:
   success:
     - "&aSuccessfully reloaded &bChat"
@@ -53,6 +78,10 @@ message:
     - "&cInvalid args, correct usage: /msg (playerName) (message)"
   self-message:
     - "&cYou can't send a message to yourself"
+  ignored-player:
+    - "&cYou can't send messages to this player because they have blocked you"
+  player-has-ignored:
+    - "&cYou can't send messages to people you have ignored"
   player-not-found:
     text:
       - "&cCould not find specified player."

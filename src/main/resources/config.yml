@@ -75,6 +75,7 @@ storage:
     tables:
       chat-logs: "spacechat_chatlogs"
       users: "spacechat_users"
+      ignore: "spacechat_ignore"
       subscribed-channels: "spacechat_subscribed_channels"
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#

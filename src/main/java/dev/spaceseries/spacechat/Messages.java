@@ -66,6 +66,11 @@ public class Messages {
     // player not found
     public Message messagePlayerNotFound;
 
+    // Ignored player
+    public Message messageIgnoredPlayer;
+
+    // Has ignored player
+    public Message messageHasIgnoredPlayer;
     // format send
     public Message messageFormatSend;
 
@@ -118,6 +123,12 @@ public class Messages {
 
     // player not found
     public Message playerNotFound;
+    public Message ignoreHelp;
+    public Message ignoreAdded, ignoreRemoved, ignoreAlready, ignoreNotFound;
+
+    public Message ignoreListHeader, ignoreListFormat, ignoreListFooter;
+
+    public Message ignorePageNotFound, ignorePageEmpty;
 
     public Messages(SpaceChatPlugin plugin) {
         this.plugin = plugin;
@@ -130,6 +141,8 @@ public class Messages {
 
         messageArgs = Message.fromConfigurationSection("message.args", this.getLangConfiguration());
         messagePlayerNotFound = Message.fromConfigurationSection("message.player-not-found.text", this.getLangConfiguration());
+        messageIgnoredPlayer = Message.fromConfigurationSection("message.ignored-player", this.getLangConfiguration());
+        messageHasIgnoredPlayer = Message.fromConfigurationSection("message.player-has-ignored", this.getLangConfiguration());
         messageSelf = Message.fromConfigurationSection("message.self-message", this.getLangConfiguration());
         messageFormatSend = Message.fromConfigurationSection("message.format.send", this.getLangConfiguration());
         messageFormatReceive = Message.fromConfigurationSection("message.format.receive", this.getLangConfiguration());
@@ -147,7 +160,20 @@ public class Messages {
         channelMute = Message.fromConfigurationSection("channel.mute", this.getLangConfiguration());
         channelAccessDenied = Message.fromConfigurationSection("channel.access-denied", this.getLangConfiguration());
         channelInvalid = Message.fromConfigurationSection("channel.invalid", this.getLangConfiguration());
+
         playerNotFound = Message.fromConfigurationSection("ignore.player-not-found", this.getLangConfiguration());
+        ignoreHelp = Message.fromConfigurationSection("ignore.help", this.getLangConfiguration());
+        ignoreAdded = Message.fromConfigurationSection("ignore.added", this.getLangConfiguration());
+        ignoreRemoved = Message.fromConfigurationSection("ignore.removed", this.getLangConfiguration());
+        ignoreAlready = Message.fromConfigurationSection("ignore.already-ignored", this.getLangConfiguration());
+        ignoreNotFound = Message.fromConfigurationSection("ignore.not-ignoring-player", this.getLangConfiguration());
+
+        ignoreListHeader = Message.fromConfigurationSection("ignore.list.header", this.getLangConfiguration());
+        ignoreListFormat = Message.fromConfigurationSection("ignore.list.format", this.getLangConfiguration());
+        ignoreListFooter = Message.fromConfigurationSection("ignore.list.footer", this.getLangConfiguration());
+
+        ignorePageNotFound = Message.fromConfigurationSection("ignore.list.page.not-found", this.getLangConfiguration());
+        ignorePageEmpty = Message.fromConfigurationSection("ignore.list.page.empty", this.getLangConfiguration());
     }
 
     /**
