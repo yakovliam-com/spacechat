@@ -14,6 +14,7 @@ public final class User {
      */
     private final UUID uuid;
 
+    private final List<String> ignoredUsers;
     /**
      * Username
      */
@@ -68,6 +69,8 @@ public final class User {
                 .collect(Collectors.toList());
 
         toSubscribe.forEach(u -> plugin.getServerSyncServiceManager().getDataService().subscribeToChannel(uuid, u));
+
+        ignoredUsers = plugin.getStorageManager().getCurrent().getIgnoreList(username);
     }
 
     /**
@@ -77,6 +80,15 @@ public final class User {
      */
     public String getUsername() {
         return username;
+    }
+
+    /**
+     * Returns ignored users
+     *
+     * @return ignored users
+     */
+    public List<String> getIgnoredUsers() {
+        return ignoredUsers;
     }
 
     /**
