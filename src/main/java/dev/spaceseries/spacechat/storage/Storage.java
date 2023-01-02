@@ -4,6 +4,7 @@ import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.User;
 
+import java.util.List;
 import java.util.UUID;
 
 public abstract class Storage {
@@ -48,6 +49,30 @@ public abstract class Storage {
      * @param user user
      */
     public abstract void updateUser(User user);
+
+    /**
+     * Create an ignored user
+     *
+     * @param username username
+     * @param ignoredUsername ignored username
+     */
+    public abstract void createIgnoredUser(String username, String ignoredUsername);
+
+    /**
+     * Delete ignored username
+     *
+     * @param username username
+     * @param ignoredUsername ignored username
+     */
+    public abstract void deleteIgnoredUser(String username, String ignoredUsername);
+
+    /**
+     * Get ignored list from user
+     * @param username username
+     * @return ignored users list
+     */
+    public abstract List<String> getIgnoreList(String username);
+
 
     /**
      * Closes the storage medium

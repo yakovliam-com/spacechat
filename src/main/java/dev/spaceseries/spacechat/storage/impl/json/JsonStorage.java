@@ -169,6 +169,22 @@ public class JsonStorage extends Storage {
         }
     }
 
+    @Override
+    public void createIgnoredUser(String username, String ignoredUsername) {
+
+    }
+
+    @Override
+    public void deleteIgnoredUser(String username, String ignoredUsername) {
+
+    }
+
+    @Override
+    public List<String> getIgnoreList(String username) {
+        return null;
+    }
+
+
     /**
      * Closes the storage medium
      */
