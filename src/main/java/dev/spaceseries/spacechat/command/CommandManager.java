@@ -12,8 +12,8 @@ public class CommandManager extends BukkitCommandManager {
     public CommandManager(SpaceChatPlugin plugin) {
         super(plugin);
 
-        enableUnstableAPI("help");
-        enableUnstableAPI("brigadier");
+        //enableUnstableAPI("help");
+        //enableUnstableAPI("brigadier"); This is necessary???
 
         setFormat(MessageType.INFO, ChatColor.WHITE);
         setFormat(MessageType.HELP, ChatColor.GRAY);
@@ -26,5 +26,6 @@ public class CommandManager extends BukkitCommandManager {
         registerCommand(new ChannelCommand(plugin));
         registerCommand(new BroadcastCommand(plugin));
         registerCommand(new BroadcastMinimessageCommand(plugin));
+        registerCommand(new IgnoreCommand(plugin));
     }
 }

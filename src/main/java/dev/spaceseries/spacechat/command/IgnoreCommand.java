@@ -2,15 +2,15 @@ package dev.spaceseries.spacechat.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import com.google.common.collect.Lists;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import org.bukkit.entity.Player;
+import java.util.List;
 
 @CommandPermission("space.chat.command.ignore")
 @CommandAlias("ignore")
 public class IgnoreCommand extends SpaceChatCommand {
-
-    private SpaceChatPlugin plugin;
 
     public IgnoreCommand(SpaceChatPlugin plugin) {
         super(plugin);
@@ -30,7 +30,15 @@ public class IgnoreCommand extends SpaceChatCommand {
                     return;
                 }
 
-                // TODO Implement adding the target from the decided storage method
+                plugin.getUserManager().getByName(player.getName(), p -> {
+                    if(p.getIgnoredUsers().contains(targetName)){
+                        Messages.getInstance(plugin).ignoreAlready.message(player, "%player%", targetName);
+                        return;
+                    }
+
+                    Messages.getInstance(plugin).ignoreAdded.message(player, "%player%", targetName);
+                    plugin.getStorageManager().getCurrent().createIgnoredUser(player.getName(), targetName);
+                });
             }));
         }
     }
@@ -38,11 +46,57 @@ public class IgnoreCommand extends SpaceChatCommand {
     @Subcommand("list")
     @CommandAlias("ignore")
     @CommandPermission("space.chat.command.ignore.list")
-    public static class ListCommand extends BaseCommand {
+    public class ListCommand extends BaseCommand {
 
         @Default
-        public void onList(Player player) {
-            // TODO Depending on decided storage method, pull all ignored players and list them in a message
+        public void onList(Player player, @Optional String pageStr ) {
+            plugin.getUserManager().getByName(player.getName(), user -> {
+                if (user == null) {
+                    return;
+                }
+
+                List<List<String>> players = Lists.partition(user.getIgnoredUsers(), 10);
+                int pages = players.size();
+                int page = (isNumber(pageStr)) ? Integer.parseInt(pageStr)-1 : 0;
+
+                Integer actualP = page+1;
+                Integer maxP = pages;
+                Integer nextP = actualP+1;
+
+                if(page > maxP){
+                    Messages.getInstance(plugin).ignorePageNotFound.message(player);
+                    return;
+                }
+
+                if(players.size() < 1){
+                    Messages.getInstance(plugin).ignorePageEmpty.message(player);
+                    return;
+                }
+
+                //Header
+                Messages.getInstance(plugin).ignoreListHeader.message(player,
+                        "%actual-page%", actualP.toString(),
+                        "%max-page%", maxP.toString());
+
+                //Format
+                for(String ignored : players.get(page)){
+                    Messages.getInstance(plugin).ignoreListFormat.message(player, "%player%", ignored);
+                }
+
+                if(nextP <= maxP){
+                    //Footer
+                    Messages.getInstance(plugin).ignoreListFooter.message(player, "%next-page%", nextP.toString());
+                }
+            });
+        }
+
+        private boolean isNumber(String value){
+            try{
+                Integer.parseInt(value);
+            }catch (NumberFormatException e){
+                return false;
+            }
+            return true;
         }
     }
 
@@ -60,8 +114,15 @@ public class IgnoreCommand extends SpaceChatCommand {
                     return;
                 }
 
-                // TODO Implement removing the target from the decided storage method -- also check if the sender even has ignored the target
+                plugin.getUserManager().getByName(player.getName(), p -> {
+                    if(!p.getIgnoredUsers().contains(targetName)){
+                        Messages.getInstance(plugin).ignoreNotFound.message(player, "%player%", targetName);
+                        return;
+                    }
 
+                    Messages.getInstance(plugin).ignoreRemoved.message(player, "%player%", targetName);
+                    plugin.getStorageManager().getCurrent().deleteIgnoredUser(player.getName(), targetName);
+                });
             });
         }
     }
@@ -71,6 +132,6 @@ public class IgnoreCommand extends SpaceChatCommand {
     @HelpCommand
     public void onDefault(Player player) {
         // send help message
-        Messages.getInstance(plugin).generalHelp.message(player);
+        Messages.getInstance(plugin).ignoreHelp.message(player);
     }
 }
