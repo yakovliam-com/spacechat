@@ -173,8 +173,11 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
             return;
         }
 
+        // send to all players filtering ignored players from sender
+        chatManager.sendComponentChatMessage(chatPacket.getSenderName(), chatPacket.getComponent());
+
         // send to all players
-        chatManager.sendComponentChatMessage(chatPacket.getComponent());
+        //chatManager.sendComponentChatMessage(chatPacket.getComponent());
     }
 
     /**
