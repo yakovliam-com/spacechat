@@ -72,6 +72,11 @@ public class EmptyStorage extends Storage {
         return null;
     }
 
+    @Override
+    public boolean isIgnored(String username, String ignoredUsername) {
+        return false;
+    }
+
 
     @Override
     public void close() {

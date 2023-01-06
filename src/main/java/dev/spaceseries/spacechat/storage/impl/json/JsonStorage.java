@@ -184,6 +184,11 @@ public class JsonStorage extends Storage {
         return null;
     }
 
+    @Override
+    public boolean isIgnored(String username, String ignoredUsername) {
+        return false;
+    }
+
 
     /**
      * Closes the storage medium

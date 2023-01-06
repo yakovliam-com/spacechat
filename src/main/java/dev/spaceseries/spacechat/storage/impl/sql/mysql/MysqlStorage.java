@@ -67,9 +67,12 @@ public class MysqlStorage extends Storage {
     private final String GET_IGNORE_USERS = "SELECT * FROM " + STORAGE_MYSQL_TABLES_IGNORE
             .get(plugin.getSpaceChatConfig().getAdapter()) + " WHERE username=?;";
 
+    private final String IS_IGNORED = "SELECT * FROM " + STORAGE_MYSQL_TABLES_IGNORE
+            .get(plugin.getSpaceChatConfig().getAdapter()) + " WHERE username=? AND ignored_username=?;";
+
     private final String DELETE_IGNORE_USER = "DELETE FROM " + STORAGE_MYSQL_TABLES_IGNORE
             .get(plugin.getSpaceChatConfig().getAdapter()) + " WHERE username=? AND ignored_username=?;";
-    
+
     /**
      * The connection manager
      */
@@ -346,6 +349,27 @@ public class MysqlStorage extends Storage {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return null;
+        }
+    }
+
+    /**
+     * Check if a player has ignored another
+     *
+     * @param username username
+     * @param ignoredUsername ignoredUsername
+     * @return true or false
+     */
+    @Override
+    public boolean isIgnored(String username, String ignoredUsername) {
+        try (Connection connection = mysqlConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(IS_IGNORED)) {
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, ignoredUsername);
+            ResultSet rs = preparedStatement.executeQuery();
+            return rs.next();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return false;
         }
     }
 

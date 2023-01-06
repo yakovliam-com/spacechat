@@ -91,6 +91,10 @@ public final class User {
         return ignoredUsers;
     }
 
+
+    public boolean isIgnored(String ignoredUsername){
+        return plugin.getStorageManager().getCurrent().isIgnored(username, ignoredUsername);
+    }
     /**
      * Returns uuid
      *

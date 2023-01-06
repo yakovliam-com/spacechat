@@ -68,10 +68,20 @@ public abstract class Storage {
 
     /**
      * Get ignored list from user
+     *
      * @param username username
      * @return ignored users list
      */
     public abstract List<String> getIgnoreList(String username);
+
+    /**
+     * Check if a player has ignored another
+     *
+     * @param username username
+     * @param ignoredUsername ignoredUsername
+     * @return true or false
+     */
+    public abstract boolean isIgnored(String username, String ignoredUsername);
 
 
     /**
