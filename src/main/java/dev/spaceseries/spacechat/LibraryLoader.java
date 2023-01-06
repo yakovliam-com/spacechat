@@ -97,7 +97,7 @@ public class LibraryLoader {
         public static final String ADVENTURE_PLATFORM = "4.1.2";
         public static final String MSG = "2.2.4-SNAPSHOT@2.2.4-20210406.012549-1";
         public static final String CONFIGURATE = "4.1.2";
-        public static final String RTAG = "1.2.0";
+        public static final String RTAG = "1.2.1";
 
     }
 
@@ -301,7 +301,7 @@ public class LibraryLoader {
         // LocaleLib
         LOCALE_LIB(
                 "{0}.LocaleManager",
-                "com{}github{}PikaMug:LocaleLib:3.0",
+                "com{}github{}PikaMug:LocaleLib:3.1",
                 JITPACK_REPOSITORY,
                 Relocation.of("me{}pikamug{}localelib", "{package}.lib.localelib")
         ),
