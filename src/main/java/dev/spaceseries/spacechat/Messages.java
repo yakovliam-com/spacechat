@@ -122,7 +122,7 @@ public class Messages {
      */
 
     // player not found
-    public Message playerNotFound;
+    public Message playerNotFound, selfIgnore;
     public Message ignoreHelp;
     public Message ignoreAdded, ignoreRemoved, ignoreAlready, ignoreNotFound;
 
@@ -162,6 +162,7 @@ public class Messages {
         channelInvalid = Message.fromConfigurationSection("channel.invalid", this.getLangConfiguration());
 
         playerNotFound = Message.fromConfigurationSection("ignore.player-not-found", this.getLangConfiguration());
+        selfIgnore = Message.fromConfigurationSection("ignore.self-ignore", this.getLangConfiguration());
         ignoreHelp = Message.fromConfigurationSection("ignore.help", this.getLangConfiguration());
         ignoreAdded = Message.fromConfigurationSection("ignore.added", this.getLangConfiguration());
         ignoreRemoved = Message.fromConfigurationSection("ignore.removed", this.getLangConfiguration());

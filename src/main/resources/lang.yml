@@ -53,6 +53,8 @@ ignore:
       - "&7- &e%player%"
     footer:
       - "&6Next page: /ignore list %next-page%"
+  self-ignore:
+    - "&cYou can't ignore yourself"
   player-not-found:
     - "&cCould not find specified player."
   already-ignored:
