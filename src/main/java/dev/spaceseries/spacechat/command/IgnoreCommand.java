@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import org.bukkit.entity.Player;
+
 import java.util.List;
 
 @CommandPermission("space.chat.command.ignore")
@@ -23,6 +24,13 @@ public class IgnoreCommand extends SpaceChatCommand {
 
         @Default
         public void onAdd(Player player, @Single String targetName) {
+
+            // self ignore LOL
+            if(player.getName().equalsIgnoreCase(targetName)){
+                Messages.getInstance(plugin).selfIgnore.message(player);
+                return;
+            }
+
             // get user
             plugin.getUserManager().getByName(targetName, (user -> {
                 if (user == null) {
@@ -31,7 +39,7 @@ public class IgnoreCommand extends SpaceChatCommand {
                 }
 
                 plugin.getUserManager().getByName(player.getName(), p -> {
-                    if(p.getIgnoredUsers().contains(targetName)){
+                    if(p.isIgnored(targetName)){
                         Messages.getInstance(plugin).ignoreAlready.message(player, "%player%", targetName);
                         return;
                     }
@@ -63,7 +71,7 @@ public class IgnoreCommand extends SpaceChatCommand {
                 Integer maxP = pages;
                 Integer nextP = actualP+1;
 
-                if(page > maxP){
+                if(page > maxP || actualP > pages || page < 0){
                     Messages.getInstance(plugin).ignorePageNotFound.message(player);
                     return;
                 }
@@ -85,7 +93,8 @@ public class IgnoreCommand extends SpaceChatCommand {
 
                 if(nextP <= maxP){
                     //Footer
-                    Messages.getInstance(plugin).ignoreListFooter.message(player, "%next-page%", nextP.toString());
+                    Messages.getInstance(plugin).ignoreListFooter.message(player,
+                            "%next-page%", nextP.toString());
                 }
             });
         }
@@ -115,7 +124,7 @@ public class IgnoreCommand extends SpaceChatCommand {
                 }
 
                 plugin.getUserManager().getByName(player.getName(), p -> {
-                    if(!p.getIgnoredUsers().contains(targetName)){
+                    if(!p.isIgnored(targetName)){
                         Messages.getInstance(plugin).ignoreNotFound.message(player, "%player%", targetName);
                         return;
                     }
