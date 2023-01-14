@@ -90,14 +90,16 @@ public class ChatManager implements Manager {
     public void sendComponentChatMessage(String senderName, Component component) {
 
         // send chat message to all online players filtering ignored players from sender
-        for(Player player : Bukkit.getOnlinePlayers()){
-            plugin.getUserManager().getByName(player.getName(), user ->{
-                if(!user.isIgnored(senderName)){
-                    Message.getAudienceProvider().player(player.getUniqueId()).sendMessage(component);
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->{
+            for(Player player : Bukkit.getOnlinePlayers()){
+                plugin.getUserManager().getByName(player.getName(), user ->{
+                    if(!user.isIgnored(senderName)){
+                        Message.getAudienceProvider().player(player.getUniqueId()).sendMessage(component);
 
-                }
-            });
-        }
+                    }
+                });
+            }
+        });
     }
 
     /**
