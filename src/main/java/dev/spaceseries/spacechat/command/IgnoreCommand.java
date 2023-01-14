@@ -17,12 +17,14 @@ public class IgnoreCommand extends SpaceChatCommand {
         super(plugin);
     }
 
+
     @Subcommand("add")
     @CommandAlias("ignore")
     @CommandPermission("space.chat.command.ignore.add")
     public class AddCommand extends BaseCommand {
 
         @Default
+        @CommandCompletion("@chatplayers")
         public void onAdd(Player player, @Single String targetName) {
 
             // self ignore LOL
