@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @CommandAlias("spacechat")
@@ -45,6 +46,7 @@ public class SpaceChatCommand extends dev.spaceseries.spacechat.api.command.Spac
 
         plugin.getUserManager().getByName(senderName, s -> {
             // Verify if target has blocked by you
+
             if(s.getIgnoredUsers().contains(targetName)){
                 Messages.getInstance(plugin).messageHasIgnoredPlayer.message(sender);
                 return;

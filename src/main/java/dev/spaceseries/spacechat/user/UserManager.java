@@ -22,6 +22,8 @@ public class UserManager implements Manager {
     private final AsyncLoadingCache<UUID, User> userAsyncCache;
     private final StorageManager storageManager;
     private final Map<String, String> replyTarget = new HashMap<>();
+
+    private final Map<String, List<String>> ignoredList = new HashMap<>();
     private boolean onUpdate = false;
     private Map<String, String> onlinePlayers = new HashMap<>();
     private final Map<String, String> cachedOnlinePlayers = new ConcurrentHashMap<>();
@@ -106,10 +108,26 @@ public class UserManager implements Manager {
     public void getByName(String username, Consumer<User> consumer) {
         CompletableFuture.supplyAsync(() -> storageManager.getCurrent().getUser(username)).thenAccept(consumer);
     }
-    
+
+    /**
+     * Get reply target map
+     *
+     * @return Reply Target Map
+     */
     public Map<String, String> getReplyTargetMap() {
         return replyTarget;
     }
+
+
+    /**
+     * Get ignore list map
+     *
+     * @return ignore list map
+     */
+    public Map<String, List<String>> getIgnoredList() {
+        return ignoredList;
+    }
+
 
     /**
         Get reply target uuid

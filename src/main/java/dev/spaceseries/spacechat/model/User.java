@@ -4,6 +4,7 @@ import dev.spaceseries.spacechat.SpaceChatPlugin;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -87,12 +88,12 @@ public final class User {
      * @return ignored users
      */
     public List<String> getIgnoredUsers() {
-        return plugin.getStorageManager().getCurrent().getIgnoreList(username);
+        return plugin.getUserManager().getIgnoredList().get(username);
     }
 
 
     public boolean isIgnored(String ignoredUsername){
-        return plugin.getStorageManager().getCurrent().isIgnored(username, ignoredUsername);
+        return plugin.getUserManager().getIgnoredList().get(username).contains(ignoredUsername);
     }
     /**
      * Returns uuid

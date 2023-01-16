@@ -7,6 +7,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.List;
+import java.util.Set;
+
 public class JoinQuitListener implements Listener {
 
     private final SpaceChatPlugin plugin;
@@ -31,6 +34,10 @@ public class JoinQuitListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(AsyncPlayerPreLoginEvent event) {
+
+        List<String> ignoredList = plugin.getStorageManager().getCurrent().getIgnoreList(event.getName());
+
+        plugin.getUserManager().getIgnoredList().put(event.getName(), ignoredList);
 
         // handle with user manager
         plugin.getUserManager().use(event.getUniqueId(), (user) -> {

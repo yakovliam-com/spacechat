@@ -5,6 +5,7 @@ import co.aikar.commands.annotation.*;
 import com.google.common.collect.Lists;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -47,7 +48,11 @@ public class IgnoreCommand extends SpaceChatCommand {
                     }
 
                     Messages.getInstance(plugin).ignoreAdded.message(player, "%player%", targetName);
-                    plugin.getStorageManager().getCurrent().createIgnoredUser(player.getName(), targetName);
+                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                        plugin.getStorageManager().getCurrent().createIgnoredUser(player.getName(), targetName);
+                        p.getIgnoredUsers().add(targetName);
+                    });
+
                 });
             }));
         }
@@ -132,7 +137,11 @@ public class IgnoreCommand extends SpaceChatCommand {
                     }
 
                     Messages.getInstance(plugin).ignoreRemoved.message(player, "%player%", targetName);
-                    plugin.getStorageManager().getCurrent().deleteIgnoredUser(player.getName(), targetName);
+
+                    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                        plugin.getStorageManager().getCurrent().deleteIgnoredUser(player.getName(), targetName);
+                        p.getIgnoredUsers().remove(targetName);
+                    });
                 });
             });
         }

@@ -29,6 +29,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ChatManager implements Manager {
@@ -95,7 +96,6 @@ public class ChatManager implements Manager {
                 plugin.getUserManager().getByName(player.getName(), user ->{
                     if(!user.isIgnored(senderName)){
                         Message.getAudienceProvider().player(player.getUniqueId()).sendMessage(component);
-
                     }
                 });
             }
