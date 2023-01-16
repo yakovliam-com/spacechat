@@ -95,6 +95,7 @@ public final class User {
     public boolean isIgnored(String ignoredUsername){
         return plugin.getUserManager().getIgnoredList().get(username).contains(ignoredUsername);
     }
+
     /**
      * Returns uuid
      *
