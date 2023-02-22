@@ -134,7 +134,8 @@ public class UserManager implements Manager {
      * @return ignore list for user
      */
     public List<String> getIgnoredList(String name) {
-        return ignoredList.getOrDefault(name, List.of());
+        final List<String> list = ignoredList.get(name);
+        return list != null ? list : List.of();
     }
 
 
