@@ -368,19 +368,21 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
     @Override
     public void end() {
         messengerEnabled = false;
-        if (this.provider.provide() != null && this.provider.provide().getResource().getClient() != null) {
-            // unsubscribe from chat channel
-            messenger.unsubscribe(
-                    REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
-                    REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
-                    REDIS_MESSAGE_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
-                    REDIS_ONLINE_PLAYERS_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
-            );
+        try {
+            if (this.provider.provide() != null && this.provider.provide().getResource().getClient() != null) {
+                // unsubscribe from chat channel
+                messenger.unsubscribe(
+                        REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                        REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                        REDIS_MESSAGE_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                        REDIS_ONLINE_PLAYERS_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
+                );
 
-            if (!provider.provide().isClosed()) {
-                provider.provide().close();
+                if (!provider.provide().isClosed()) {
+                    provider.provide().close();
+                }
             }
-        }
+        } catch (Throwable ignored) { }
     }
 
     private class Messenger extends JedisPubSub {
