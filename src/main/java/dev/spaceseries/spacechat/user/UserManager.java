@@ -128,6 +128,15 @@ public class UserManager implements Manager {
         return ignoredList;
     }
 
+    /**
+     * Get ignore list for user
+     *
+     * @return ignore list for user
+     */
+    public List<String> getIgnoredList(String name) {
+        return ignoredList.getOrDefault(name, List.of());
+    }
+
 
     /**
         Get reply target uuid

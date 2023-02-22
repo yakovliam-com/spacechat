@@ -88,12 +88,12 @@ public final class User {
      * @return ignored users
      */
     public List<String> getIgnoredUsers() {
-        return plugin.getUserManager().getIgnoredList().get(username);
+        return plugin.getUserManager().getIgnoredList(username);
     }
 
 
     public boolean isIgnored(String ignoredUsername){
-        return plugin.getUserManager().getIgnoredList().get(username).contains(ignoredUsername);
+        return plugin.getUserManager().getIgnoredList(username).contains(ignoredUsername);
     }
 
     /**

@@ -94,7 +94,7 @@ public class ChatManager implements Manager {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->{
             for(Player player : Bukkit.getOnlinePlayers()){
 
-                List<String> ignoredList = plugin.getUserManager().getIgnoredList().get(player.getName());
+                List<String> ignoredList = plugin.getUserManager().getIgnoredList(player.getName());
                 if(!ignoredList.contains(senderName)){
                     Message.getAudienceProvider().player(player.getUniqueId()).sendMessage(component);
                 }
