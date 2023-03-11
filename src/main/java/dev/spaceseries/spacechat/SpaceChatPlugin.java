@@ -10,6 +10,7 @@ import dev.spaceseries.spacechat.config.SpaceChatConfig;
 import dev.spaceseries.spacechat.external.papi.SpaceChatExpansion;
 import dev.spaceseries.spacechat.listener.ChatListener;
 import dev.spaceseries.spacechat.listener.JoinQuitListener;
+import dev.spaceseries.spacechat.listener.VanishListener;
 import dev.spaceseries.spacechat.logging.LogManagerImpl;
 import dev.spaceseries.spacechat.storage.StorageManager;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
@@ -134,6 +135,7 @@ public final class SpaceChatPlugin extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new ChatListener(this), this);
         // register join listener
         this.getServer().getPluginManager().registerEvents(new JoinQuitListener(this), this);
+        new VanishListener(this).registerEvents();
 
         // register placeholder expansion
         new SpaceChatExpansion(this).register();

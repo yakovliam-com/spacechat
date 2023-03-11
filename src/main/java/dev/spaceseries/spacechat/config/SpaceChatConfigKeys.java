@@ -58,6 +58,8 @@ public class SpaceChatConfigKeys {
     public static ConfigKey<String> PERMISSIONS_USE_CHAT_COLORS = key(c -> c.getString("permissions.use-chat-colors", null));
     public static ConfigKey<String> PERMISSIONS_USE_ITEM_CHAT = key(c -> c.getString("permissions.use-item-chat", null));
     public static ConfigKey<String> PERMISSIONS_USE_CHAT_LINKS = key(c -> c.getString("permissions.use-chat-links", null));
+    public static ConfigKey<String> PERMISSIONS_VANISH_COMMAND = key(c -> c.getString("permissions.vanish-command", "space.chat.vanish"));
+    public static ConfigKey<String> PERMISSIONS_UNLISTED = key(c -> c.getString("permissions.unlisted", "space.chat.unlisted"));
 
     public static ConfigKey<Boolean> BROADCAST_USE_LANG_WRAPPER = key(c -> c.getBoolean("broadcast.use-lang-wrapper", false));
 
@@ -69,6 +71,8 @@ public class SpaceChatConfigKeys {
     public static ConfigKey<Integer> ITEM_CHAT_MAX_PER_MESSAGE = key(c -> c.getInteger("item-chat.max-per-message", 2));
 
     public static ConfigKey<Boolean> USE_RELATIONAL_PLACEHOLDERS = key(c -> c.getBoolean("use-relational-placeholders", false));
+
+    public static ConfigKey<List<String>> FAKE_PLAYERS = key(c -> c.getStringList("fake-players", List.of()));
 
     private static final List<SimpleConfigKey<?>> KEYS = KeyedConfiguration.initialise(SpaceChatConfigKeys.class);
 

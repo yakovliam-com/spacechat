@@ -8,7 +8,6 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.List;
-import java.util.Set;
 
 public class JoinQuitListener implements Listener {
 
@@ -29,7 +28,7 @@ public class JoinQuitListener implements Listener {
         plugin.getUserManager().getReplyTargetMap().remove(event.getPlayer().getName());
 
         // invalidate
-        plugin.getUserManager().invalidate(user.getUuid());
+        plugin.getUserManager().invalidate(user.getUuid(), user.getUsername());
     }
 
     @EventHandler

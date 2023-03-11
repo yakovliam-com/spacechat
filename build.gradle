@@ -16,6 +16,8 @@ repositories {
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     // placeholderapi
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    // essentials
+    maven { url 'https://repo.essentialsx.net/releases/' }
     // triumph-msg
     maven { url 'https://repo.triumphteam.dev/snapshots/' }
     // acf
@@ -31,6 +33,7 @@ dependencies {
     // Compile
     compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.2'
+    compileOnly 'net.essentialsx:EssentialsX:2.19.7'
 
     //compileOnly 'com.google.code.gson:gson:2.8.0'
     //compileOnly 'com.google.guava:guava:21.0'

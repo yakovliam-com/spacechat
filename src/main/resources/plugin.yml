@@ -9,3 +9,4 @@ depend:
   - PlaceholderAPI
 softdepend:
   - DiscordSRV
+  - Essentials

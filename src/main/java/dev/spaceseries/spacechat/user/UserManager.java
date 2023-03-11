@@ -25,6 +25,7 @@ public class UserManager implements Manager {
 
     private final Map<String, List<String>> ignoredList = new HashMap<>();
     private boolean onUpdate = false;
+    private final Set<String> vanishedPlayers = new HashSet<>();
     private Map<String, String> onlinePlayers = new HashMap<>();
     private final Map<String, String> cachedOnlinePlayers = new ConcurrentHashMap<>();
 
@@ -47,9 +48,14 @@ public class UserManager implements Manager {
                     final String id = SpaceChatConfigKeys.REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getAdapter());
                     final List<String> players = new ArrayList<>();
                     for (Player player : Bukkit.getOnlinePlayers()) {
+                        if (isPlayerVanished(player.getName())
+                                || player.hasPermission(SpaceChatConfigKeys.PERMISSIONS_UNLISTED.get(plugin.getSpaceChatConfig().getAdapter()))) {
+                            continue;
+                        }
                         players.add(player.getName());
                     }
                     setOnlinePlayers(id, players);
+                    setOnlinePlayers(id, SpaceChatConfigKeys.FAKE_PLAYERS.get(plugin.getSpaceChatConfig().getAdapter()));
                     plugin.getServerSyncServiceManager().getStreamService().publishPlayerList(id, players);
                 }
                 onlinePlayers = new HashMap<>(cachedOnlinePlayers);
@@ -85,9 +91,38 @@ public class UserManager implements Manager {
      * Invalidates user
      *
      * @param uuid uuid
+     * @param name name
      */
-    public void invalidate(UUID uuid) {
+    public void invalidate(UUID uuid, String name) {
         userAsyncCache.synchronous().invalidate(uuid);
+        vanishedPlayers.remove(name);
+    }
+
+    /**
+     * Change the current vanish status for player
+     *
+     * @param name Player name
+     * @return     true if the player was vanished
+     */
+    public boolean vanish(String name) {
+        return vanish(name, !vanishedPlayers.contains(name));
+    }
+
+    /**
+     * Change the current vanish status for player
+     *
+     * @param name     Player name
+     * @param activate true to vanish the player
+     * @return         true if the player was vanished
+     */
+    public boolean vanish(String name, boolean activate) {
+        if (activate) {
+            vanishedPlayers.add(name);
+            return true;
+        } else {
+            vanishedPlayers.remove(name);
+            return false;
+        }
     }
 
     /**
@@ -147,6 +182,15 @@ public class UserManager implements Manager {
     }
 
     /**
+     * Get vanished players
+     *
+     * @return A set with vanished player names
+     */
+    public Set<String> getVanishedPlayers() {
+        return vanishedPlayers;
+    }
+
+    /**
      * Get current online players separated by server identifiers
      *
      * @return A multimap with player names.
@@ -183,5 +227,9 @@ public class UserManager implements Manager {
 
     public boolean isPlayerOnline(String name) {
         return name.equalsIgnoreCase("@console") || onlinePlayers.containsKey(name);
+    }
+
+    public boolean isPlayerVanished(String name) {
+        return vanishedPlayers.contains(name);
     }
 }

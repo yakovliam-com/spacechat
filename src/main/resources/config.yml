@@ -152,6 +152,10 @@ item-chat:
 # <!> <!> <!> <!> <!> You can only enable this if your server is [NOT] USING MULTI-SERVER CAPABILITIES (redis, etc) <!> <!> <!> <!> <!> Y
 use-relational-placeholders: false
 
+# Fake online players on tab complete
+fake-players:
+  - "@console"
+
 #=#=#=#=#=#=#=#=#=#=#=#=#=#
 # Permissions             #
 #                         #
@@ -164,3 +168,5 @@ permissions:
   use-chat-colors: "space.chat.chatcolor"
   use-chat-links: "space.chat.chatlinks"
   use-item-chat: "space.chat.item-chat"
+  vanish-command: "space.chat.vanish"
+  unlisted: "space.chat.unlisted"
