@@ -10,10 +10,7 @@ import org.spongepowered.configurate.BasicConfigurationNode;
 import org.spongepowered.configurate.serialize.SerializationException;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class JsonStorage extends Storage {
 
@@ -168,6 +165,27 @@ public class JsonStorage extends Storage {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void createIgnoredUser(String username, String ignoredUsername) {
+
+    }
+
+    @Override
+    public void deleteIgnoredUser(String username, String ignoredUsername) {
+
+    }
+
+    @Override
+    public List<String> getIgnoreList(String username) {
+        return null;
+    }
+
+    @Override
+    public boolean isIgnored(String username, String ignoredUsername) {
+        return false;
+    }
+
 
     /**
      * Closes the storage medium

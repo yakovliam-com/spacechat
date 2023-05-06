@@ -93,11 +93,11 @@ public class LibraryLoader {
 
         public static final String BSTATS = "3.0.0";
         public static final String EXAMINATION = "1.3.0";
-        public static final String ADVENTURE = "4.11.0";
-        public static final String ADVENTURE_PLATFORM = "4.1.2";
+        public static final String ADVENTURE = "4.13.1";
+        public static final String ADVENTURE_PLATFORM = "4.3.0";
         public static final String MSG = "2.2.4-SNAPSHOT@2.2.4-20210406.012549-1";
         public static final String CONFIGURATE = "4.1.2";
-        public static final String RTAG = "1.2.0";
+        public static final String RTAG = "1.3.0";
 
     }
 
@@ -117,7 +117,7 @@ public class LibraryLoader {
         // Caffeine
         CAFFEINE(
                 "{0}.Cache",
-                "com{}github{}ben-manes{}caffeine:caffeine:3.1.1",
+                "com{}github{}ben-manes{}caffeine:caffeine:3.1.6",
                 Relocation.of("com{}github{}benmanes{}caffeine{}cache", "{package}.lib.caffeine")
         ),
         // Adventure
@@ -301,7 +301,7 @@ public class LibraryLoader {
         // LocaleLib
         LOCALE_LIB(
                 "{0}.LocaleManager",
-                "com{}github{}PikaMug:LocaleLib:3.0",
+                "com{}github{}PikaMug:LocaleLib:338b52b0dc",
                 JITPACK_REPOSITORY,
                 Relocation.of("me{}pikamug{}localelib", "{package}.lib.localelib")
         ),
@@ -317,6 +317,12 @@ public class LibraryLoader {
                 "com{}saicone{}rtag:rtag-item:" + Version.RTAG,
                 JITPACK_REPOSITORY,
                 RTAG.relocation
+        ),
+        // XSeries
+        XSERIES(
+                "{0}.XSound",
+                "com{}github{}cryptomorin:XSeries:9.3.1",
+                Relocation.of("com{}cryptomorin{}xseries", "{package}.lib.xseries")
         );
 
         public static final Dependency[] VALUES = values();

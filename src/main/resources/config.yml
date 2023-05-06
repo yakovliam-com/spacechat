@@ -75,6 +75,7 @@ storage:
     tables:
       chat-logs: "spacechat_chatlogs"
       users: "spacechat_users"
+      ignore: "spacechat_ignore"
       subscribed-channels: "spacechat_subscribed_channels"
 
 #=#=#=#=#=#=#=#=#=#=#=#=#=#
@@ -151,6 +152,15 @@ item-chat:
 # <!> <!> <!> <!> <!> You can only enable this if your server is [NOT] USING MULTI-SERVER CAPABILITIES (redis, etc) <!> <!> <!> <!> <!> Y
 use-relational-placeholders: false
 
+# Fake online players on tab complete
+fake-players:
+  - "@console"
+
+# Private messages configuration
+private:
+  notification:
+    sound: 'ENTITY_PLAYER_LEVELUP'
+
 #=#=#=#=#=#=#=#=#=#=#=#=#=#
 # Permissions             #
 #                         #
@@ -163,3 +173,5 @@ permissions:
   use-chat-colors: "space.chat.chatcolor"
   use-chat-links: "space.chat.chatlinks"
   use-item-chat: "space.chat.item-chat"
+  vanish-command: "space.chat.vanish"
+  unlisted: "space.chat.unlisted"

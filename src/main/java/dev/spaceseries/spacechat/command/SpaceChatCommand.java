@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @CommandAlias("spacechat")
@@ -22,6 +23,7 @@ public class SpaceChatCommand extends dev.spaceseries.spacechat.api.command.Spac
     @Subcommand("message|msg|m|tell")
     @CommandCompletion("@chatplayers")
     @CommandPermission("space.chat.command.message")
+    @Syntax(" <playerName> <message>")
     public void onMessage(CommandSender sender, @Split(" ") String[] args) {
         if (args.length <= 1) {
             Messages.getInstance(plugin).messageArgs.message(sender);
@@ -42,35 +44,51 @@ public class SpaceChatCommand extends dev.spaceseries.spacechat.api.command.Spac
             return;
         }
 
-        // Construct the message
-        final String messageStr = String.join(" ", args)
-                .replace(targetName, "") //Replace target to empty
-                .trim(); //Remove unnecessary spaces
+        plugin.getUserManager().getByName(senderName, s -> {
+            // Verify if target has blocked by you
 
-        // put replier in map
-        plugin.getUserManager().getReplyTargetMap().put(targetName, senderName);
+            if(s.getIgnoredUsers().contains(targetName)){
+                Messages.getInstance(plugin).messageHasIgnoredPlayer.message(sender);
+                return;
+            }
 
-        // messages
-        Message formatSend = Messages.getInstance(plugin).messageFormatSend;
+            // Verify if target has blocked you
+            plugin.getUserManager().getByName(targetName, user -> {
+                if(user.getIgnoredUsers().contains(senderName)){
+                    Messages.getInstance(plugin).messageIgnoredPlayer.message(sender);
+                    return;
+                }
+                // Construct the message
+                final String messageStr = String.join(" ", args)
+                        .replace(targetName, "") //Replace target to empty
+                        .trim(); //Remove unnecessary spaces
 
-        // send a message to player in the same server if is connected
-        final Player target = Bukkit.getPlayer(targetName);
-        if (target != null) {
-            Messages.getInstance(plugin).messageFormatReceive.message(target,
-                    "%sender%", senderName,
-                    "%message%", messageStr
-            );
-        }
+                // put replier in map
+                plugin.getUserManager().getReplyTargetMap().put(targetName, senderName);
 
-        // send to player
-        plugin.getChatManager().sendPrivateMessage(sender, targetName, messageStr, formatSend);
+                // messages
+                Message formatSend = Messages.getInstance(plugin).messageFormatSend;
 
+                // send a message to player in the same server if is connected
+                final Player target = Bukkit.getPlayer(targetName);
+                if (target != null) {
+                    Messages.getInstance(plugin).messageFormatReceive.message(target,
+                            "%sender%", senderName,
+                            "%message%", messageStr
+                    );
+                }
+
+                // send to player
+                plugin.getChatManager().sendPrivateMessage(sender, targetName, messageStr, formatSend);
+            });
+        });
     }
 
     @CommandAlias("reply|r")
     @Subcommand("reply|r")
     @CommandCompletion("@chatplayers")
     @CommandPermission("space.chat.command.reply")
+    @Syntax(" <message>")
     public void onReply(CommandSender sender, @Split(" ") String[] args) {
         if (args.length == 0) {
             Messages.getInstance(plugin).replyArgs.message(sender);
@@ -164,7 +182,7 @@ public class SpaceChatCommand extends dev.spaceseries.spacechat.api.command.Spac
     }
 
     @Default
-    @CatchUnknown
+    //@CatchUnknown
     @HelpCommand
     public void onDefault(CommandSender sender) {
         // send help message

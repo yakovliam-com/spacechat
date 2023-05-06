@@ -173,8 +173,11 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
             return;
         }
 
+        // send to all players filtering ignored players from sender
+        chatManager.sendComponentChatMessage(chatPacket.getSenderName(), chatPacket.getComponent());
+
         // send to all players
-        chatManager.sendComponentChatMessage(chatPacket.getComponent());
+        //chatManager.sendComponentChatMessage(chatPacket.getComponent());
     }
 
     /**
@@ -237,6 +240,9 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
                 "%sender%", messagePacket.getSenderName(),
                 "%message%", messagePacket.getMessage()
         );
+        if (!consoleReceiver) {
+            PRIVATE_NOTIFICATION_SOUND.get(plugin.getSpaceChatConfig().getAdapter()).play(receiver);
+        }
     }
 
     /**
@@ -365,19 +371,21 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
     @Override
     public void end() {
         messengerEnabled = false;
-        if (this.provider.provide() != null && this.provider.provide().getResource().getClient() != null) {
-            // unsubscribe from chat channel
-            messenger.unsubscribe(
-                    REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
-                    REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
-                    REDIS_MESSAGE_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
-                    REDIS_ONLINE_PLAYERS_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
-            );
+        try {
+            if (this.provider.provide() != null && this.provider.provide().getResource().getClient() != null) {
+                // unsubscribe from chat channel
+                messenger.unsubscribe(
+                        REDIS_CHAT_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                        REDIS_BROADCAST_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                        REDIS_MESSAGE_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter()),
+                        REDIS_ONLINE_PLAYERS_CHANNEL.get(this.plugin.getSpaceChatConfig().getAdapter())
+                );
 
-            if (!provider.provide().isClosed()) {
-                provider.provide().close();
+                if (!provider.provide().isClosed()) {
+                    provider.provide().close();
+                }
             }
-        }
+        } catch (Throwable ignored) { }
     }
 
     private class Messenger extends JedisPubSub {

@@ -29,6 +29,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ChatManager implements Manager {
@@ -79,6 +80,31 @@ public class ChatManager implements Manager {
      */
     public void sendComponentChatMessage(Component component, Player to) {
         sendComponentMessage(component, to);
+    }
+
+    /**
+     * Send a raw component to all players filter ignored players from sender
+     *
+     * @param component component
+     * @param senderName sender name
+     */
+    public void sendComponentChatMessage(String senderName, Component component) {
+
+        // send chat message to all online players filtering ignored players from sender
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->{
+            for(Player player : Bukkit.getOnlinePlayers()){
+
+                List<String> ignoredList = plugin.getUserManager().getIgnoredList(player.getName());
+                if(!ignoredList.contains(senderName)){
+                    Message.getAudienceProvider().player(player.getUniqueId()).sendMessage(component);
+                }
+                /*plugin.getUserManager().getByName(player.getName(), user ->{
+                    if(!user.isIgnored(senderName)){
+                        Message.getAudienceProvider().player(player.getUniqueId()).sendMessage(component);
+                    }
+                });*/
+            }
+        });
     }
 
     /**
@@ -187,7 +213,8 @@ public class ChatManager implements Manager {
             sendComponentChannelMessage(from, components, applicableChannel);
         } else {
             // send component message to entire server
-            sendComponentChatMessage(components);
+            sendComponentChatMessage(from.getName(), components);
+            //sendComponentChatMessage(components); OLD
         }
 
         // log to storage

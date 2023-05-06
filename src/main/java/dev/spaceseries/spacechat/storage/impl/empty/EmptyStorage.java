@@ -6,6 +6,7 @@ import dev.spaceseries.spacechat.model.User;
 import dev.spaceseries.spacechat.storage.Storage;
 import dev.spaceseries.spacechat.storage.StorageInitializationException;
 
+import java.util.List;
 import java.util.UUID;
 
 public class EmptyStorage extends Storage {
@@ -55,6 +56,27 @@ public class EmptyStorage extends Storage {
     @Override
     public void updateUser(User user) {
     }
+
+    @Override
+    public void createIgnoredUser(String username, String ignoredUsername) {
+
+    }
+
+    @Override
+    public void deleteIgnoredUser(String username, String ignoredUsername) {
+
+    }
+
+    @Override
+    public List<String> getIgnoreList(String username) {
+        return null;
+    }
+
+    @Override
+    public boolean isIgnored(String username, String ignoredUsername) {
+        return false;
+    }
+
 
     @Override
     public void close() {

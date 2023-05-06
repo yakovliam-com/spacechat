@@ -22,7 +22,11 @@ public class UserManager implements Manager {
     private final AsyncLoadingCache<UUID, User> userAsyncCache;
     private final StorageManager storageManager;
     private final Map<String, String> replyTarget = new HashMap<>();
+
+    private final Map<String, List<String>> ignoredList = new HashMap<>();
+    private final Set<String> pendingReload = new HashSet<>();
     private boolean onUpdate = false;
+    private final Set<String> vanishedPlayers = new HashSet<>();
     private Map<String, String> onlinePlayers = new HashMap<>();
     private final Map<String, String> cachedOnlinePlayers = new ConcurrentHashMap<>();
 
@@ -45,9 +49,14 @@ public class UserManager implements Manager {
                     final String id = SpaceChatConfigKeys.REDIS_SERVER_IDENTIFIER.get(plugin.getSpaceChatConfig().getAdapter());
                     final List<String> players = new ArrayList<>();
                     for (Player player : Bukkit.getOnlinePlayers()) {
+                        if (isPlayerVanished(player.getName())
+                                || player.hasPermission(SpaceChatConfigKeys.PERMISSIONS_UNLISTED.get(plugin.getSpaceChatConfig().getAdapter()))) {
+                            continue;
+                        }
                         players.add(player.getName());
                     }
                     setOnlinePlayers(id, players);
+                    setOnlinePlayers(id, SpaceChatConfigKeys.FAKE_PLAYERS.get(plugin.getSpaceChatConfig().getAdapter()));
                     plugin.getServerSyncServiceManager().getStreamService().publishPlayerList(id, players);
                 }
                 onlinePlayers = new HashMap<>(cachedOnlinePlayers);
@@ -83,9 +92,40 @@ public class UserManager implements Manager {
      * Invalidates user
      *
      * @param uuid uuid
+     * @param name name
      */
-    public void invalidate(UUID uuid) {
+    public void invalidate(UUID uuid, String name) {
+        ignoredList.remove(name);
+        replyTarget.remove(name);
+        vanishedPlayers.remove(name);
         userAsyncCache.synchronous().invalidate(uuid);
+    }
+
+    /**
+     * Change the current vanish status for player
+     *
+     * @param name Player name
+     * @return     true if the player was vanished
+     */
+    public boolean vanish(String name) {
+        return vanish(name, !vanishedPlayers.contains(name));
+    }
+
+    /**
+     * Change the current vanish status for player
+     *
+     * @param name     Player name
+     * @param activate true to vanish the player
+     * @return         true if the player was vanished
+     */
+    public boolean vanish(String name, boolean activate) {
+        if (activate) {
+            vanishedPlayers.add(name);
+            return true;
+        } else {
+            vanishedPlayers.remove(name);
+            return false;
+        }
     }
 
     /**
@@ -94,7 +134,20 @@ public class UserManager implements Manager {
      * @param user user
      */
     public void update(User user) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> storageManager.getCurrent().updateUser(user));
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> storageManager.getCurrent().updateUser(user));
+        } else {
+            storageManager.getCurrent().updateUser(user);
+        }
+    }
+
+    public void loadIgnoreList(String name) {
+        List<String> list = plugin.getStorageManager().getCurrent().getIgnoreList(name);
+        if (list == null) {
+            pendingReload.add(name);
+        } else {
+            ignoredList.put(name, list);
+        }
     }
 
     /**
@@ -106,16 +159,51 @@ public class UserManager implements Manager {
     public void getByName(String username, Consumer<User> consumer) {
         CompletableFuture.supplyAsync(() -> storageManager.getCurrent().getUser(username)).thenAccept(consumer);
     }
-    
+
+    /**
+     * Get reply target map
+     *
+     * @return Reply Target Map
+     */
     public Map<String, String> getReplyTargetMap() {
         return replyTarget;
     }
+
+
+    /**
+     * Get ignore list map
+     *
+     * @return ignore list map
+     */
+    public Map<String, List<String>> getIgnoredList() {
+        return ignoredList;
+    }
+
+    /**
+     * Get ignore list for user
+     *
+     * @return ignore list for user
+     */
+    public List<String> getIgnoredList(String name) {
+        final List<String> list = ignoredList.get(name);
+        return list != null ? list : List.of();
+    }
+
 
     /**
         Get reply target uuid
      */
     public String getReplyTarget(String sender){
         return replyTarget.get(sender);
+    }
+
+    /**
+     * Get vanished players
+     *
+     * @return A set with vanished player names
+     */
+    public Set<String> getVanishedPlayers() {
+        return vanishedPlayers;
     }
 
     /**
@@ -153,7 +241,23 @@ public class UserManager implements Manager {
         }
     }
 
+    public boolean isPlayerLoaded(String name) {
+        boolean loaded = ignoredList.containsKey(name);
+        if (loaded) {
+            return true;
+        }
+        if (pendingReload.contains(name)) {
+            pendingReload.remove(name);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> loadIgnoreList(name));
+        }
+        return false;
+    }
+
     public boolean isPlayerOnline(String name) {
         return name.equalsIgnoreCase("@console") || onlinePlayers.containsKey(name);
+    }
+
+    public boolean isPlayerVanished(String name) {
+        return vanishedPlayers.contains(name);
     }
 }

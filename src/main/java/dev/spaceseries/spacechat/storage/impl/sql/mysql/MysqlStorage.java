@@ -53,6 +53,26 @@ public class MysqlStorage extends Storage {
     private final String DELETE_SUBSCRIBED_CHANNEL = "DELETE FROM " + STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getAdapter()) + " WHERE uuid=? AND channel=?;";
     private final String INSERT_SUBSCRIBED_CHANNEL = "INSERT INTO " + STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getAdapter()) + " (uuid, channel) VALUES(?, ?);";
 
+
+    public static final String IGNORE_CREATION_STATEMENT = "CREATE TABLE IF NOT EXISTS `%s` (\n" +
+            "`username` TEXT NOT NULL,\n" +
+            "`ignored_username` TEXT NOT NULL,\n" +
+            "`id` INT NOT NULL AUTO_INCREMENT,\n" +
+            "PRIMARY KEY (`id`)\n" +
+            ");";
+
+    private final String CREATE_IGNORE_USER = "INSERT INTO " + STORAGE_MYSQL_TABLES_IGNORE
+            .get(plugin.getSpaceChatConfig().getAdapter()) + " (username, ignored_username) VALUES(?, ?);";
+
+    private final String GET_IGNORE_USERS = "SELECT * FROM " + STORAGE_MYSQL_TABLES_IGNORE
+            .get(plugin.getSpaceChatConfig().getAdapter()) + " WHERE username=?;";
+
+    private final String IS_IGNORED = "SELECT * FROM " + STORAGE_MYSQL_TABLES_IGNORE
+            .get(plugin.getSpaceChatConfig().getAdapter()) + " WHERE username=? AND ignored_username=?;";
+
+    private final String DELETE_IGNORE_USER = "DELETE FROM " + STORAGE_MYSQL_TABLES_IGNORE
+            .get(plugin.getSpaceChatConfig().getAdapter()) + " WHERE username=? AND ignored_username=?;";
+
     /**
      * The connection manager
      */
@@ -79,6 +99,7 @@ public class MysqlStorage extends Storage {
             SqlHelper.execute(mysqlConnectionFactory.getConnection(), String.format(MysqlStorage.LOG_CHAT_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_CHAT_LOGS.get(plugin.getSpaceChatConfig().getAdapter())));
             SqlHelper.execute(mysqlConnectionFactory.getConnection(), String.format(MysqlStorage.USERS_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_USERS.get(plugin.getSpaceChatConfig().getAdapter())));
             SqlHelper.execute(mysqlConnectionFactory.getConnection(), String.format(MysqlStorage.USERS_SUBSCRIBED_CHANNELS_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_SUBSCRIBED_CHANNELS.get(plugin.getSpaceChatConfig().getAdapter())));
+            SqlHelper.execute(mysqlConnectionFactory.getConnection(), String.format(MysqlStorage.IGNORE_CREATION_STATEMENT, STORAGE_MYSQL_TABLES_IGNORE.get(plugin.getSpaceChatConfig().getAdapter())));
         } catch (SQLException e) {
             e.printStackTrace();
             throw new StorageInitializationException();
@@ -258,6 +279,97 @@ public class MysqlStorage extends Storage {
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+    }
+
+    /**
+     * Creates a new ignored user in the database
+     *
+     * @param username username
+     * @param ignoredUsername ignored username
+     */
+    @Override
+    public void createIgnoredUser(String username, String ignoredUsername) {
+        // create prepared statement
+        try (Connection connection = mysqlConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(CREATE_IGNORE_USER)) {
+            // replace
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, ignoredUsername);
+            // execute
+            preparedStatement.execute();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    /**
+     * Delete an ignored user in the database
+     *
+     * @param username username
+     * @param ignoredUsername ignored username
+     */
+    @Override
+    public void deleteIgnoredUser(String username, String ignoredUsername) {
+        // create prepared statement
+        try (Connection connection = mysqlConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_IGNORE_USER)) {
+            // replace
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, ignoredUsername);
+            // execute
+            preparedStatement.execute();
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Get the list of ignored users of a user
+     *
+     * @param username username
+     * @return list of ignored users
+     */
+    @Override
+    public List<String> getIgnoreList(String username) {
+        // create prepared statement
+        try (Connection connection = mysqlConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(GET_IGNORE_USERS)) {
+            preparedStatement.setString(1, username);
+            ResultSet rs = preparedStatement.executeQuery();
+            final List<String> ignoredUserList = new ArrayList<>();
+            while (rs.next()){
+                String ignoredUsername = rs.getString("ignored_username");
+                ignoredUserList.add(ignoredUsername);
+            }
+            return ignoredUserList;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Check if a player has ignored another
+     *
+     * @param username username
+     * @param ignoredUsername ignoredUsername
+     * @return true or false
+     */
+    @Override
+    public boolean isIgnored(String username, String ignoredUsername) {
+        try (Connection connection = mysqlConnectionFactory.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(IS_IGNORED)) {
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, ignoredUsername);
+            ResultSet rs = preparedStatement.executeQuery();
+            return rs.next();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return false;
         }
     }
 

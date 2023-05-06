@@ -4,6 +4,7 @@ import dev.spaceseries.spacechat.SpaceChatPlugin;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -68,6 +69,8 @@ public final class User {
                 .collect(Collectors.toList());
 
         toSubscribe.forEach(u -> plugin.getServerSyncServiceManager().getDataService().subscribeToChannel(uuid, u));
+
+
     }
 
     /**
@@ -77,6 +80,20 @@ public final class User {
      */
     public String getUsername() {
         return username;
+    }
+
+    /**
+     * Returns ignored users
+     *
+     * @return ignored users
+     */
+    public List<String> getIgnoredUsers() {
+        return plugin.getUserManager().getIgnoredList(username);
+    }
+
+
+    public boolean isIgnored(String ignoredUsername){
+        return plugin.getUserManager().getIgnoredList(username).contains(ignoredUsername);
     }
 
     /**

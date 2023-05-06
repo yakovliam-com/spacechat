@@ -16,6 +16,8 @@ repositories {
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     // placeholderapi
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    // essentials
+    maven { url 'https://repo.essentialsx.net/releases/' }
     // triumph-msg
     maven { url 'https://repo.triumphteam.dev/snapshots/' }
     // acf
@@ -29,8 +31,9 @@ repositories {
 
 dependencies {
     // Compile
-    compileOnly 'org.spigotmc:spigot-api:1.19.2-R0.1-SNAPSHOT'
-    compileOnly 'me.clip:placeholderapi:2.11.2'
+    compileOnly 'org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.11.3'
+    compileOnly 'net.essentialsx:EssentialsX:2.19.7'
 
     //compileOnly 'com.google.code.gson:gson:2.8.0'
     //compileOnly 'com.google.guava:guava:21.0'
@@ -41,11 +44,11 @@ dependencies {
     implementation 'com.saicone.ezlib:ezlib:1.1'
     compileOnly 'org.bstats:bstats-bukkit:3.0.0'
 
-    compileOnly 'com.github.ben-manes.caffeine:caffeine:3.1.1'
+    compileOnly 'com.github.ben-manes.caffeine:caffeine:3.1.6'
 
-    compileOnly 'net.kyori:adventure-api:4.11.0'
-    compileOnly 'net.kyori:adventure-platform-bukkit:4.1.2'
-    compileOnly 'net.kyori:adventure-text-minimessage:4.11.0'
+    compileOnly 'net.kyori:adventure-api:4.13.1'
+    compileOnly 'net.kyori:adventure-platform-bukkit:4.3.0'
+    compileOnly 'net.kyori:adventure-text-minimessage:4.13.1'
 
     compileOnly 'me.mattstudios:triumph-msg-adventure:2.2.4-SNAPSHOT'
 
@@ -57,18 +60,17 @@ dependencies {
     compileOnly 'com.zaxxer:HikariCP:5.0.1'
 
     compileOnly 'org.spongepowered:configurate-gson:4.1.2'
-    compileOnly 'com.github.PikaMug:LocaleLib:3.0'
+    compileOnly 'com.github.PikaMug:LocaleLib:338b52b0dc'
 
-    compileOnly 'com.saicone.rtag:rtag:1.2.0'
-    compileOnly 'com.saicone.rtag:rtag-item:1.2.0'
+    compileOnly 'com.saicone.rtag:rtag:1.3.0'
+    compileOnly 'com.saicone.rtag:rtag-item:1.3.0'
+
+    compileOnly 'com.github.cryptomorin:XSeries:9.3.1'
 }
 
 compileJava {
     options.release = 11
     options.encoding = 'UTF-8'
-    options.compilerArgs += ["-parameters"]
-    options.fork = true
-    options.forkOptions.executable = 'javac'
 }
 
 jar {
@@ -98,6 +100,7 @@ shadowJar {
     relocate 'org.spongepowered.configurate', project.group + '.lib.configurate'
     relocate 'me.pikamug.localelib', project.group + '.lib.localelib'
     relocate 'com.saicone.rtag', project.group + '.lib.rtag'
+    relocate 'com.cryptomorin.xseries', project.group + '.lib.xseries'
 
     minimize()
 }
