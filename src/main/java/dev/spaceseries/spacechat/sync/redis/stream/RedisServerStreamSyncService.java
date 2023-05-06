@@ -240,6 +240,9 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
                 "%sender%", messagePacket.getSenderName(),
                 "%message%", messagePacket.getMessage()
         );
+        if (!consoleReceiver) {
+            PRIVATE_NOTIFICATION_SOUND.get(plugin.getSpaceChatConfig().getAdapter()).play(receiver);
+        }
     }
 
     /**

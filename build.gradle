@@ -98,6 +98,7 @@ shadowJar {
     relocate 'org.spongepowered.configurate', project.group + '.lib.configurate'
     relocate 'me.pikamug.localelib', project.group + '.lib.localelib'
     relocate 'com.saicone.rtag', project.group + '.lib.rtag'
+    relocate 'com.cryptomorin.xseries', project.group + '.lib.xseries'
 
     minimize()
 }

@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.config;
 
+import com.cryptomorin.xseries.XSound;
 import com.google.common.collect.ImmutableMap;
 import dev.spaceseries.spacechat.api.config.generic.KeyedConfiguration;
 import dev.spaceseries.spacechat.api.config.generic.key.ConfigKey;
@@ -73,6 +74,8 @@ public class SpaceChatConfigKeys {
     public static ConfigKey<Boolean> USE_RELATIONAL_PLACEHOLDERS = key(c -> c.getBoolean("use-relational-placeholders", false));
 
     public static ConfigKey<List<String>> FAKE_PLAYERS = key(c -> c.getStringList("fake-players", List.of()));
+
+    public static ConfigKey<XSound> PRIVATE_NOTIFICATION_SOUND = key(c -> XSound.matchXSound(c.getString("private.notification.sound", "ENTITY_PLAYER_LEVELUP")).orElse(XSound.ENTITY_PLAYER_LEVELUP));
 
     private static final List<SimpleConfigKey<?>> KEYS = KeyedConfiguration.initialise(SpaceChatConfigKeys.class);
 

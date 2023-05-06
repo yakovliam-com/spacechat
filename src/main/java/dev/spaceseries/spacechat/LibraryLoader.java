@@ -317,6 +317,12 @@ public class LibraryLoader {
                 "com{}saicone{}rtag:rtag-item:" + Version.RTAG,
                 JITPACK_REPOSITORY,
                 RTAG.relocation
+        ),
+        // XSeries
+        XSERIES(
+                "{0}.XSound",
+                "com{}github{}cryptomorin:XSeries:9.3.1",
+                Relocation.of("com{}cryptomorin{}xseries", "{package}.lib.xseries")
         );
 
         public static final Dependency[] VALUES = values();

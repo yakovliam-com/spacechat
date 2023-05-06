@@ -156,6 +156,11 @@ use-relational-placeholders: false
 fake-players:
   - "@console"
 
+# Private messages configuration
+private:
+  notification:
+    sound: 'ENTITY_PLAYER_LEVELUP'
+
 #=#=#=#=#=#=#=#=#=#=#=#=#=#
 # Permissions             #
 #                         #
