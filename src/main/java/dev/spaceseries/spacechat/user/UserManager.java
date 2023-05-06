@@ -24,6 +24,7 @@ public class UserManager implements Manager {
     private final Map<String, String> replyTarget = new HashMap<>();
 
     private final Map<String, List<String>> ignoredList = new HashMap<>();
+    private final Set<String> pendingReload = new HashSet<>();
     private boolean onUpdate = false;
     private final Set<String> vanishedPlayers = new HashSet<>();
     private Map<String, String> onlinePlayers = new HashMap<>();
@@ -94,8 +95,10 @@ public class UserManager implements Manager {
      * @param name name
      */
     public void invalidate(UUID uuid, String name) {
-        userAsyncCache.synchronous().invalidate(uuid);
+        ignoredList.remove(name);
+        replyTarget.remove(name);
         vanishedPlayers.remove(name);
+        userAsyncCache.synchronous().invalidate(uuid);
     }
 
     /**
@@ -131,7 +134,20 @@ public class UserManager implements Manager {
      * @param user user
      */
     public void update(User user) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> storageManager.getCurrent().updateUser(user));
+        if (Bukkit.isPrimaryThread()) {
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> storageManager.getCurrent().updateUser(user));
+        } else {
+            storageManager.getCurrent().updateUser(user);
+        }
+    }
+
+    public void loadIgnoreList(String name) {
+        List<String> list = plugin.getStorageManager().getCurrent().getIgnoreList(name);
+        if (list == null) {
+            pendingReload.add(name);
+        } else {
+            ignoredList.put(name, list);
+        }
     }
 
     /**
@@ -223,6 +239,18 @@ public class UserManager implements Manager {
         for (String player : players) {
             cachedOnlinePlayers.put(player, id);
         }
+    }
+
+    public boolean isPlayerLoaded(String name) {
+        boolean loaded = ignoredList.containsKey(name);
+        if (loaded) {
+            return true;
+        }
+        if (pendingReload.contains(name)) {
+            pendingReload.remove(name);
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> loadIgnoreList(name));
+        }
+        return false;
     }
 
     public boolean isPlayerOnline(String name) {

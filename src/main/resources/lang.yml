@@ -65,6 +65,8 @@ ignore:
     - "&cYou will no longer receive messages from %player%"
   removed:
     - "&aYou are now receiving messages from %player% again"
+  not-loaded:
+    - "&cYour ignored list is not loaded yet."
 reload:
   success:
     - "&aSuccessfully reloaded &bChat"
