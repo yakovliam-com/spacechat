@@ -1,5 +1,8 @@
 package dev.spaceseries.spacechat.parser.itemchat;
 
+import com.saicone.ezlib.Dependencies;
+import com.saicone.ezlib.Dependency;
+import com.saicone.ezlib.Repository;
 import com.saicone.rtag.item.ItemObject;
 import com.saicone.rtag.tag.TagBase;
 import com.saicone.rtag.tag.TagCompound;
@@ -25,6 +28,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+@Dependencies({
+        @Dependency(value = "com.github.PikaMug:LocaleLib:338b52b0dc",
+                repository = @Repository(url = "https://jitpack.io"),
+                relocate = {"me.pikamug.localelib", "{package}.lib.localelib"}
+        ),
+        @Dependency(value = "com.saicone.rtag:rtag-item:1.3.0",
+                repository = @Repository(url = "https://jitpack.io"),
+                relocate = {"com.saicone.rtag", "{package}.lib.rtag"}
+        )
+})
 public class ItemChatParser extends Parser {
 
     /**

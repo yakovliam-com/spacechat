@@ -1,5 +1,8 @@
 package dev.spaceseries.spacechat;
 
+import com.saicone.ezlib.Dependencies;
+import com.saicone.ezlib.Dependency;
+import com.saicone.ezlib.EzlibLoader;
 import dev.spaceseries.spacechat.api.config.adapter.BukkitConfigAdapter;
 import dev.spaceseries.spacechat.api.message.Message;
 import dev.spaceseries.spacechat.channel.ChannelManager;
@@ -17,7 +20,6 @@ import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 import dev.spaceseries.spacechat.user.UserManager;
 import dev.spaceseries.spacechat.util.version.VersionUtil;
 import org.bstats.bukkit.Metrics;
-import org.bukkit.plugin.AuthorNagException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -25,12 +27,20 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+@Dependencies(value = {
+        @Dependency(value = "org.bstats:bstats-bukkit:3.0.0", relocate = {"org.bstats", "{package}.lib.bstats"}),
+        @Dependency("org.jetbrains:annotations:23.0.0"),
+        @Dependency(value = "com.github.cryptomorin:XSeries:9.3.1", relocate = {"com.cryptomorin.xseries", "{package}.lib.xseries"})
+}, relocations = {
+        "org.jetbrains.annotations", "{package}.lib.annotations",
+        "org.intellij.lang.annotations", "{package}.lib.annotations.lang"
+})
 public final class SpaceChatPlugin extends JavaPlugin {
 
     /**
      * The library loader
      */
-    private LibraryLoader libraryLoader;
+    private EzlibLoader libraryLoader;
 
     /**
      * The formats config
@@ -90,8 +100,24 @@ public final class SpaceChatPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         getLogger().info("We're currently downloading some data to make this plugin work correctly, so please wait. This may take a while.");
-        libraryLoader = new LibraryLoader(this);
-        libraryLoader.load();
+        new EzlibLoader()
+                .replace("{package}", "dev.spaceseries.spacechat")
+                .logger((level, msg) -> {
+                    switch (level) {
+                        case 3:
+                            getLogger().info(msg);
+                            break;
+                        case 2:
+                            getLogger().warning(msg);
+                            break;
+                        case 1:
+                            getLogger().severe(msg);
+                            break;
+                        default:
+                            break;
+                    }
+                })
+                .load();
     }
 
     /**
@@ -295,7 +321,7 @@ public final class SpaceChatPlugin extends JavaPlugin {
      *
      * @return library loader
      */
-    public LibraryLoader getLibraryLoader() {
+    public EzlibLoader getLibraryLoader() {
         return libraryLoader;
     }
 

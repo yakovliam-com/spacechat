@@ -3,6 +3,8 @@ package dev.spaceseries.spacechat.sync.redis.stream;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.saicone.ezlib.Dependencies;
+import com.saicone.ezlib.Dependency;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.api.message.Message;
@@ -38,6 +40,19 @@ import java.util.logging.Level;
 
 import static dev.spaceseries.spacechat.config.SpaceChatConfigKeys.*;
 
+@Dependencies(
+        value = {
+                @Dependency("redis.clients:jedis:4.2.3"),
+                @Dependency("org.slf4j:slf4j-nop:1.7.32")
+        },
+        relocations = {
+                "redis.clients.jedis", "{package}.lib.jedis",
+                "com.google.gson", "{package}.lib.gson",
+                "org.apache.commons.pool2", "{package}.lib.commons.pool2",
+                "org.json", "{package}.lib.json",
+                "org.slf4j", "{package}.lib.slf4j"
+        }
+)
 public class RedisServerStreamSyncService extends ServerStreamSyncService {
 
     /**

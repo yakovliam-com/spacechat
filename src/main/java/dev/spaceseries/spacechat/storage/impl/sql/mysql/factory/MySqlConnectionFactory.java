@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.sql.mysql.factory;
 
+import com.saicone.ezlib.Dependency;
 import com.zaxxer.hikari.HikariConfig;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.StorageCredentials;
 
@@ -9,6 +10,12 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Map;
 
+@Dependency(value = "mysql:mysql-connector-java:8.0.30",
+        relocate = {
+                "com.mysql", "{package}.lib.mysql",
+                "com.google.protobuf", "{package}.lib.protobuf"
+        }
+)
 public class MySqlConnectionFactory extends HikariConnectionFactory {
     public MySqlConnectionFactory(StorageCredentials configuration) {
         super(configuration);

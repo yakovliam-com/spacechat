@@ -1,6 +1,9 @@
 package dev.spaceseries.spacechat.api.message;
 
 import com.google.common.base.Joiner;
+import com.saicone.ezlib.Dependencies;
+import com.saicone.ezlib.Dependency;
+import com.saicone.ezlib.Repository;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
 import me.mattstudios.msg.adventure.AdventureMessage;
@@ -15,6 +18,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Dependencies(value = {
+        @Dependency("net.kyori:adventure-api:4.13.1"),
+        @Dependency("net.kyori:adventure-platform-bukkit:4.3.0"),
+        @Dependency("net.kyori:adventure-text-minimessage:4.13.1"),
+        @Dependency(value = "me.mattstudios:triumph-msg-adventure:2.2.4-SNAPSHOT", snapshot = true,
+                repository = @Repository(url = "https://repo.triumphteam.dev/snapshots/"),
+                relocate = {"me.mattstudios.msg", "{package}.lib.msg"}
+        )
+}, relocations = {
+        "net.kyori.adventure", "{package}.lib.adventure",
+        "net.kyori.examination", "{package}.lib.examination"
+})
 public class Message {
 
     private static AudienceProvider audienceProvider;

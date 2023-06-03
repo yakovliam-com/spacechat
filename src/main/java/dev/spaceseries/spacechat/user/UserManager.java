@@ -2,6 +2,7 @@ package dev.spaceseries.spacechat.user;
 
 import com.github.benmanes.caffeine.cache.AsyncLoadingCache;
 import com.github.benmanes.caffeine.cache.Caffeine;
+import com.saicone.ezlib.Dependency;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.model.User;
@@ -16,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+@Dependency(value = "com.github.ben-manes.caffeine:caffeine:3.1.6", relocate = {"com.github.benmanes.caffeine.cache", "{package}.lib.caffeine"})
 public class UserManager implements Manager {
 
     private final SpaceChatPlugin plugin;
