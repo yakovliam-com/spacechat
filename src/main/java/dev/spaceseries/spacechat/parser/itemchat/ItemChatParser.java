@@ -27,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Dependencies({
         @Dependency(value = "com.github.PikaMug:LocaleLib:338b52b0dc",
@@ -223,6 +224,10 @@ public class ItemChatParser extends Parser {
         }
 
         Object tag = TagCompound.get(compound, "tag");
+        final Set<String> allowedTags;
+        if (tag != null && !(allowedTags = SpaceChatConfigKeys.ITEM_CHAT_ALLOWED_TAGS.get(configuration)).isEmpty()) {
+            TagCompound.getValue(tag).entrySet().removeIf(entry -> !allowedTags.contains(entry.getKey()));
+        }
         return HoverEvent.showItem(key, item.getAmount(), tag == null ? null : BinaryTagHolder.binaryTagHolder(tag.toString()));
     }
 }

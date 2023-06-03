@@ -7,8 +7,10 @@ import dev.spaceseries.spacechat.api.config.generic.key.ConfigKey;
 import dev.spaceseries.spacechat.api.config.generic.key.SimpleConfigKey;
 import dev.spaceseries.spacechat.storage.impl.sql.mysql.StorageCredentials;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static dev.spaceseries.spacechat.api.config.generic.key.ConfigKeyFactory.key;
 import static dev.spaceseries.spacechat.api.config.generic.key.ConfigKeyFactory.notReloadable;
@@ -70,6 +72,7 @@ public class SpaceChatConfigKeys {
     public static ConfigKey<Boolean> ITEM_CHAT_WITH_LORE_USE_CUSTOM = key(c -> c.getBoolean("item-chat.with.lore.use-custom", false));
     public static ConfigKey<List<String>> ITEM_CHAT_WITH_LORE_CUSTOM = key(c -> c.getStringList("item-chat.with.lore.custom", List.of()));
     public static ConfigKey<Integer> ITEM_CHAT_MAX_PER_MESSAGE = key(c -> c.getInteger("item-chat.max-per-message", 2));
+    public static ConfigKey<Set<String>> ITEM_CHAT_ALLOWED_TAGS = key(c -> new HashSet<>(c.getStringList("item-chat.allowed-tags", List.of())));
 
     public static ConfigKey<Boolean> USE_RELATIONAL_PLACEHOLDERS = key(c -> c.getBoolean("use-relational-placeholders", false));
 
