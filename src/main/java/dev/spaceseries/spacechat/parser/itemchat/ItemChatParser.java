@@ -24,10 +24,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Dependencies({
         @Dependency(value = "com.github.PikaMug:LocaleLib:338b52b0dc",
@@ -40,6 +37,8 @@ import java.util.Set;
         )
 })
 public class ItemChatParser extends Parser {
+
+    private static final Map<String, Long> COOLDOWN = new HashMap<>();
 
     /**
      * Configuration
@@ -64,6 +63,13 @@ public class ItemChatParser extends Parser {
 
     @Override
     public Component parse(Player player, Component message) {
+        final long cooldown = SpaceChatConfigKeys.ITEM_CHAT_COOLDOWN.get(configuration);
+        if (cooldown > 0) {
+            if (COOLDOWN.containsKey(player.getName()) && (System.currentTimeMillis() - COOLDOWN.get(player.getName())) < cooldown) {
+                return message;
+            }
+            COOLDOWN.put(player.getName(), System.currentTimeMillis());
+        }
 
         boolean containsItemChatAliases = false;
         for (String s : SpaceChatConfigKeys.ITEM_CHAT_REPLACE_ALIASES.get(configuration)) {

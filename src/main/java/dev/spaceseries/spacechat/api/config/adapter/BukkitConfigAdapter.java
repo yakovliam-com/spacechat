@@ -39,6 +39,11 @@ public class BukkitConfigAdapter implements ConfigurationAdapter {
     }
 
     @Override
+    public long getLong(String path, long def) {
+        return this.configuration.getLong(path, def);
+    }
+
+    @Override
     public boolean getBoolean(String path, boolean def) {
         return this.configuration.getBoolean(path, def);
     }

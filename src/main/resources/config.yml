@@ -132,6 +132,8 @@ broadcast:
 
 item-chat:
   enabled: false
+  # Cooldown in millis
+  cooldown: 10000
   replace-aliases:
     - "[item]"
     - "{item}"

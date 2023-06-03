@@ -67,6 +67,7 @@ public class SpaceChatConfigKeys {
     public static ConfigKey<Boolean> BROADCAST_USE_LANG_WRAPPER = key(c -> c.getBoolean("broadcast.use-lang-wrapper", false));
 
     public static ConfigKey<Boolean> ITEM_CHAT_ENABLED = key(c -> c.getBoolean("item-chat.enabled", false));
+    public static ConfigKey<Long> ITEM_CHAT_COOLDOWN = key(c -> c.getLong("item-chat.cooldown", 10000));
     public static ConfigKey<List<String>> ITEM_CHAT_REPLACE_ALIASES = key(c -> c.getStringList("item-chat.replace-aliases", List.of("[item]", "{item}")));
     public static ConfigKey<String> ITEM_CHAT_WITH_CHAT = key(c -> c.getString("item-chat.with.chat", "&7[&f%name% &ox%amount%&7]"));
     public static ConfigKey<Boolean> ITEM_CHAT_WITH_LORE_USE_CUSTOM = key(c -> c.getBoolean("item-chat.with.lore.use-custom", false));
