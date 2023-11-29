@@ -38,7 +38,7 @@ import java.util.*;
 })
 public class ItemChatParser extends Parser {
 
-    private static final Map<String, Long> COOLDOWN = new HashMap<>();
+    private static final Map<UUID, Long> COOLDOWN = new HashMap<>();
 
     /**
      * Configuration
@@ -63,12 +63,13 @@ public class ItemChatParser extends Parser {
 
     @Override
     public Component parse(Player player, Component message) {
-        final long cooldown = SpaceChatConfigKeys.ITEM_CHAT_COOLDOWN.get(configuration);
-        if (cooldown > 0) {
-            if (COOLDOWN.containsKey(player.getName()) && (System.currentTimeMillis() - COOLDOWN.get(player.getName())) < cooldown) {
-                return message;
-            }
-            COOLDOWN.put(player.getName(), System.currentTimeMillis());
+        // if not enabled, return
+        if (!SpaceChatConfigKeys.ITEM_CHAT_ENABLED.get(configuration)) {
+            return message;
+        }
+
+        if (!player.hasPermission(SpaceChatConfigKeys.PERMISSIONS_USE_ITEM_CHAT.get(configuration))) {
+            return message;
         }
 
         boolean containsItemChatAliases = false;
@@ -82,13 +83,13 @@ public class ItemChatParser extends Parser {
             return message;
         }
 
-        // if not enabled, return
-        if (!SpaceChatConfigKeys.ITEM_CHAT_ENABLED.get(configuration)) {
-            return message;
-        }
-
-        if (!player.hasPermission(SpaceChatConfigKeys.PERMISSIONS_USE_ITEM_CHAT.get(configuration))) {
-            return message;
+        final long cooldown = SpaceChatConfigKeys.ITEM_CHAT_COOLDOWN.get(configuration);
+        if (cooldown > 0) {
+            final long currentTime = System.currentTimeMillis();
+            if (COOLDOWN.getOrDefault(player.getUniqueId(), 0L) > currentTime) {
+                return message;
+            }
+            COOLDOWN.put(player.getUniqueId(), currentTime + cooldown);
         }
 
         // get item in hand
