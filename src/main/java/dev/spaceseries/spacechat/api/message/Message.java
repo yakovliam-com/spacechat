@@ -19,9 +19,9 @@ import java.util.Collections;
 import java.util.List;
 
 @Dependencies(value = {
-        @Dependency(value = "net.kyori:adventure-api:4.14.0", repository = @Repository(url = "MavenCentral")),
-        @Dependency(value = "net.kyori:adventure-platform-bukkit:4.3.1", repository = @Repository(url = "MavenCentral")),
-        @Dependency(value = "net.kyori:adventure-text-minimessage:4.14.0", repository = @Repository(url = "MavenCentral")),
+        @Dependency(value = "net.kyori:adventure-api:4.15.0", repository = @Repository(url = "MavenCentral")),
+        @Dependency(value = "net.kyori:adventure-platform-bukkit:4.3.2", repository = @Repository(url = "MavenCentral")),
+        @Dependency(value = "net.kyori:adventure-text-minimessage:4.15.0", repository = @Repository(url = "MavenCentral")),
         @Dependency(value = "me.mattstudios:triumph-msg-adventure:2.2.4-SNAPSHOT", snapshot = true,
                 repository = @Repository(url = "https://repo.triumphteam.dev/snapshots/"),
                 relocate = {"me.mattstudios.msg", "{package}.lib.msg"}

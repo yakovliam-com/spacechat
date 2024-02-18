@@ -29,7 +29,7 @@ import java.nio.file.Path;
 
 @Dependencies(value = {
         @Dependency(value = "org.bstats:bstats-bukkit:3.0.0", relocate = {"org.bstats", "{package}.lib.bstats"}),
-        @Dependency(value = "com.github.cryptomorin:XSeries:9.7.0", relocate = {"com.cryptomorin.xseries", "{package}.lib.xseries"})
+        @Dependency(value = "com.github.cryptomorin:XSeries:9.9.0", relocate = {"com.cryptomorin.xseries", "{package}.lib.xseries"})
 }, relocations = {
         "org.jetbrains.annotations", "{package}.lib.annotations",
         "org.intellij.lang.annotations", "{package}.lib.annotations.lang"
