@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.json;
 
+import com.saicone.ezlib.Dependency;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.logging.wrap.LogWrapper;
 import dev.spaceseries.spacechat.model.User;
@@ -12,6 +13,14 @@ import org.spongepowered.configurate.serialize.SerializationException;
 import java.time.Instant;
 import java.util.*;
 
+@Dependency(value = "org.spongepowered:configurate-gson:4.1.2",
+        relocate = {
+                "org.spongepowered.configurate", "{package}.lib.configurate",
+                "io.leangen.geantyref", "{package}.lib.geantyref",
+                "org.checkerframework", "{package}.lib.checkerframework",
+                "com.google.errorprone.annotations", "{package}.lib.annotations.errorprone"
+        }
+)
 public class JsonStorage extends Storage {
 
     /**

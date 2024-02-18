@@ -59,22 +59,20 @@ public class NormalLiveChatFormatBuilder extends LiveChatFormatBuilder implement
                 String mmWithPlaceholdersReplaced = SECTION_REPLACER.apply(PlaceholderAPI.setPlaceholders(player, AMPERSAND_REPLACER.apply(formatPart.getLine(), player)), player);
 
                 // get chat message (formatted)
+                final String msg = MiniMessage.miniMessage().escapeTags(messageString);
                 String chatMessage = LegacyComponentSerializer
                         .legacySection()
                         .serialize(player.hasPermission(SpaceChatConfigKeys.PERMISSIONS_USE_CHAT_COLORS.get(plugin.getSpaceChatConfig().getAdapter())) ? // if player has permission to use chat colors
                                 LegacyComponentSerializer // yes, the player has permission to use chat colors, so color message
                                         .legacyAmpersand()
-                                        .deserialize(messageString) :
-                                Component.text(messageString)); // no, the player doesn't have permission to use chat colors, so just return the message (not colored)
+                                        .deserialize(msg) :
+                                Component.text(msg)); // no, the player doesn't have permission to use chat colors, so just return the message (not colored)
 
                 // parse message
                 Component message = new MessageParser(plugin).parse(player, Component.text(chatMessage));
 
                 // parse miniMessage
-                Component parsedMiniMessage = MiniMessage.miniMessage().deserialize(mmWithPlaceholdersReplaced);
-
-                // replace chat message
-                parsedMiniMessage = parsedMiniMessage.replaceText((text) -> text.match("<chat_message>").replacement(message));
+                Component parsedMiniMessage = MiniMessage.miniMessage().deserialize(mmWithPlaceholdersReplaced.replace("<chat_message>", MiniMessage.miniMessage().serialize(message)));
 
                 // parse MiniMessage into builder
                 partComponentBuilder.append(parsedMiniMessage);

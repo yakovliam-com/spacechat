@@ -1,5 +1,8 @@
 package dev.spaceseries.spacechat.parser.itemchat;
 
+import com.saicone.ezlib.Dependencies;
+import com.saicone.ezlib.Dependency;
+import com.saicone.ezlib.Repository;
 import com.saicone.rtag.item.ItemObject;
 import com.saicone.rtag.tag.TagBase;
 import com.saicone.rtag.tag.TagCompound;
@@ -21,11 +24,21 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
+@Dependencies({
+        @Dependency(value = "com.github.PikaMug:LocaleLib:@release",
+                repository = @Repository(url = "https://jitpack.io"),
+                relocate = {"me.pikamug.localelib", "{package}.lib.localelib"}
+        ),
+        @Dependency(value = "com.saicone.rtag:rtag-item:1.4.4",
+                repository = @Repository(url = "https://jitpack.io"),
+                relocate = {"com.saicone.rtag", "{package}.lib.rtag"}
+        )
+})
 public class ItemChatParser extends Parser {
+
+    private static final Map<UUID, Long> COOLDOWN = new HashMap<>();
 
     /**
      * Configuration
@@ -50,6 +63,14 @@ public class ItemChatParser extends Parser {
 
     @Override
     public Component parse(Player player, Component message) {
+        // if not enabled, return
+        if (!SpaceChatConfigKeys.ITEM_CHAT_ENABLED.get(configuration)) {
+            return message;
+        }
+
+        if (!player.hasPermission(SpaceChatConfigKeys.PERMISSIONS_USE_ITEM_CHAT.get(configuration))) {
+            return message;
+        }
 
         boolean containsItemChatAliases = false;
         for (String s : SpaceChatConfigKeys.ITEM_CHAT_REPLACE_ALIASES.get(configuration)) {
@@ -62,13 +83,13 @@ public class ItemChatParser extends Parser {
             return message;
         }
 
-        // if not enabled, return
-        if (!SpaceChatConfigKeys.ITEM_CHAT_ENABLED.get(configuration)) {
-            return message;
-        }
-
-        if (!player.hasPermission(SpaceChatConfigKeys.PERMISSIONS_USE_ITEM_CHAT.get(configuration))) {
-            return message;
+        final long cooldown = SpaceChatConfigKeys.ITEM_CHAT_COOLDOWN.get(configuration);
+        if (cooldown > 0) {
+            final long currentTime = System.currentTimeMillis();
+            if (COOLDOWN.getOrDefault(player.getUniqueId(), 0L) > currentTime) {
+                return message;
+            }
+            COOLDOWN.put(player.getUniqueId(), currentTime + cooldown);
         }
 
         // get item in hand
@@ -210,6 +231,10 @@ public class ItemChatParser extends Parser {
         }
 
         Object tag = TagCompound.get(compound, "tag");
+        final Set<String> allowedTags;
+        if (tag != null && !(allowedTags = SpaceChatConfigKeys.ITEM_CHAT_ALLOWED_TAGS.get(configuration)).isEmpty()) {
+            TagCompound.getValue(tag).entrySet().removeIf(entry -> !allowedTags.contains(entry.getKey()));
+        }
         return HoverEvent.showItem(key, item.getAmount(), tag == null ? null : BinaryTagHolder.binaryTagHolder(tag.toString()));
     }
 }

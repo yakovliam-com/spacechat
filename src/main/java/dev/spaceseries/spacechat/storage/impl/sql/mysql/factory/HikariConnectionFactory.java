@@ -1,5 +1,6 @@
 package dev.spaceseries.spacechat.storage.impl.sql.mysql.factory;
 
+import com.saicone.ezlib.Dependency;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import dev.spaceseries.spacechat.storage.impl.ConnectionFactory;
@@ -14,6 +15,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Abstract {@link ConnectionFactory} using a {@link HikariDataSource}.
  */
+@Dependency(value = "com.zaxxer:HikariCP:5.0.1",
+        relocate = {
+                "com.zaxxer.hikari", "{package}.lib.hikari"
+        }
+)
 public abstract class HikariConnectionFactory implements ConnectionFactory {
     private final StorageCredentials configuration;
     private HikariDataSource hikari;
