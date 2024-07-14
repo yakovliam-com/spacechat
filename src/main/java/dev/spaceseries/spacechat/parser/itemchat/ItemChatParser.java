@@ -31,7 +31,7 @@ import java.util.*;
                 repository = @Repository(url = "https://jitpack.io"),
                 relocate = {"me.pikamug.localelib", "{package}.lib.localelib"}
         ),
-        @Dependency(value = "com.saicone.rtag:rtag-item:1.4.4",
+        @Dependency(value = "com.saicone.rtag:rtag-item:1.5.5",
                 repository = @Repository(url = "https://jitpack.io"),
                 relocate = {"com.saicone.rtag", "{package}.lib.rtag"}
         )
@@ -39,16 +39,15 @@ import java.util.*;
 public class ItemChatParser extends Parser {
 
     private static final Map<UUID, Long> COOLDOWN = new HashMap<>();
+    /**
+     * Locale manager
+     */
+    private static final LocaleManager LOCALE_MANAGER = new LocaleManager();
 
     /**
      * Configuration
      */
     private final ConfigurationAdapter configuration;
-
-    /**
-     * Locale manager
-     */
-    private final LocaleManager localeManager;
 
     /**
      * Item Chat parser
@@ -58,7 +57,6 @@ public class ItemChatParser extends Parser {
     public ItemChatParser(SpaceChatPlugin plugin) {
         super(plugin);
         this.configuration = plugin.getSpaceChatConfig().getAdapter();
-        this.localeManager = new LocaleManager();
     }
 
     @Override
@@ -101,7 +99,7 @@ public class ItemChatParser extends Parser {
         }
 
         // get item key
-        String itemKey = localeManager.queryMaterial(itemStack.getType());
+        String itemKey = LOCALE_MANAGER.queryMaterial(itemStack.getType());
 
         // get display name
         Component name = itemStack.hasItemMeta() ?
