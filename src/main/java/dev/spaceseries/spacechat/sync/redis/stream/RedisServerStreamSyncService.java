@@ -9,6 +9,7 @@ import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.api.message.Message;
 import dev.spaceseries.spacechat.chat.ChatManager;
+import dev.spaceseries.spacechat.model.formatting.parsed.SimpleParsedFormat;
 import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
 import dev.spaceseries.spacechat.sync.ServerSyncServiceManager;
 import dev.spaceseries.spacechat.sync.packet.ReceiveStreamDataPacket;
@@ -183,12 +184,12 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
 
         // if channel exists, send through that instead
         if (chatPacket.getChannel() != null && plugin.getChannelManager().get(chatPacket.getChannel().getHandle()) != null) {
-            chatManager.sendComponentChannelMessage(null, chatPacket.getComponent(), chatPacket.getChannel());
+            chatManager.sendComponentChannelMessage(null, chatPacket.getParsedFormat(), chatPacket.getChannel());
             return;
         }
 
         // send to all players filtering ignored players from sender
-        chatManager.sendComponentChatMessage(chatPacket.getSenderName(), chatPacket.getComponent());
+        chatManager.sendComponentChatMessage(chatPacket.getSenderName(), chatPacket.getParsedFormat());
 
         // send to all players
         //chatManager.sendComponentChatMessage(chatPacket.getComponent());
@@ -241,7 +242,7 @@ public class RedisServerStreamSyncService extends ServerStreamSyncService {
 
             // if channel exists, send through that instead
             if (messagePacket.getChannel() != null && plugin.getChannelManager().get(messagePacket.getChannel().getHandle()) != null) {
-                chatManager.sendComponentChannelMessage(null, componentReceive, messagePacket.getChannel());
+                chatManager.sendComponentChannelMessage(null, new SimpleParsedFormat(componentReceive), messagePacket.getChannel());
                 return;
             }
         } else {

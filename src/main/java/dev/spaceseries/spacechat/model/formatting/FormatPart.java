@@ -14,6 +14,8 @@ public class FormatPart {
      */
     private String line;
 
+    private int lineProtocol = -1;
+
     /**
      * The extra for the format part
      */
@@ -72,6 +74,14 @@ public class FormatPart {
      */
     public void setLine(String line) {
         this.line = line;
+    }
+
+    public int getLineProtocol() {
+        return lineProtocol;
+    }
+
+    public void setLineProtocol(int lineProtocol) {
+        this.lineProtocol = lineProtocol;
     }
 
     /**

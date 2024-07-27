@@ -9,6 +9,8 @@ public class Format {
      */
     private List<FormatPart> formatParts;
 
+    private boolean conditional;
+
     /**
      * Construct format
      *
@@ -16,6 +18,7 @@ public class Format {
      */
     public Format(List<FormatPart> formatParts) {
         this.formatParts = formatParts;
+        this.conditional = formatParts.stream().anyMatch(part -> part.getLineProtocol() > 0);
     }
 
     /**
@@ -34,5 +37,10 @@ public class Format {
      */
     public void setFormatParts(List<FormatPart> formatParts) {
         this.formatParts = formatParts;
+        this.conditional = formatParts.stream().anyMatch(part -> part.getLineProtocol() > 0);
+    }
+
+    public boolean isConditional() {
+        return conditional;
     }
 }

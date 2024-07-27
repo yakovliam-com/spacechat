@@ -3,8 +3,6 @@ package dev.spaceseries.spacechat.chat;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
 import dev.spaceseries.spacechat.api.message.Message;
-import dev.spaceseries.spacechat.api.wrapper.Quad;
-import dev.spaceseries.spacechat.api.wrapper.Trio;
 import dev.spaceseries.spacechat.builder.live.NormalLiveChatFormatBuilder;
 import dev.spaceseries.spacechat.builder.live.RelationalLiveChatFormatBuilder;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
@@ -13,6 +11,8 @@ import dev.spaceseries.spacechat.logging.wrap.LogToType;
 import dev.spaceseries.spacechat.logging.wrap.LogType;
 import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.model.formatting.Format;
+import dev.spaceseries.spacechat.model.formatting.ParsedFormat;
+import dev.spaceseries.spacechat.model.formatting.parsed.SimpleParsedFormat;
 import dev.spaceseries.spacechat.model.manager.Manager;
 import dev.spaceseries.spacechat.sync.ServerDataSyncService;
 import dev.spaceseries.spacechat.sync.ServerStreamSyncService;
@@ -29,7 +29,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ChatManager implements Manager {
@@ -39,6 +38,9 @@ public class ChatManager implements Manager {
     private ServerDataSyncService serverDataSyncService;
     private final ConfigurationAdapter config;
 
+    private final NormalLiveChatFormatBuilder normalBuilder;
+    private final RelationalLiveChatFormatBuilder relationalBuilder;
+
     /**
      * Construct chat event manager
      *
@@ -47,6 +49,8 @@ public class ChatManager implements Manager {
     public ChatManager(SpaceChatPlugin plugin) {
         this.plugin = plugin;
         this.config = plugin.getSpaceChatConfig().getAdapter();
+        this.normalBuilder = new NormalLiveChatFormatBuilder(plugin);
+        this.relationalBuilder = new RelationalLiveChatFormatBuilder(plugin);
     }
 
     /**
@@ -72,23 +76,23 @@ public class ChatManager implements Manager {
     /**
      * Send a chat message to a specific player
      * <p>
-     * This does the same thing as {@link ChatManager#sendComponentMessage(Component, Player)} but I just made it different for the sake
+     * This does the same thing as {@link ChatManager#sendComponentMessage(ParsedFormat, Player)} but I just made it different for the sake
      * of understanding
      *
      * @param component component
      * @param to        to
      */
-    public void sendComponentChatMessage(Component component, Player to) {
+    public void sendComponentChatMessage(ParsedFormat component, Player to) {
         sendComponentMessage(component, to);
     }
 
     /**
      * Send a raw component to all players filter ignored players from sender
      *
-     * @param component component
+     * @param parsedFormat component
      * @param senderName sender name
      */
-    public void sendComponentChatMessage(String senderName, Component component) {
+    public void sendComponentChatMessage(String senderName, ParsedFormat parsedFormat) {
 
         // send chat message to all online players filtering ignored players from sender
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () ->{
@@ -96,7 +100,7 @@ public class ChatManager implements Manager {
 
                 List<String> ignoredList = plugin.getUserManager().getIgnoredList(player.getName());
                 if(!ignoredList.contains(senderName)){
-                    Message.getAudienceProvider().player(player.getUniqueId()).sendMessage(component);
+                    Message.getAudienceProvider().player(player.getUniqueId()).sendMessage(parsedFormat.asComponent(player));
                 }
                 /*plugin.getUserManager().getByName(player.getName(), user ->{
                     if(!user.isIgnored(senderName)){
@@ -120,21 +124,21 @@ public class ChatManager implements Manager {
     /**
      * Send a raw component to a player
      *
-     * @param component component
-     * @param to        to
+     * @param parsedFormat component
+     * @param to           to
      */
-    public void sendComponentMessage(Component component, Player to) {
+    public void sendComponentMessage(ParsedFormat parsedFormat, Player to) {
         // send chat message to all online players
-        Message.getAudienceProvider().player(to.getUniqueId()).sendMessage(component);
+        Message.getAudienceProvider().player(to.getUniqueId()).sendMessage(parsedFormat.asComponent(to));
     }
 
     /**
      * Send a raw component to a channel
      *
-     * @param component component
+     * @param parsedFormat component
      * @param channel   channel
      */
-    public void sendComponentChannelMessage(Player from, Component component, Channel channel) {
+    public void sendComponentChannelMessage(Player from, ParsedFormat parsedFormat, Channel channel) {
         // get all subscribed players to that channel
         List<Player> subscribedPlayers = serverDataSyncService.getSubscribedUUIDs(channel)
                 .stream().map(Bukkit::getPlayer)
@@ -158,7 +162,7 @@ public class ChatManager implements Manager {
         }));
 
 
-        subscribedPlayersWithPermission.forEach(p -> sendComponentMessage(component, p));
+        subscribedPlayersWithPermission.forEach(p -> sendComponentMessage(parsedFormat, p));
     }
 
     /**
@@ -192,29 +196,29 @@ public class ChatManager implements Manager {
         // get player's current channel, and send through that (if null, that means 'global')
         Channel applicableChannel = serverDataSyncService.getCurrentChannel(from.getUniqueId());
 
-        Component components;
+        ParsedFormat parsed;
 
         // if null, return
         if (format == null) {
             // build components default message
             // this only happens if it's not possible to find a chat format
-            components = Component.text()
+            parsed = new SimpleParsedFormat(Component.text()
                     .append(Component.text(from.getDisplayName(), NamedTextColor.AQUA))
                     .append(Component.text("> ", NamedTextColor.GRAY))
                     .append(Component.text(message))
-                    .build();
+                    .build());
         } else { // if not null
             // get baseComponents from live builder
-            components = new NormalLiveChatFormatBuilder(plugin).build(new Trio<>(from, message, format));
+            parsed = normalBuilder.build(from, message, format, true);
         }
 
         // if channel exists, then send through it
         if (applicableChannel != null) {
-            sendComponentChannelMessage(from, components, applicableChannel);
+            sendComponentChannelMessage(from, parsed, applicableChannel);
         } else {
             // send component message to entire server
-            sendComponentChatMessage(from.getName(), components);
-            //sendComponentChatMessage(components); OLD
+            sendComponentChatMessage(from.getName(), parsed);
+            //sendComponentChatMessage(parsed); OLD
         }
 
         // log to storage
@@ -225,12 +229,12 @@ public class ChatManager implements Manager {
                 );
 
         // send via redis (it won't do anything if redis isn't enabled, so we can be sure that we aren't using dead methods that will throw an exception)
-        serverStreamSyncService.publishChat(new RedisChatPacket(from.getUniqueId(), from.getName(), applicableChannel, SpaceChatConfigKeys.REDIS_SERVER_IDENTIFIER.get(config), SpaceChatConfigKeys.REDIS_SERVER_DISPLAYNAME.get(config), components));
+        serverStreamSyncService.publishChat(new RedisChatPacket(from.getUniqueId(), from.getName(), applicableChannel, SpaceChatConfigKeys.REDIS_SERVER_IDENTIFIER.get(config), SpaceChatConfigKeys.REDIS_SERVER_DISPLAYNAME.get(config), parsed));
 
         // log to console
         if (event != null) { // if there's an event, log w/ the event
             plugin.getLogManagerImpl()
-                    .log(components.children()
+                    .log(parsed.asComponent().children()
                             .stream()
                             .map(c -> LegacyComponentSerializer.legacySection().serialize(c))
                             .map(ColorUtil::translateFromAmpersand)
@@ -238,7 +242,7 @@ public class ChatManager implements Manager {
                             .collect(Collectors.joining()), LogType.CHAT, LogToType.CONSOLE, event);
         } else {
             plugin.getLogManagerImpl() // if there's no event, just log to console without using the event
-                    .log(components.children()
+                    .log(parsed.asComponent().children()
                             .stream()
                             .map(c -> LegacyComponentSerializer.legacySection().serialize(c))
                             .map(ColorUtil::translateFromAmpersand)
@@ -261,22 +265,6 @@ public class ChatManager implements Manager {
      * @param event   event
      */
     public void sendRelationalChatMessage(Player from, String message, Format format, AsyncPlayerChatEvent event) {
-        // component to use with storage and logging
-        Component sampledComponent;
-
-        if (format == null) {
-            // build components default message
-            // this only happens if it's not possible to find a chat format
-            sampledComponent = Component.text()
-                    .append(Component.text(from.getDisplayName(), NamedTextColor.AQUA))
-                    .append(Component.text("> ", NamedTextColor.GRAY))
-                    .append(Component.text(message))
-                    .build();
-        } else { // if not null
-            // get baseComponents from live builder
-            sampledComponent = new NormalLiveChatFormatBuilder(plugin).build(new Trio<>(from, message, format));
-        }
-
         // do relational parsing
         Bukkit.getOnlinePlayers().forEach(to -> {
             Component component;
@@ -291,11 +279,11 @@ public class ChatManager implements Manager {
                         .build();
             } else { // if not null
                 // get baseComponents from live builder
-                component = new RelationalLiveChatFormatBuilder(plugin).build(new Quad<>(from, to, message, format));
+                component = relationalBuilder.build(from, to, message, format);
             }
 
             // send to 'to-player'
-            sendComponentChatMessage(component, to);
+            sendComponentChatMessage(new SimpleParsedFormat(component), to);
         });
 
         // log to storage
@@ -304,6 +292,22 @@ public class ChatManager implements Manager {
                         LogType.CHAT,
                         LogToType.STORAGE
                 );
+
+        // component to use with storage and logging
+        Component sampledComponent;
+
+        if (format == null) {
+            // build components default message
+            // this only happens if it's not possible to find a chat format
+            sampledComponent = Component.text()
+                    .append(Component.text(from.getDisplayName(), NamedTextColor.AQUA))
+                    .append(Component.text("> ", NamedTextColor.GRAY))
+                    .append(Component.text(message))
+                    .build();
+        } else { // if not null
+            // get baseComponents from live builder
+            sampledComponent = normalBuilder.build(from, message, format, false).asComponent();
+        }
 
         // log to console
         if (event != null) {// if there's an event, log w/ the event

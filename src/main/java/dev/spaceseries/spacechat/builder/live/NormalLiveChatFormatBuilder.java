@@ -1,11 +1,13 @@
 package dev.spaceseries.spacechat.builder.live;
 
 import dev.spaceseries.spacechat.SpaceChatPlugin;
-import dev.spaceseries.spacechat.api.wrapper.Trio;
-import dev.spaceseries.spacechat.builder.Builder;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import dev.spaceseries.spacechat.model.formatting.Extra;
 import dev.spaceseries.spacechat.model.formatting.Format;
+import dev.spaceseries.spacechat.model.formatting.ParsedFormat;
+import dev.spaceseries.spacechat.model.formatting.parsed.ConditionalParsedFormat;
+import dev.spaceseries.spacechat.model.formatting.parsed.ParsedFormatPart;
+import dev.spaceseries.spacechat.model.formatting.parsed.SimpleParsedFormat;
 import dev.spaceseries.spacechat.parser.MessageParser;
 import dev.spaceseries.spacechat.replacer.AmpersandReplacer;
 import dev.spaceseries.spacechat.replacer.SectionReplacer;
@@ -17,7 +19,10 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.entity.Player;
 
-public class NormalLiveChatFormatBuilder extends LiveChatFormatBuilder implements Builder<Trio<Player, String, Format>, TextComponent> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class NormalLiveChatFormatBuilder extends LiveChatFormatBuilder {
 
     /**
      * Ampersand replacer
@@ -36,23 +41,41 @@ public class NormalLiveChatFormatBuilder extends LiveChatFormatBuilder implement
     /**
      * Builds an array of baseComponents from a message, player, and format
      *
-     * @param input The trio of inputs
-     * @return The array of baseComponents
+     * @param player        the player that send the message
+     * @param messageString the message as string
+     * @param format        the format to parse the provided player and message
+     * @param conditional   true if the builder accept conditional formats
+     * @return              a parsed format using provided arguments
      */
-    @Override
-    public TextComponent build(Trio<Player, String, Format> input) {
-        // get input parameters
-        Player player = input.getLeft();
-        String messageString = input.getMid();
-        Format format = input.getRight();
+    public ParsedFormat build(Player player, String messageString, Format format, boolean conditional) {
+        if (conditional && format.isConditional()) {
+            final List<ParsedFormatPart> parts = new ArrayList<>();
+            build(player, messageString, format, false, (textComponent, lineComponent, lineProtocol) -> {
+                parts.add(new ParsedFormatPart(
+                        textComponent == null ? null : Component.text().append(textComponent).build(),
+                        lineComponent == null ? null : Component.text().append(lineComponent).build(),
+                        lineProtocol
+                ));
+            });
+            return new ConditionalParsedFormat(parts);
+        } else {
+            final ComponentBuilder<TextComponent, TextComponent.Builder> partComponentBuilder = Component.text();
+            build(player, messageString, format, true, (textComponent, lineComponent, lineProtocol) -> {
+                if (lineComponent != null) {
+                    partComponentBuilder.append(lineComponent);
+                } else {
+                    partComponentBuilder.append(textComponent);
+                }
+            });
+            return new SimpleParsedFormat(partComponentBuilder.build());
+        }
+    }
 
-        // create component builder for message
-        ComponentBuilder<TextComponent, TextComponent.Builder> componentBuilder = Component.text();
-
+    private void build(Player player, String messageString, Format format, boolean line, FormatPartConsumer consumer) {
         // loop through format parts
         format.getFormatParts().forEach(formatPart -> {
             // create component builder
-            ComponentBuilder<TextComponent, TextComponent.Builder> partComponentBuilder = Component.text();
+            Component parsedMiniMessage = null;
             // if the part has "line", it is a SINGLE MiniMessage...in that case, just parse & return (continues to next part if exists, which it shouldn't)
             if (formatPart.getLine() != null) {
                 // replace placeholders
@@ -72,13 +95,12 @@ public class NormalLiveChatFormatBuilder extends LiveChatFormatBuilder implement
                 Component message = new MessageParser(plugin).parse(player, Component.text(chatMessage));
 
                 // parse miniMessage
-                Component parsedMiniMessage = MiniMessage.miniMessage().deserialize(mmWithPlaceholdersReplaced.replace("<chat_message>", MiniMessage.miniMessage().serialize(message)));
+                parsedMiniMessage = MiniMessage.miniMessage().deserialize(mmWithPlaceholdersReplaced.replace("<chat_message>", MiniMessage.miniMessage().serialize(message)));
 
-                // parse MiniMessage into builder
-                partComponentBuilder.append(parsedMiniMessage);
-                // append partComponentBuilder to main builder
-                componentBuilder.append(partComponentBuilder.build());
-                return;
+                if (line || formatPart.getText() == null) {
+                    consumer.accept(null, parsedMiniMessage, -1);
+                    return;
+                }
             }
 
             String text = formatPart.getText();
@@ -119,14 +141,8 @@ public class NormalLiveChatFormatBuilder extends LiveChatFormatBuilder implement
                 }
             }
 
-            partComponentBuilder.append(parsedText);
-
-            // append build partComponentBuilder to main componentBuilder
-            componentBuilder.append(partComponentBuilder.build());
+            consumer.accept(parsedText, parsedMiniMessage, formatPart.getLineProtocol());
         });
-
-        // return built component builder
-        return componentBuilder.build();
     }
 
     /**
@@ -148,5 +164,10 @@ public class NormalLiveChatFormatBuilder extends LiveChatFormatBuilder implement
         }
 
         return legacyComponentSerializerBuilder.build();
+    }
+
+    @FunctionalInterface
+    public interface FormatPartConsumer {
+        void accept(Component textComponent, Component lineComponent, int lineProtocol);
     }
 }

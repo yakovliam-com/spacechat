@@ -1,7 +1,6 @@
 package dev.spaceseries.spacechat.sync.redis.stream.packet.chat;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import dev.spaceseries.spacechat.model.formatting.ParsedFormat;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -42,12 +41,10 @@ public class RedisChatPacketDeserializer implements JsonDeserializer<RedisChatPa
         // get server display name
         String serverDisplayName = object.get("serverDisplayName").getAsString();
 
-        // get component string
-        String componentString = object.get("component").getAsString();
         // deserialize
-        Component component = GsonComponentSerializer.gson().deserialize(componentString);
+        ParsedFormat parsedFormat = ParsedFormat.fromJson(object.get("component"));
 
         // return a new message
-        return new RedisChatPacket(sender, senderName, channel, serverIdentifier, serverDisplayName, component);
+        return new RedisChatPacket(sender, senderName, channel, serverIdentifier, serverDisplayName, parsedFormat);
     }
 }

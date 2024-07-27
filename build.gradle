@@ -32,6 +32,10 @@ repositories {
     maven { url 'https://repo.aikar.co/content/groups/aikar/' }
     // localelib, rtag
     maven { url 'https://jitpack.io' }
+    // viaversion
+    maven { url 'https://repo.viaversion.com' }
+    // protocollib
+    maven { url 'https://repo.dmulloy2.net/repository/public/' }
 
     // bstats, caffeine, adventure, mysql-driver, hikaricp, jedis, configurate
     mavenCentral()
@@ -52,6 +56,10 @@ dependencies {
     implementation 'com.saicone.ezlib:loader:1.2.3'
     compileOnly 'com.saicone.ezlib:annotations:1.2.3'
     annotationProcessor 'com.saicone.ezlib:annotations:1.2.3'
+
+    // Protocol
+    compileOnly 'com.viaversion:viaversion-api:5.0.1'
+    compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
 
     // Implementations
     compileOnly 'org.bstats:bstats-bukkit:3.0.2'
