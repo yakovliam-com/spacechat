@@ -43,6 +43,7 @@ public class ItemChatParser extends Parser {
      * Locale manager
      */
     private static final LocaleManager LOCALE_MANAGER = new LocaleManager();
+    private static final Map<String, String> FALLBACK_NAMES = new HashMap<>();
 
     /**
      * Configuration
@@ -99,12 +100,22 @@ public class ItemChatParser extends Parser {
         }
 
         // get item key
-        String itemKey = LOCALE_MANAGER.queryMaterial(itemStack.getType());
+        String itemKey = LOCALE_MANAGER.queryMaterial(itemStack.getType(), itemStack.getDurability(), itemStack.getItemMeta());
+        String fallback = FALLBACK_NAMES.get(itemKey);
+        if (fallback == null) {
+            final String[] split = itemStack.getType().name().split("_");
+            for (int i = 0; i < split.length; i++) {
+                final String s = split[i];
+                split[i] = s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
+            }
+            fallback = String.join(" ", split);
+            FALLBACK_NAMES.put(itemKey, fallback);
+        }
 
         // get display name
         Component name = itemStack.hasItemMeta() ?
-                Objects.requireNonNull(itemStack.getItemMeta()).hasDisplayName() ? LegacyComponentSerializer.legacySection().deserialize(itemStack.getItemMeta().getDisplayName()) : Component.translatable(itemKey) :
-                Component.translatable(itemKey);
+                Objects.requireNonNull(itemStack.getItemMeta()).hasDisplayName() ? LegacyComponentSerializer.legacySection().deserialize(itemStack.getItemMeta().getDisplayName()) : Component.translatable(itemKey, fallback) :
+                Component.translatable(itemKey, fallback);
 
         // replacement config for %item% and %amount%
         TextReplacementConfig nameReplacementConfig = TextReplacementConfig.builder()

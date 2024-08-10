@@ -81,6 +81,7 @@ dependencies {
 
     compileOnly 'org.spongepowered:configurate-gson:4.1.2'
     compileOnly 'com.github.PikaMug:LocaleLib:3.9'
+    compileOnly 'commons-lang:commons-lang:2.6'
 
     compileOnly 'com.saicone.rtag:rtag:1.5.5'
     compileOnly 'com.saicone.rtag:rtag-item:1.5.5'
@@ -108,6 +109,7 @@ shadowJar {
     relocate 'org.bstats', project.group + '.lib.bstats'
     relocate 'com.github.benmanes.caffeine.cache', project.group + '.lib.caffeine'
     relocate 'net.kyori.adventure', project.group + '.lib.adventure'
+    relocate 'net.kyori.examination', project.group + '.lib.examination'
     relocate 'me.mattstudios.msg', project.group + '.lib.msg'
     relocate 'co.aikar.commands', project.group + '.lib.acf.commands'
     relocate 'co.aikar.locales', project.group + '.lib.acf.locales'
@@ -118,6 +120,4 @@ shadowJar {
     relocate 'me.pikamug.localelib', project.group + '.lib.localelib'
     relocate 'com.saicone.rtag', project.group + '.lib.rtag'
     relocate 'com.cryptomorin.xseries', project.group + '.lib.xseries'
-
-    minimize()
 }
