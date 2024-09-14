@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'idea'
-    id 'io.github.goooler.shadow' version '8.1.7'
+    id 'com.gradleup.shadow' version '8.3.1'
 }
 
 idea {
@@ -20,30 +20,36 @@ processResources {
 }
 
 repositories {
+    // bstats, caffeine, adventure, mysql-driver, hikaricp, jedis, configurate
+    mavenCentral()
+    // rtag
+    maven { url 'https://jitpack.io' }
     // spigot
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    // placeholderapi
-    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    // localelib
+    maven { url 'https://repo.codemc.io/repository/maven-public/' }
+    // viaversion
+    maven { url 'https://repo.viaversion.com' }
+    // protocollib
+    maven { url 'https://repo.dmulloy2.net/repository/public/' }
     // essentials
     maven { url 'https://repo.essentialsx.net/releases/' }
     // triumph-msg
     maven { url 'https://repo.triumphteam.dev/snapshots/' }
     // acf
     maven { url 'https://repo.aikar.co/content/groups/aikar/' }
-    // localelib, rtag
-    maven { url 'https://jitpack.io' }
-    // viaversion
-    maven { url 'https://repo.viaversion.com' }
-    // protocollib
-    maven { url 'https://repo.dmulloy2.net/repository/public/' }
-
-    // bstats, caffeine, adventure, mysql-driver, hikaricp, jedis, configurate
-    mavenCentral()
+    // placeholderapi
+    maven {
+        url 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+        content {
+            includeGroup 'me.clip'
+        }
+    }
 }
 
 dependencies {
     // Compile
-    compileOnly 'org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT'
+    compileOnly 'org.spigotmc:spigot-api:1.21.1-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.6'
     compileOnly 'net.essentialsx:EssentialsX:2.20.1'
 
@@ -59,6 +65,7 @@ dependencies {
 
     // Protocol
     compileOnly 'com.viaversion:viaversion-api:5.0.1'
+    compileOnly 'io.netty:netty-all:4.0.20.Final'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.1.0'
 
     // Implementations
@@ -80,13 +87,13 @@ dependencies {
     compileOnly 'com.zaxxer:HikariCP:5.0.1'
 
     compileOnly 'org.spongepowered:configurate-gson:4.1.2'
-    compileOnly 'com.github.PikaMug:LocaleLib:3.9'
+    compileOnly 'me.pikamug.localelib:LocaleLib:4.0.0'
     compileOnly 'commons-lang:commons-lang:2.6'
 
-    compileOnly 'com.saicone.rtag:rtag:1.5.5'
-    compileOnly 'com.saicone.rtag:rtag-item:1.5.5'
+    compileOnly 'com.saicone.rtag:rtag:1.5.6'
+    compileOnly 'com.saicone.rtag:rtag-item:1.5.6'
 
-    compileOnly('com.github.cryptomorin:XSeries:11.2.0') { transitive = false }
+    compileOnly('com.github.cryptomorin:XSeries:11.2.1') { transitive = false }
 }
 
 compileJava {
@@ -96,9 +103,6 @@ compileJava {
 
 jar {
     enabled = false
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
     dependsOn (shadowJar)
 }
 

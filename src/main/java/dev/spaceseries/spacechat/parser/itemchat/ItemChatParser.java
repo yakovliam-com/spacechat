@@ -27,11 +27,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 @Dependencies({
-        @Dependency(value = "com.github.PikaMug:LocaleLib:@release",
-                repository = @Repository(url = "https://jitpack.io"),
+        @Dependency(value = "me.pikamug.localelib:LocaleLib:@release",
+                repository = @Repository(url = "https://repo.codemc.io/repository/maven-public"),
                 relocate = {"me.pikamug.localelib", "{package}.lib.localelib"}
         ),
-        @Dependency(value = "com.saicone.rtag:rtag-item:1.5.5",
+        @Dependency(value = "com.saicone.rtag:rtag-item:1.5.6",
                 repository = @Repository(url = "https://jitpack.io"),
                 relocate = {"com.saicone.rtag", "{package}.lib.rtag"}
         )
