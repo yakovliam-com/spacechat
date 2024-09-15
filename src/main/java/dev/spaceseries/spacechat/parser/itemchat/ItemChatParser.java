@@ -6,6 +6,7 @@ import com.saicone.ezlib.Repository;
 import com.saicone.rtag.item.ItemObject;
 import com.saicone.rtag.tag.TagBase;
 import com.saicone.rtag.tag.TagCompound;
+import com.saicone.rtag.util.ServerInstance;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
 import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
@@ -16,6 +17,7 @@ import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TextReplacementConfig;
+import net.kyori.adventure.text.event.DataComponentValue;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -216,15 +218,16 @@ public class ItemChatParser extends Parser {
      * @return     A hover event that represent the item
      * @throws Throwable if any error occurs on reflected method invoking.
      */
-    public HoverEvent<?> getItemHoverEvent(ItemStack item) throws Throwable {
-        final Object compound = ItemObject.save(ItemObject.asNMSCopy(item));
-        if (compound == null) {
+    public HoverEvent<HoverEvent.ShowItem> getItemHoverEvent(ItemStack item) throws Throwable {
+        final Object savedItem = ItemObject.save(ItemObject.asNMSCopy(item));
+        if (savedItem == null) {
             throw new NullPointerException("Item compound cannot be null");
         }
+        final Map<String, Object> compound = TagCompound.getValue(savedItem);
 
         // This can be simplified with Rtag.INSTANCE.get(compound, "id");
         // but consumes a bit more
-        Object id = TagBase.getValue(TagCompound.get(compound, "id"));
+        Object id = TagBase.getValue(compound.get("id"));
 
         Key key;
         if (id != null) {
@@ -239,11 +242,22 @@ public class ItemChatParser extends Parser {
             }
         }
 
-        Object tag = TagCompound.get(compound, "tag");
-        final Set<String> allowedTags;
-        if (tag != null && !(allowedTags = SpaceChatConfigKeys.ITEM_CHAT_ALLOWED_TAGS.get(configuration)).isEmpty()) {
-            TagCompound.getValue(tag).entrySet().removeIf(entry -> !allowedTags.contains(entry.getKey()));
+        if (ServerInstance.Release.COMPONENT) {
+            final Map<Key, DataComponentValue> map = new HashMap<>();
+            final Object components = compound.get("components");
+            if (components != null) {
+                for (Map.Entry<String, Object> entry : TagCompound.getValue(components).entrySet()) {
+                    map.put(Key.key(entry.getKey()), BinaryTagHolder.binaryTagHolder(entry.getValue().toString()));
+                }
+            }
+            return HoverEvent.showItem(HoverEvent.ShowItem.showItem(key, item.getAmount(), map));
+        } else {
+            Object tag = compound.get("tag");
+            final Set<String> allowedTags;
+            if (tag != null && !(allowedTags = SpaceChatConfigKeys.ITEM_CHAT_ALLOWED_TAGS.get(configuration)).isEmpty()) {
+                TagCompound.getValue(tag).entrySet().removeIf(entry -> !allowedTags.contains(entry.getKey()));
+            }
+            return HoverEvent.showItem(key, item.getAmount(), tag == null ? null : BinaryTagHolder.binaryTagHolder(tag.toString()));
         }
-        return HoverEvent.showItem(key, item.getAmount(), tag == null ? null : BinaryTagHolder.binaryTagHolder(tag.toString()));
     }
 }
