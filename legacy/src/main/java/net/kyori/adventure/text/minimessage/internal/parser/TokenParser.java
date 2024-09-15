@@ -160,22 +160,22 @@ public final class TokenParser {
         final int length = message.length();
         for (int i = 0; i < length; i++) {
             final int codePoint = message.codePointAt(i);
-            if (!lenient && codePoint == '§' && i + 1 < length) {
-                final int nextChar = Character.toLowerCase(message.codePointAt(i + 1));
-                // Only throw an exception if the next character is actually going to make a legacy color code
-                if ((nextChar >= '0' && nextChar <= '9')
-                        || (nextChar >= 'a' && nextChar <= 'f')
-                        || nextChar == 'r'
-                        || (nextChar >= 'k' && nextChar <= 'o')) {
-                    throw new ParsingExceptionImpl(
-                            "Legacy formatting codes have been detected in a MiniMessage string - this is unsupported behaviour. Please refer to the Adventure documentation (https://docs.advntr.dev) for more information.",
-                            message,
-                            null,
-                            true,
-                            new Token(i, i + 2, TokenType.TEXT)
-                    );
-                }
-            }
+//            if (!lenient && codePoint == '§' && i + 1 < length) {
+//                final int nextChar = Character.toLowerCase(message.codePointAt(i + 1));
+//                // Only throw an exception if the next character is actually going to make a legacy color code
+//                if ((nextChar >= '0' && nextChar <= '9')
+//                        || (nextChar >= 'a' && nextChar <= 'f')
+//                        || nextChar == 'r'
+//                        || (nextChar >= 'k' && nextChar <= 'o')) {
+//                    throw new ParsingExceptionImpl(
+//                            "Legacy formatting codes have been detected in a MiniMessage string - this is unsupported behaviour. Please refer to the Adventure documentation (https://docs.advntr.dev) for more information.",
+//                            message,
+//                            null,
+//                            true,
+//                            new Token(i, i + 2, TokenType.TEXT)
+//                    );
+//                }
+//            }
 
             if (!Character.isBmpCodePoint(codePoint)) {
                 i++;
