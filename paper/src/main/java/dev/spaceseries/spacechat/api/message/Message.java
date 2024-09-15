@@ -4,13 +4,11 @@ import com.google.common.base.Joiner;
 import com.saicone.ezlib.Dependencies;
 import com.saicone.ezlib.Dependency;
 import com.saicone.ezlib.Repository;
-import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
 import me.mattstudios.msg.adventure.AdventureMessage;
 import me.mattstudios.msg.base.MessageOptions;
-import net.kyori.adventure.platform.AudienceProvider;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -70,16 +68,6 @@ import java.util.List;
         )
 })
 public class Message {
-
-    private static AudienceProvider audienceProvider;
-
-    public static void initAudience(SpaceChatPlugin plugin) {
-        audienceProvider = BukkitAudiences.create(plugin);
-    }
-
-    public static AudienceProvider getAudienceProvider() {
-        return audienceProvider;
-    }
 
     /**
      * Gets a message from a configuration section
@@ -232,13 +220,7 @@ public class Message {
     public void message(Iterable<CommandSender> commandSenders, String... replacers) {
         Component output = compile(replacers);
 
-        commandSenders.forEach(sender -> {
-            if (sender instanceof Player) {
-                audienceProvider.player(((Player) sender).getUniqueId()).sendMessage(output);
-            } else {
-                audienceProvider.console().sendMessage(output);
-            }
-        });
+        commandSenders.forEach(sender -> sender.sendMessage(output));
     }
 
     /**
@@ -248,7 +230,9 @@ public class Message {
      */
     public void broadcast(String... replacers) {
         Component output = compile(replacers);
-        audienceProvider.all().sendMessage(output);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(output);
+        }
     }
 
     public static class Builder {

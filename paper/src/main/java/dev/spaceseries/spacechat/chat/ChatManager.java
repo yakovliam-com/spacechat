@@ -99,8 +99,8 @@ public class ChatManager implements Manager {
             for (Player player : Bukkit.getOnlinePlayers()) {
 
                 List<String> ignoredList = plugin.getUserManager().getIgnoredList(player.getName());
-                if(!ignoredList.contains(senderName)){
-                    Message.getAudienceProvider().player(player.getUniqueId()).sendMessage(parsedFormat.asComponent(player));
+                if(!ignoredList.contains(senderName)) {
+                    player.sendMessage(parsedFormat.asComponent(player));
                 }
                 /*plugin.getUserManager().getByName(player.getName(), user ->{
                     if(!user.isIgnored(senderName)){
@@ -118,7 +118,9 @@ public class ChatManager implements Manager {
      */
     public void sendComponentMessage(Component component) {
         // send chat message to all online players
-        Message.getAudienceProvider().players().sendMessage(component);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(component);
+        }
     }
 
     /**
@@ -129,7 +131,7 @@ public class ChatManager implements Manager {
      */
     public void sendComponentMessage(ParsedFormat parsedFormat, Player to) {
         // send chat message to all online players
-        Message.getAudienceProvider().player(to.getUniqueId()).sendMessage(parsedFormat.asComponent(to));
+        to.sendMessage(parsedFormat.asComponent(to));
     }
 
     /**

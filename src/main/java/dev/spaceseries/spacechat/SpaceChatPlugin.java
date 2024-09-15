@@ -28,13 +28,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Dependencies(value = {
-        @Dependency(value = "org.bstats:bstats-bukkit:3.0.2", relocate = {"org.bstats", "{package}.lib.bstats"}),
-        @Dependency(value = "com.github.cryptomorin:XSeries:11.2.1", relocate = {"com.cryptomorin.xseries", "{package}.lib.xseries"})
+        @Dependency(
+                value = "org.bstats:bstats-bukkit:3.0.2",
+                relocate = {"org.bstats", "{package}.lib.bstats"}),
+        @Dependency(
+                value = "com.github.cryptomorin:XSeries:11.2.1",
+                relocate = {"com.cryptomorin.xseries", "{package}.lib.xseries"})
 }, relocations = {
         "org.jetbrains.annotations", "{package}.lib.annotations",
         "org.intellij.lang.annotations", "{package}.lib.annotations.lang"
 })
 public final class SpaceChatPlugin extends JavaPlugin {
+
+    public static final boolean PAPER_PLATFORM = "paper.platform".equalsIgnoreCase("true");
 
     /**
      * The library loader
@@ -99,7 +105,7 @@ public final class SpaceChatPlugin extends JavaPlugin {
     @Override
     public void onLoad() {
         getLogger().info("We're currently downloading some data to make this plugin work correctly, so please wait. This may take a while.");
-        new EzlibLoader()
+        libraryLoader = new EzlibLoader()
                 .replace("{package}", "dev.spaceseries.spacechat")
                 .logger((level, msg) -> {
                     switch (level) {
@@ -116,6 +122,7 @@ public final class SpaceChatPlugin extends JavaPlugin {
                             break;
                     }
                 })
+                .condition("paper", s -> s.equalsIgnoreCase("true") == PAPER_PLATFORM)
                 .load();
     }
 
@@ -124,7 +131,9 @@ public final class SpaceChatPlugin extends JavaPlugin {
      */
     @Override
     public void onEnable() {
-        Message.initAudience(this);
+        if (!PAPER_PLATFORM) {
+            Message.initAudience(this);
+        }
 
         // load configs
         loadConfigs();
