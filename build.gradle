@@ -161,6 +161,7 @@ shadowJar {
         archiveBaseName.set(rootProject.name + '-bukkit')
     }
 
+    relocate 'load.adventure', 'true'
     relocate 'net.kyori.adventure', project.group + '.lib.adventure'
     relocate 'net.kyori.examination', project.group + '.lib.examination'
 }

@@ -40,7 +40,10 @@ import java.nio.file.Path;
 })
 public final class SpaceChatPlugin extends JavaPlugin {
 
-    public static final boolean PAPER_PLATFORM = "paper.platform".equalsIgnoreCase("true");
+    @SuppressWarnings("all")
+    private static final boolean PAPER_PLATFORM = "paper.platform".equalsIgnoreCase("true");
+    @SuppressWarnings("all")
+    private static final boolean LOAD_ADVENTURE = "load.adventure".equalsIgnoreCase("true");
 
     /**
      * The library loader
@@ -123,6 +126,7 @@ public final class SpaceChatPlugin extends JavaPlugin {
                     }
                 })
                 .condition("paper", s -> s.equalsIgnoreCase("true") == PAPER_PLATFORM)
+                .condition("adventure", s -> s.equalsIgnoreCase("true") == LOAD_ADVENTURE)
                 .load();
     }
 

@@ -21,7 +21,7 @@ import java.util.List;
         @Dependency(
                 value = "net.kyori:adventure-api:4.17.0",
                 repository = @Repository(url = "MavenCentral"),
-                condition = "paper=false",
+                condition = {"paper=false", "adventure=true"},
                 relocate = {
                         "net.kyori.adventure", "{package}.lib.adventure",
                         "net.kyori.examination", "{package}.lib.examination"
@@ -30,7 +30,7 @@ import java.util.List;
         @Dependency(
                 value = "net.kyori:adventure-platform-bukkit:4.3.3",
                 repository = @Repository(url = "MavenCentral"),
-                condition = "paper=false",
+                condition = {"paper=false", "adventure=true"},
                 relocate = {
                         "net.kyori.adventure", "{package}.lib.adventure",
                         "net.kyori.examination", "{package}.lib.examination"
@@ -39,7 +39,7 @@ import java.util.List;
         @Dependency(
                 value = "net.kyori:adventure-text-minimessage:4.17.0",
                 repository = @Repository(url = "MavenCentral"),
-                condition = "paper=false",
+                condition = {"paper=false", "adventure=true"},
                 relocate = {
                         "net.kyori.adventure", "{package}.lib.adventure",
                         "net.kyori.examination", "{package}.lib.examination"
