@@ -1,0 +1,26 @@
+repositories {
+    // paper
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+}
+
+processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    from(sourceSets.main.resources.srcDirs) {
+        include 'paper-plugin.yml'
+        expand(project.properties)
+    }
+}
+
+dependencies {
+    // Compile
+    compileOnly 'io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+shadowJar {
+    relocate 'paper.platform', 'true'
+}

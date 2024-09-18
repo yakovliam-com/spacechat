@@ -132,6 +132,8 @@ broadcast:
 
 item-chat:
   enabled: false
+  # Cooldown in millis
+  cooldown: 10000
   replace-aliases:
     - "[item]"
     - "{item}"
@@ -147,6 +149,27 @@ item-chat:
   # This dictates the maximum amount of times that players can use the item-chat feature in a single message
   # Set to -1 to disable the maximum amount
   max-per-message: 2
+  # Whitelist item NBT tag
+  allowed-tags:
+    - "CustomModelData"
+    - "Damage"
+    - "HideFlags"
+    - "Unbreakable"
+    - "Enchantments"
+    - "StoredEnchantments"
+    - "display"
+    - "AttributeModifiers"
+    - "CanPlaceOn"
+    - "CanDestroy"
+    - "Potion"
+    - "CustomPotionColor"
+    - "CustomPotionEffects"
+    - "map"
+    - "SkullOwner"
+    - "Fireworks"
+    - "Items"
+    - "author"
+    - "title"
 
 # Enables or disables relational placeholders
 # <!> <!> <!> <!> <!> You can only enable this if your server is [NOT] USING MULTI-SERVER CAPABILITIES (redis, etc) <!> <!> <!> <!> <!> Y

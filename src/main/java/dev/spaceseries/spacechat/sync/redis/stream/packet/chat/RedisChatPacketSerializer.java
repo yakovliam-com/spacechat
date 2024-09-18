@@ -21,7 +21,7 @@ public class RedisChatPacketSerializer implements JsonSerializer<RedisChatPacket
         element.addProperty("channel", src.getChannel() == null ? null : src.getChannel().getHandle());
         element.addProperty("serverIdentifier", src.getServerIdentifier());
         element.addProperty("serverDisplayName", src.getServerDisplayName());
-        element.addProperty("component", GsonComponentSerializer.gson().serialize(src.getComponent()));
+        element.add("component", src.getParsedFormat().asJson());
 
         return element;
     }

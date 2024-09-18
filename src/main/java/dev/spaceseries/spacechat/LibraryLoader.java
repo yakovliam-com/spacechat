@@ -4,11 +4,11 @@ import com.saicone.ezlib.Ezlib;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class LibraryLoader {
 
     private static final String MAVEN_REPOSITORY = "https://repo.maven.apache.org/maven2/";
@@ -21,36 +21,7 @@ public class LibraryLoader {
 
     public LibraryLoader(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.ezlib = new Ezlib(new File(plugin.getDataFolder(), "libs")) {
-            // Support for msg library
-            @Override
-            public File download(String dependency, String repository) throws IOException, IllegalArgumentException {
-                String[] split = dependency.split(":", 4);
-                if (split.length < 3) {
-                    throw new IllegalArgumentException("Malformatted dependency");
-                }
-
-                String repo = repository.endsWith("/") ? repository : repository + "/";
-                String version = split[2];
-                String fileVersion;
-                String[] s = version.split("@", 2);
-                if (s.length > 1) {
-                    version = s[0];
-                    fileVersion = s[1];
-                } else {
-                    fileVersion = version;
-                }
-
-                String fileName = split[1] + "-" + fileVersion + (split.length < 4 ? "" : "-" + split[3].replace(":", "-"));
-                String url = repo + split[0].replace(".", "/") + "/" + split[1] + "/" + version + "/" + fileName + ".jar";
-
-                if (!getFolder().exists()) {
-                    getFolder().mkdirs();
-                }
-                File file = new File(getFolder(), fileName + ".jar");
-                return file.exists() ? file : download(url, file);
-            }
-        };
+        this.ezlib = new Ezlib(new File(plugin.getDataFolder(), "libs"));
     }
 
     public void load() {
@@ -58,13 +29,13 @@ public class LibraryLoader {
             try {
                 String name = MessageFormat.format(dependency.test, (Object[]) dependency.getRelocation().to);
                 if (dependency.isInner()) {
-                    Class.forName(name, true, ezlib.getClassLoader());
+                    Class.forName(name, true, ezlib.getPublicClassLoader());
                 } else {
                     Class.forName(name);
                 }
             } catch (ClassNotFoundException e) {
                 plugin.getLogger().info("Loading dependency " + dependency.path);
-                ezlib.load(dependency.path, dependency.repository, dependency.getRelocationMap(), !dependency.inner);
+                ezlib.dependency(dependency.path, dependency.repository).relocations(dependency.getRelocationMap()).parent(!dependency.inner).load();
             }
         }
     }
@@ -78,7 +49,7 @@ public class LibraryLoader {
     }
 
     public ClassLoader getClassLoader() {
-        return getEzlib().getClassLoader();
+        return getEzlib().getPublicClassLoader();
     }
 
     public void close()  {

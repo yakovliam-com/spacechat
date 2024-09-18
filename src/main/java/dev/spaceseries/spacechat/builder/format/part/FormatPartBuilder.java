@@ -51,6 +51,8 @@ public class FormatPartBuilder implements Builder<Pair<String, ConfigurationAdap
                 formatPart.setLine(line);
             }
 
+            formatPart.setLineProtocol(adapter.getInteger(path + "." + handle + ".protocol", -1));
+
             // add format part
             formatPartList.add(formatPart);
         }

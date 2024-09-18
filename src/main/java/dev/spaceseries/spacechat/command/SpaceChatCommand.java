@@ -4,11 +4,11 @@ import co.aikar.commands.annotation.*;
 import dev.spaceseries.spacechat.Messages;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.api.message.Message;
+import dev.spaceseries.spacechat.config.SpaceChatConfigKeys;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @CommandAlias("spacechat")
@@ -76,6 +76,7 @@ public class SpaceChatCommand extends dev.spaceseries.spacechat.api.command.Spac
                             "%sender%", senderName,
                             "%message%", messageStr
                     );
+                    SpaceChatConfigKeys.PRIVATE_NOTIFICATION_SOUND.get(plugin.getSpaceChatConfig().getAdapter()).play(target);
                 }
 
                 // send to player

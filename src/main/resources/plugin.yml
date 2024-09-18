@@ -10,3 +10,4 @@ depend:
 softdepend:
   - DiscordSRV
   - Essentials
+  - ViaVersion

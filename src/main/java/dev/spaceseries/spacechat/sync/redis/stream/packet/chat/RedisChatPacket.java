@@ -1,6 +1,6 @@
 package dev.spaceseries.spacechat.sync.redis.stream.packet.chat;
 
-import net.kyori.adventure.text.Component;
+import dev.spaceseries.spacechat.model.formatting.ParsedFormat;
 import dev.spaceseries.spacechat.model.Channel;
 import dev.spaceseries.spacechat.sync.packet.SendStreamDataPacket;
 import dev.spaceseries.spacechat.sync.redis.stream.packet.PacketType;
@@ -38,19 +38,19 @@ public class RedisChatPacket extends RedisPacket implements SendStreamDataPacket
     /**
      * The actual chat message as a component
      */
-    private Component component;
+    private ParsedFormat parsedFormat;
 
     /**
      * Construct redis chat message
      */
-    public RedisChatPacket(UUID sender, String senderName, Channel channel, String serverIdentifier, String serverDisplayName, Component component) {
+    public RedisChatPacket(UUID sender, String senderName, Channel channel, String serverIdentifier, String serverDisplayName, ParsedFormat parsedFormat) {
         this();
         this.sender = sender;
         this.senderName = senderName;
         this.channel = channel;
         this.serverIdentifier = serverIdentifier;
         this.serverDisplayName = serverDisplayName;
-        this.component = component;
+        this.parsedFormat = parsedFormat;
     }
 
     /**
@@ -83,17 +83,17 @@ public class RedisChatPacket extends RedisPacket implements SendStreamDataPacket
      *
      * @return component
      */
-    public Component getComponent() {
-        return component;
+    public ParsedFormat getParsedFormat() {
+        return parsedFormat;
     }
 
     /**
      * Sets component
      *
-     * @param component component
+     * @param parsedFormat component
      */
-    public void setComponent(Component component) {
-        this.component = component;
+    public void setParsedFormat(ParsedFormat parsedFormat) {
+        this.parsedFormat = parsedFormat;
     }
 
     /**

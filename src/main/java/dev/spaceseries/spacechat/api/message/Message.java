@@ -1,6 +1,9 @@
 package dev.spaceseries.spacechat.api.message;
 
 import com.google.common.base.Joiner;
+import com.saicone.ezlib.Dependencies;
+import com.saicone.ezlib.Dependency;
+import com.saicone.ezlib.Repository;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import dev.spaceseries.spacechat.api.config.generic.adapter.ConfigurationAdapter;
 import me.mattstudios.msg.adventure.AdventureMessage;
@@ -15,6 +18,57 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Dependencies(value = {
+        // Non-paper servers
+        @Dependency(
+                value = "net.kyori:adventure-api:4.17.0",
+                repository = @Repository(url = "MavenCentral"),
+                condition = "paper=false",
+                relocate = {
+                        "net.kyori.adventure", "{package}.lib.adventure",
+                        "net.kyori.examination", "{package}.lib.examination"
+                }
+        ),
+        @Dependency(
+                value = "net.kyori:adventure-platform-bukkit:4.3.3",
+                repository = @Repository(url = "MavenCentral"),
+                condition = "paper=false",
+                relocate = {
+                        "net.kyori.adventure", "{package}.lib.adventure",
+                        "net.kyori.examination", "{package}.lib.examination"
+                }
+        ),
+        @Dependency(
+                value = "net.kyori:adventure-text-minimessage:4.17.0",
+                repository = @Repository(url = "MavenCentral"),
+                condition = "paper=false",
+                relocate = {
+                        "net.kyori.adventure", "{package}.lib.adventure",
+                        "net.kyori.examination", "{package}.lib.examination"
+                }
+        ),
+        @Dependency(
+                value = "me.mattstudios:triumph-msg-adventure:2.2.4-SNAPSHOT",
+                snapshot = true,
+                repository = @Repository(url = "https://repo.triumphteam.dev/snapshots/"),
+                condition = "paper=false",
+                relocate = {
+                        "me.mattstudios.msg", "{package}.lib.msg",
+                        "net.kyori.adventure", "{package}.lib.adventure",
+                        "net.kyori.examination", "{package}.lib.examination"
+                }
+        ),
+        // Paper servers
+        @Dependency(
+                value = "me.mattstudios:triumph-msg-adventure:2.2.4-SNAPSHOT",
+                snapshot = true,
+                repository = @Repository(url = "https://repo.triumphteam.dev/snapshots/"),
+                condition = "paper=true",
+                relocate = {
+                        "me.mattstudios.msg", "{package}.lib.msg"
+                }
+        )
+})
 public class Message {
 
     private static AudienceProvider audienceProvider;

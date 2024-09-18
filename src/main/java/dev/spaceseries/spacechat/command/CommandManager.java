@@ -2,12 +2,21 @@ package dev.spaceseries.spacechat.command;
 
 import co.aikar.commands.BukkitCommandManager;
 import co.aikar.commands.MessageType;
+import com.saicone.ezlib.Dependency;
+import com.saicone.ezlib.Repository;
 import dev.spaceseries.spacechat.SpaceChatPlugin;
 import org.bukkit.ChatColor;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+@Dependency(value = "co.aikar:acf-bukkit:0.5.1-SNAPSHOT", snapshot = true,
+        repository = @Repository(url = "https://repo.aikar.co/content/groups/aikar/"),
+        relocate = {
+                "co.aikar.commands", "{package}.lib.acf.commands",
+                "co.aikar.locales", "{package}.lib.acf.locales"
+        }
+)
 public class CommandManager extends BukkitCommandManager {
 
     public CommandManager(SpaceChatPlugin plugin) {
